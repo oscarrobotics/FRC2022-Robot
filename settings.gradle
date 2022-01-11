@@ -25,3 +25,11 @@ pluginManagement {
         }
     }
 }
+
+rootProject.name='FRC2022-Unnamed'
+// Bring in GrouchLib
+include 'GrouchLib'
+rootProject.children[0].buildFileName = "GrouchLib.gradle"
+if (!rootProject.children[0].buildFile.isFile()) {
+    rootProject.children[0].buildFileName = "build.gradle"
+}

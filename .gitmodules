@@ -1,0 +1,3 @@
+[submodule "GrouchLib"]
+	path = GrouchLib
+	url = https://github.com/oscarrobotics/GrouchLib
