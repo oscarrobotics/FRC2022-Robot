@@ -1,4 +1,4 @@
-package frc.robot.team832;
+package frc.team832.robot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -9,8 +9,8 @@ package frc.robot.team832;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    private Constants() {}
+	private Constants() {}
 
-    public static final int RPD_CAN_ID = 1;
-    public static final int RPH_CAN_ID = 1;
+	public static final int RPD_CAN_ID = 1;
+	public static final int RPH_CAN_ID = 1;
 }
