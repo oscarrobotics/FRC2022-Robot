@@ -1,5 +1,9 @@
 package frc.team832.robot;
 
+import frc.team832.lib.motors.Gearbox;
+import frc.team832.lib.motors.Motor;
+import frc.team832.lib.motors.WheeledPowerTrain;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,4 +17,25 @@ public final class Constants {
 
 	public static final int RPD_CAN_ID = 1;
 	public static final int RPH_CAN_ID = 1;
+
+	public static final class DrivetrainConstants {
+		/** CAN IDs **/ 
+		public static final int LEFT_MASTER_TALON_ID = 1;
+		public static final int LEFT_SLAVE_TALON_ID = 2;
+		public static final int RIGHT_MASTER_TALON_ID = 3;
+		public static final int RIGHT_SLAVE_TALON_ID = 4;
+		public static final int PIGEON_ID = 1;
+
+		/** Power **/ 
+		public static final int CURRENT_LIMIT = 45;
+
+		/** Mechanical Characteristics **/
+		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 16.0 / 32.0);
+		public static final Motor MOTOR = Motor.kFalcon500;
+		public static final double WHEEL_DIAMETER_INCHES = 5.9;
+		public static final double WHEEBASE_INCHES = 26.0;
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
+
+
+	}	
 }
