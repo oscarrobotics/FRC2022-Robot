@@ -20,10 +20,10 @@ public final class Constants {
 
 	public static final class DrivetrainConstants {
 		/** CAN IDs **/ 
-		public static final int LEFT_MASTER_TALON_ID = 1;
-		public static final int LEFT_SLAVE_TALON_ID = 2;
-		public static final int RIGHT_MASTER_TALON_ID = 3;
-		public static final int RIGHT_SLAVE_TALON_ID = 4;
+		public static final int LEFT_MASTER_TALON_ID = 2;
+		public static final int LEFT_SLAVE_TALON_ID = 3;
+		public static final int RIGHT_MASTER_TALON_ID = 4;
+		public static final int RIGHT_SLAVE_TALON_ID = 5;
 		public static final int PIGEON_ID = 1;
 
 		/** Power **/ 
@@ -35,7 +35,22 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
 		public static final double WHEEBASE_INCHES = 26.0;
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
-
-
 	}	
+
+	public static final class IntakeConstants {
+		/** CAN IDs **/
+		public static final int INTAKE_MOTOR_TALON_ID = 6;
+
+		/** Power **/
+		public static final int CURRENT_LIMIT = 45;
+
+		/** Mechanical Characteristics **/
+	}
+
+
+    public static class PneumaticsValues {
+        public static final int PCM_MODULE_NUM = 0;
+
+        public static final int INTAKE_SOLENOID_ID = 1;
+    }
 }
