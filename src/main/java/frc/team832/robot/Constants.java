@@ -47,10 +47,44 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 	}
 
+	public static final class ConveyerConstants {
+		/** CAN IDs **/
+		public static final int CONVEYER_MOTOR_TALON_ID = 7;
+
+		/** Power **/
+		public static final int CURRENT_LIMIT = 45;
+
+		/** Mechanical Characteristics **/
+	}
+
+	public static final class ShooterConstants {
+		/** CAN IDs **/
+		public static final int SHOOTER_MOTOR_TALON_ID = 8;
+
+		/** Power **/
+		public static final int CURRENT_LIMIT = 45;
+
+		/** Mechanical Characteristics **/
+	}
+
+	public static final class ClimbConstants {
+			/** CAN IDs **/
+			public static final int CLIMB_MOTOR_TALON_ID = 9;
+	
+			/** Power **/
+			public static final int CURRENT_LIMIT = 45;
+	
+			/** Mechanical Characteristics **/
+			public static final int EXTEND_TARGET = 0;
+			public static final int RETRACT_TARGET = 0;
+		
+	}
 
     public static class PneumaticsValues {
         public static final int PCM_MODULE_NUM = 0;
 
+		/** Solenoid IDs*/
         public static final int INTAKE_SOLENOID_ID = 1;
+		public static final int CLIMB_SOLENOID_ID = 2;
     }
 }

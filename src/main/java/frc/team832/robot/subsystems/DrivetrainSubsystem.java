@@ -42,7 +42,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // ensure right slave follows master inversion
     m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
-
     
     // TODO: Gyro based Pigeon wrapper in GrouchLib
     Gyro pigeon = new Gyro() {
