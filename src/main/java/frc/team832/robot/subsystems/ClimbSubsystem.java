@@ -8,20 +8,24 @@ import static frc.team832.robot.Constants.ClimbConstants.*;
 import static frc.team832.robot.Constants.PneumaticsValues.*;
 
 public class ClimbSubsystem extends SubsystemBase{
-    private final CANTalonFX climbMotor = new CANTalonFX(CLIMB_MOTOR_TALON_ID);
+    private final CANTalonFX climbMotorLeft = new CANTalonFX(CLIMB_LEFT_TALON_ID);
+    private final CANTalonFX climbMotorRight = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
     private final Solenoid climbPistons = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
 
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
-        climbMotor.limitInputCurrent(CURRENT_LIMIT);
+        climbMotorLeft.limitInputCurrent(CURRENT_LIMIT);
+        climbMotorRight.limitInputCurrent(CURRENT_LIMIT);
     }
     
     public void extendClimb() {
-        climbMotor.setTargetPosition(EXTEND_TARGET);;
+        climbMotorLeft.setTargetPosition(EXTEND_TARGET);;
+        climbMotorRight.setTargetPosition(EXTEND_TARGET);;
     }
 
     public void retractClimb() {
-        climbMotor.setTargetPosition(RETRACT_TARGET);
+        climbMotorLeft.setTargetPosition(RETRACT_TARGET);
+        climbMotorRight.setTargetPosition(RETRACT_TARGET);
     }
 
     public void pivotClimb() {

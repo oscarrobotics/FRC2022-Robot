@@ -69,8 +69,9 @@ public final class Constants {
 
 	public static final class ClimbConstants {
 			/** CAN IDs **/
-			public static final int CLIMB_MOTOR_TALON_ID = 9;
-	
+			public static final int CLIMB_LEFT_TALON_ID = 9;
+			public static final int CLIMB_RIGHT_TALON_ID = 10;
+
 			/** Power **/
 			public static final int CURRENT_LIMIT = 45;
 	
