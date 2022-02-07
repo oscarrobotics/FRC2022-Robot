@@ -1,8 +1,16 @@
 package frc.team832.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team832.robot.subsystems.ClimbSubsystem;
+import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.DrivetrainSubsystem;
+import frc.team832.robot.subsystems.IntakeSubsystem;
+import frc.team832.robot.subsystems.ShooterSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -14,6 +22,13 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private final Compressor compressor = m_robotContainer.compressor;
+  private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
+  private final IntakeSubsystem intake = m_robotContainer.intake;
+  private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
+  private final ShooterSubsystem shooter = m_robotContainer.shooter;
+  private final ClimbSubsystem climber = m_robotContainer.climber;
 
   /**
    * This function is run when the robot is first started up and should be used for any

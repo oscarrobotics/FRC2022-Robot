@@ -8,7 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.team832.robot.subsystems.ClimbSubsystem;
+import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
+import frc.team832.robot.subsystems.IntakeSubsystem;
+import frc.team832.robot.subsystems.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,6 +27,10 @@ public class RobotContainer {
 
   /** Subsystems **/
   public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  public final IntakeSubsystem intake = new IntakeSubsystem();
+  public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
+  public final ShooterSubsystem shooter = new ShooterSubsystem();
+  public final ClimbSubsystem climber = new ClimbSubsystem();
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
