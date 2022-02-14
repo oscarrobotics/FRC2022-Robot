@@ -46,6 +46,7 @@ public final class Constants {
 
 		/** Mechanical Characteristics **/
 		public static final double INTAKE_SPEED = 0;
+		public static final double OUTTAKE_SPEED = 0;
 	}
 
 	public static final class ConveyerConstants {
