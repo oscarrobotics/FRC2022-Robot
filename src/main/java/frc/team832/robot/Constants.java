@@ -20,11 +20,11 @@ public final class Constants {
 
 	public static final class DrivetrainConstants {
 		/** CAN IDs **/ 
-		public static final int LEFT_MASTER_TALON_ID = 2;
-		public static final int LEFT_SLAVE_TALON_ID = 3;
-		public static final int RIGHT_MASTER_TALON_ID = 4;
-		public static final int RIGHT_SLAVE_TALON_ID = 5;
-		public static final int PIGEON_ID = 1;
+		public static final int LEFT_MASTER_TALON_ID = 0;
+		public static final int LEFT_SLAVE_TALON_ID = 1;
+		public static final int RIGHT_MASTER_TALON_ID = 2;
+		public static final int RIGHT_SLAVE_TALON_ID = 3;
+		public static final int PIGEON_ID = 0;
 
 		/** Power **/ 
 		public static final int CURRENT_LIMIT = 45;
@@ -39,38 +39,41 @@ public final class Constants {
 
 	public static final class IntakeConstants {
 		/** CAN IDs **/
-		public static final int INTAKE_MOTOR_TALON_ID = 6;
+		public static final int INTAKE_MOTOR_TALON_ID = 4;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
+		public static final double INTAKE_SPEED = 0;
 	}
 
 	public static final class ConveyerConstants {
 		/** CAN IDs **/
-		public static final int CONVEYER_MOTOR_TALON_ID = 7;
+		public static final int CONVEYER_MOTOR_TALON_ID = 5;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
+		public static final double QUEUING_SPEED = 0;
 	}
 
 	public static final class ShooterConstants {
 		/** CAN IDs **/
-		public static final int SHOOTER_MOTOR_TALON_ID = 8;
+		public static final int SHOOTER_MOTOR_TALON_ID = 6;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
+		public static final double SHOOTER_SPEED = 0;
 	}
 
 	public static final class ClimbConstants {
 			/** CAN IDs **/
-			public static final int CLIMB_LEFT_TALON_ID = 9;
-			public static final int CLIMB_RIGHT_TALON_ID = 10;
+			public static final int CLIMB_LEFT_TALON_ID = 7;
+			public static final int CLIMB_RIGHT_TALON_ID = 8;
 
 			/** Power **/
 			public static final int CURRENT_LIMIT = 45;
@@ -85,7 +88,7 @@ public final class Constants {
         public static final int PCM_MODULE_NUM = 0;
 
 		/** Solenoid IDs*/
-        public static final int INTAKE_SOLENOID_ID = 1;
-		public static final int CLIMB_SOLENOID_ID = 2;
+        public static final int INTAKE_SOLENOID_ID = 0;
+		public static final int CLIMB_SOLENOID_ID = 1;
     }
 }

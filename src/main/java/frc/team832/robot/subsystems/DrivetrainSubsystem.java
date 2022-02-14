@@ -17,16 +17,29 @@ import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Physical devices **/
-  private final CANTalonFX m_leftMasterMotor = new CANTalonFX(LEFT_MASTER_TALON_ID);
-  private final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
-  private final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
-  private final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
+  public final CANTalonFX m_leftMasterMotor = new CANTalonFX(LEFT_MASTER_TALON_ID);
+  public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
+  public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
+  public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
   private final PigeonIMU m_imu = new PigeonIMU(PIGEON_ID);
 
   private final OscarDrivetrain m_drivetrain;
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
+    if (!m_leftMasterMotor.getCANConnection()) {
+      System.out.println("[DRIVETRAIN] LeftMasterMotor not on CAN!");
+    }
+    if (!m_leftSlaveMotor.getCANConnection()) {
+      System.out.println("[DRIVETRAIN] LeftSlaveMotor not on CAN!");
+    }
+    if (!m_rightMasterMotor.getCANConnection()) {
+      System.out.println("[DRIVETRAIN] RightMasterMotor not on CAN!");
+    }
+    if (!m_rightSlaveMotor.getCANConnection()) {
+      System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
+    }
+
     // set current limits
     m_leftMasterMotor.limitInputCurrent(CURRENT_LIMIT);
     m_leftSlaveMotor.limitInputCurrent(CURRENT_LIMIT);
@@ -86,5 +99,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
+  }
+
+  public void stop() {
+    
   }
 }

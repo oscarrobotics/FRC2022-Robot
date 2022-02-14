@@ -12,8 +12,6 @@ import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
-//test
-
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -23,23 +21,21 @@ import frc.team832.robot.subsystems.ShooterSubsystem;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer = new RobotContainer();
 
   private final Compressor compressor = m_robotContainer.compressor;
   private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
-  private final IntakeSubsystem intake = m_robotContainer.intake;
-  private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
-  private final ShooterSubsystem shooter = m_robotContainer.shooter;
-  private final ClimbSubsystem climber = m_robotContainer.climber;
+  // private final IntakeSubsystem intake = m_robotContainer.intake;
+  // private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
+  // private final ShooterSubsystem shooter = m_robotContainer.shooter;
+  // private final ClimbSubsystem climber = m_robotContainer.climber;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
-  public void robotInit() {
-    m_robotContainer = new RobotContainer();
-
+  public void robotInit() {    
   }
 
   /**
@@ -60,7 +56,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    drivetrain.stop();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -99,9 +97,12 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    drivetrain.teleopCurvatureDrive(-1.0, 0, false, 1);
+  }
 }
