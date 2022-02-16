@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.Constants;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 
-public class AcceptBall extends CommandBase{
+public class AcceptBallCommand extends CommandBase{
     private final IntakeSubsystem intake;
     
-    public AcceptBall(IntakeSubsystem intake) {
+    public AcceptBallCommand(IntakeSubsystem intake) {
         this.intake = intake;
         addRequirements(intake);
     }
@@ -24,11 +24,8 @@ public class AcceptBall extends CommandBase{
         return true;
     }
 
-
-    //ASK BANKS ABOUT @Override
-
-    //@Override
-    public void end() {
+    @Override
+    public void end(boolean interrupted) {
         intake.retractIntake();
         intake.setPower(0);
     }

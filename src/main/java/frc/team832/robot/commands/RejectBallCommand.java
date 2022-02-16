@@ -5,10 +5,10 @@ import frc.team832.robot.Constants;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 
 //Nicole wrote this :))) <3
-public class RejectBall extends CommandBase {
+public class RejectBallCommand extends CommandBase {
     private final IntakeSubsystem intake;
     
-    public RejectBall(IntakeSubsystem intake) {
+    public RejectBallCommand(IntakeSubsystem intake) {
         this.intake = intake;
         addRequirements(intake);
     }

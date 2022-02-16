@@ -69,6 +69,7 @@ public final class Constants {
 
 		/** Mechanical Characteristics **/
 		public static final double SHOOTER_SPEED = 0;
+		public static final double QUEUING_SPEED = 0;
 	}
 
 	public static final class ClimbConstants {
