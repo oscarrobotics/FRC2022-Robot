@@ -42,8 +42,8 @@ public class RobotContainer {
     drivetrainSubsystem.setDefaultCommand(new RunCommand(() -> {
       var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
       drivetrainSubsystem.teleopCurvatureDrive(
-        m_xboxCtrl.getLeftX(),
-        m_xboxCtrl.getRightY(),
+        m_xboxCtrl.getLeftY()*.5,
+        m_xboxCtrl.getRightX()*.5,
         shouldTurnInPlace,
         1.2);
     }, drivetrainSubsystem));
