@@ -57,7 +57,8 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double CONVEYER_QUEUING_SPEED = 0;
+		public static final double CONVEYER_QUEUING_POWER = 0;
+		public static final double CONVEYER_FEEDING_POWER = 0;
 	}
 
 	public static final class ShooterConstants {
@@ -68,8 +69,8 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double SHOOTER_SPEED = 0;
-		public static final double SHOOTER_QUEUING_SPEED = 0;
+		public static final double SHOOTER_POWER = 0;
+		public static final double SHOOTER_QUEUING_POWER = 0;
 	}
 
 	public static final class ClimbConstants {
