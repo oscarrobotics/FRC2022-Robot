@@ -23,11 +23,11 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
-  private final Compressor compressor = m_robotContainer.compressor;
-  private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
+  // private final Compressor compressor = m_robotContainer.compressor;
+  // private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
   // private final IntakeSubsystem intake = m_robotContainer.intake;
   // private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
-  // private final ShooterSubsystem shooter = m_robotContainer.shooter;
+  private final ShooterSubsystem shooter = m_robotContainer.shooter;
   // private final ClimbSubsystem climber = m_robotContainer.climber;
 
   /**
@@ -52,12 +52,13 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    shooter.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    drivetrain.stop();
+    // drivetrain.stop();
   }
 
   @Override
@@ -103,6 +104,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    drivetrain.teleopCurvatureDrive(-1.0, 0, false, 1);
+    m_robotContainer.configTestingCommands();
   }
 }

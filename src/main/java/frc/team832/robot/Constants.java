@@ -39,7 +39,7 @@ public final class Constants {
 
 	public static final class IntakeConstants {
 		/** CAN IDs **/
-		public static final int INTAKE_MOTOR_TALON_ID = 4;
+		public static final int INTAKE_MOTOR_TALON_ID = 5;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
@@ -51,31 +51,31 @@ public final class Constants {
 
 	public static final class ConveyerConstants {
 		/** CAN IDs **/
-		public static final int CONVEYER_MOTOR_TALON_ID = 5;
+		public static final int CONVEYER_MOTOR_TALON_ID = 6;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double QUEUING_SPEED = 0;
+		public static final double CONVEYER_QUEUING_SPEED = 0;
 	}
 
 	public static final class ShooterConstants {
 		/** CAN IDs **/
-		public static final int SHOOTER_MOTOR_TALON_ID = 6;
+		public static final int SHOOTER_MOTOR_TALON_ID = 7;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
 		public static final double SHOOTER_SPEED = 0;
-		public static final double QUEUING_SPEED = 0;
+		public static final double SHOOTER_QUEUING_SPEED = 0;
 	}
 
 	public static final class ClimbConstants {
 			/** CAN IDs **/
-			public static final int CLIMB_LEFT_TALON_ID = 7;
-			public static final int CLIMB_RIGHT_TALON_ID = 8;
+			public static final int CLIMB_LEFT_TALON_ID = 8;
+			public static final int CLIMB_RIGHT_TALON_ID = 9;
 
 			/** Power **/
 			public static final int CURRENT_LIMIT = 45;

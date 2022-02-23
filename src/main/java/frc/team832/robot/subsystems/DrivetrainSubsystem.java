@@ -7,6 +7,7 @@ package frc.team832.robot.subsystems;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDrivetrain;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
@@ -48,6 +49,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // invert right side
     m_rightMasterMotor.setInverted(true);
+
+    // set to brake mode
+    m_leftMasterMotor.setNeutralMode(NeutralMode.kBrake);
+    m_leftSlaveMotor.setNeutralMode(NeutralMode.kBrake);
+    m_rightMasterMotor.setNeutralMode(NeutralMode.kBrake);
+    m_rightSlaveMotor.setNeutralMode(NeutralMode.kBrake);
 
     // set slave motors to follow masters
     m_leftSlaveMotor.follow(m_leftMasterMotor);
@@ -94,6 +101,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
     m_drivetrain.getDiffDrive().curvatureDrive(xSpeed, zRotation, turnInPlace, inputScalingPow);
+  }
+
+  public void teleopArcadeDrive(double xSpeed, double zRotation, double inputPow) {
+    m_drivetrain.getDiffDrive().arcadeDrive(xSpeed, zRotation, inputPow);
+  }
+
+  public void teleopArcadeDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
+    m_drivetrain.getDiffDrive().arcadeDrive(xSpeed, zRotation);
+  }
+
+  public void teleopTankDrive(double leftSpeed, double rightSpeed, boolean turnInPlace, double inputScalingPow) {
+    m_drivetrain.getDiffDrive().tankDrive(leftSpeed, rightSpeed);
   }
 
   @Override
