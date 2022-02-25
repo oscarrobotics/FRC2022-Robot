@@ -12,8 +12,8 @@ public class QueueBallCommand extends SequentialCommandGroup {
     public QueueBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(conveyer, shooter);
         addCommands(
-            new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_SPEED)),
-            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.CONVEYER_QUEUING_SPEED)),
+            new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER)),
+            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.CONVEYER_QUEUING_POWER)),
             new WaitCommand(5),
             new InstantCommand (() -> conveyer.setPower(0)),
             new InstantCommand (() -> shooter.setPower(0))

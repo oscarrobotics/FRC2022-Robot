@@ -103,10 +103,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.getDiffDrive().curvatureDrive(xSpeed, zRotation, turnInPlace, inputScalingPow);
   }
 
-  public void teleopArcadeDrive(double xSpeed, double zRotation, double inputPow) {
-    m_drivetrain.getDiffDrive().arcadeDrive(xSpeed, zRotation, inputPow);
-  }
-
   public void teleopArcadeDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
     m_drivetrain.getDiffDrive().arcadeDrive(xSpeed, zRotation);
   }
@@ -121,6 +117,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-    
+    m_leftMasterMotor.set(0);
+    m_rightMasterMotor.set(0);
   }
+
+  
+  public void setWheelVolts(Double leftVolts, Double rightVolts) {
+    m_leftMasterMotor.set(leftVolts);
+    m_rightMasterMotor.set(rightVolts);
+}
 }
