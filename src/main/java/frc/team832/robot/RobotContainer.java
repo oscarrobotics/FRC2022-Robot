@@ -45,11 +45,17 @@ public class RobotContainer {
     drivetrainSubsystem.setDefaultCommand(new RunCommand(() -> {
       var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
       drivetrainSubsystem.teleopArcadeDrive(
-        m_xboxCtrl.getLeftY(),
-        -m_xboxCtrl.getRightX(),
+        m_xboxCtrl.getLeftY()*.5,
+        -m_xboxCtrl.getRightX()*.5,
         shouldTurnInPlace,
         1.2);
     }, drivetrainSubsystem));
+  //   drivetrainSubsystem.teleopTankDrive(
+  //     m_xboxCtrl.getLeftY(),
+  //     -m_xboxCtrl.getRightX(),
+  //     shouldTurnInPlace,
+  //     1.2);
+  // }, drivetrainSubsystem));
   }
 
   /**

@@ -1,18 +1,19 @@
 package frc.team832.robot.commands.Climb;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 
-public class ExtendClimbCommand extends CommandBase{
+public class StraightenClimbCommand extends CommandBase{
     private final ClimbSubsystem climb;
     
-    public ExtendClimbCommand(ClimbSubsystem climb) {
+    public StraightenClimbCommand(ClimbSubsystem climb) {
        this.climb = climb;
         addRequirements(climb);
     }
    
     @Override
     public void initialize() {
-        climb.extendClimb();
+        climb.straightenClimb();
     }
 
     @Override

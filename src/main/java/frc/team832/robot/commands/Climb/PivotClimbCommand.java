@@ -2,17 +2,17 @@ package frc.team832.robot.commands.Climb;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 
-public class ExtendClimbCommand extends CommandBase{
+public class PivotClimbCommand extends CommandBase{
     private final ClimbSubsystem climb;
     
-    public ExtendClimbCommand(ClimbSubsystem climb) {
+    public PivotClimbCommand(ClimbSubsystem climb) {
        this.climb = climb;
         addRequirements(climb);
     }
    
     @Override
     public void initialize() {
-        climb.extendClimb();
+        climb.pivotClimb();
     }
 
     @Override
