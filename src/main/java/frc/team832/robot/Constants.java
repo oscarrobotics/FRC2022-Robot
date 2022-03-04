@@ -1,5 +1,6 @@
 package frc.team832.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
@@ -45,7 +46,7 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double INTAKE_SPEED = 0;
+		public static final double INTAKE_POWER = -1;
 		public static final double OUTTAKE_SPEED = 0;
 	}
 
@@ -71,6 +72,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double SHOOTER_POWER = 0;
 		public static final double SHOOTER_QUEUING_POWER = 0;
+		public static final double ShooterkP = 0;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
 
 	public static final class ClimbConstants {

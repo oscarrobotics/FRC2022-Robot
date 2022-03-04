@@ -16,7 +16,7 @@ public class AcceptBallCommand extends CommandBase{
     @Override
     public void initialize() {
         intake.extendIntake();
-        intake.setPower(Constants.IntakeConstants.INTAKE_SPEED);
+        intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
     }
 
     @Override

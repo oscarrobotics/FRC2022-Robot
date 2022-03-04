@@ -50,6 +50,11 @@ public class RobotContainer {
         shouldTurnInPlace,
         1.2);
     }, drivetrainSubsystem));
+
+    stratComInterface.arcadeBlackRight().whenHeld(new RunCommand(()->{
+      intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
+    }));
+
   //   drivetrainSubsystem.teleopTankDrive(
   //     m_xboxCtrl.getLeftY(),
   //     -m_xboxCtrl.getRightX(),
@@ -76,7 +81,7 @@ public class RobotContainer {
     });
 
     var intakeTestCmd = new RunCommand(()->{
-      intake.setPower(Constants.IntakeConstants.INTAKE_SPEED);
+      intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
     });
 
 
