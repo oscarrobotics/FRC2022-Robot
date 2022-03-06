@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
+import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -30,7 +32,7 @@ public class RobotContainer {
   /** Subsystems **/
   public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   public final IntakeSubsystem intake = new IntakeSubsystem();
-  // public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
+  public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
   public final ShooterSubsystem shooter = new ShooterSubsystem();
   // public final ClimbSubsystem climber = new ClimbSubsystem();
   
@@ -51,16 +53,36 @@ public class RobotContainer {
         1.2);
     }, drivetrainSubsystem));
 
-    stratComInterface.arcadeBlackRight().whenHeld(new RunCommand(()->{
-      intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
-    }));
+    configOperatorCommands();
+  }
 
-  //   drivetrainSubsystem.teleopTankDrive(
-  //     m_xboxCtrl.getLeftY(),
-  //     -m_xboxCtrl.getRightX(),
-  //     shouldTurnInPlace,
-  //     1.2);
-  // }, drivetrainSubsystem));
+  public void configOperatorCommands() {
+  }
+
+  public void configTestingCommands() {
+    // Sets shooter rpm proportional to slider position
+    var shooterTestCmd = new StartEndCommand(
+      () -> {
+        var sliderPos = stratComInterface.getLeftSlider();
+        shooter.setRPM(OscarMath.map(sliderPos, 0, 1, 0, 6380));
+      },
+      () -> {
+        shooter.idleShooter();
+      },
+      shooter
+    );
+
+    // Sets intake rpm proportional to slider position
+    var intakeTestCmd = new StartEndCommand(
+      () -> {
+        var sliderPos = stratComInterface.getRightSlider();
+        intake.setRPM(OscarMath.map(sliderPos, 0, 1, 0, 6380));
+      },
+      () -> {
+        intake.idleIntake();
+      },
+      intake
+    );
   }
 
   /**
@@ -73,19 +95,4 @@ public class RobotContainer {
     return new PrintCommand("Autonomous!");
   }
 
-  public void configTestingCommands() {
-    // Sets shooter power proportionate to slider 
-    var shooterTestCmd = new RunCommand(()->{
-      var sliderPos = stratComInterface.getLeftSlider();
-      shooter.setPower(sliderPos);
-    });
-
-    var intakeTestCmd = new RunCommand(()->{
-      intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
-    });
-
-
-    stratComInterface.arcadeBlackLeft().whenHeld(shooterTestCmd);
-    stratComInterface.arcadeBlackRight().whenHeld(intakeTestCmd);
-  }
 }
