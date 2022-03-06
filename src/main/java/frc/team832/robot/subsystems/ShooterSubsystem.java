@@ -1,7 +1,6 @@
 package frc.team832.robot.subsystems;
 
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
-import frc.team832.lib.motors.Motor;
 import frc.team832.robot.Constants.ShooterConstants;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
@@ -16,11 +15,11 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX shooterMotor = new CANTalonFX(SHOOTER_MOTOR_TALON_ID);
 
     //Instantiate PID Controller and FeedFoward 
-    private PIDController shooterPID = new PIDController(ShooterConstants.ShooterkP, 0, 0);
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 1/Motor.kFalcon500.kv);
+    private PIDController shooterPID = new PIDController(ShooterConstants.KP, 0, 0);
+    private final SimpleMotorFeedforward feedforward = ShooterConstants.FEEDFORWARD;
     
-    //Instantiate flywheel RPM + feedfoward variables
-    public double flywheelTargetRPM, flywheelActualRPM, flywheelMotorRPM, flywheelPIDEffort, flywheelFFEffort;
+    //Instantiate shooter RPM + feedfoward variables
+    public double shooterTargetRPM, shooterActualRPM, shooterPIDEffort, shooterFFEffort;
 
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem() {
@@ -29,7 +28,10 @@ public class ShooterSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("shooterRPM", shooterMotor.getSensorVelocity());
+        SmartDashboard.putNumber("shooterActualRPM", shooterMotor.getSensorVelocity());
+        SmartDashboard.putNumber("shooterTargetRPM", shooterTargetRPM);
+        
+        updateControlLoops();
     }
 
     public void updateControlLoops() {
@@ -37,27 +39,28 @@ public class ShooterSubsystem extends SubsystemBase{
     }
     
     public void runShooterPID() {
-        flywheelActualRPM = shooterMotor.getSensorVelocity();
+        shooterActualRPM = shooterMotor.getSensorVelocity();
         
-        if (flywheelTargetRPM != 0) {
-            flywheelFFEffort = feedforward.calculate(flywheelTargetRPM) / 12.0;
-            flywheelPIDEffort = shooterPID.calculate(flywheelActualRPM, flywheelTargetRPM) / 12.0;
+        if (shooterTargetRPM != 0) {
+            shooterFFEffort = feedforward.calculate(shooterTargetRPM) / 12.0;
+            shooterPIDEffort = shooterPID.calculate(shooterActualRPM, shooterTargetRPM) / 12.0;
         } else {
-            flywheelFFEffort = 0;
-            flywheelPIDEffort = 0;
+            shooterFFEffort = 0;
+            shooterPIDEffort = 0;
         }
       
-        shooterMotor.set(flywheelPIDEffort + flywheelFFEffort);
-        
+        shooterMotor.set(shooterPIDEffort + shooterFFEffort);
     }
 
+    public void setRPM(double targetRPM) {
+        shooterTargetRPM = targetRPM;
+    }
+    
     public void setPower(double power) {
-        SmartDashboard.putNumber("dumbEffortVolts", power * 12);
-        SmartDashboard.putNumber("ffEffortVolts", feedforward.calculate(Math.abs(power) * 6380));
         shooterMotor.set(power);
     }
 
-    public void stop() {
+    public void idleShooter() {
         shooterMotor.set(0);
     }
 }

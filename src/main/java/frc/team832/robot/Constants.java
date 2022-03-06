@@ -48,6 +48,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double INTAKE_POWER = -1;
 		public static final double OUTTAKE_SPEED = 0;
+		public static final double KP = 0;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
 
 	public static final class ConveyerConstants {
@@ -60,6 +62,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double CONVEYER_QUEUING_POWER = 0;
 		public static final double CONVEYER_FEEDING_POWER = 0;
+		public static final double KP = 0;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
 
 	public static final class ShooterConstants {
@@ -72,7 +76,7 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double SHOOTER_POWER = 0;
 		public static final double SHOOTER_QUEUING_POWER = 0;
-		public static final double ShooterkP = 0;
+		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
 
@@ -87,7 +91,9 @@ public final class Constants {
 			/** Mechanical Characteristics **/
 			public static final int EXTEND_TARGET = 0;
 			public static final int RETRACT_TARGET = 0;
-		
+			public static final double KP = 0;
+			public static final double KD = 0;
+			public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
 
     public static class PneumaticsValues {

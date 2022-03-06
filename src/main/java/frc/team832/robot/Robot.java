@@ -1,7 +1,5 @@
 package frc.team832.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +22,9 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer = new RobotContainer();
 
   // private final Compressor compressor = m_robotContainer.compressor;
-  // private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
-  // private final IntakeSubsystem intake = m_robotContainer.intake;
-  // private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
+  private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
+  private final IntakeSubsystem intake = m_robotContainer.intake;
+  private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
   private final ShooterSubsystem shooter = m_robotContainer.shooter;
   // private final ClimbSubsystem climber = m_robotContainer.climber;
 
@@ -52,6 +50,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    intake.periodic();
+    conveyer.periodic();
     shooter.periodic();
   }
 
