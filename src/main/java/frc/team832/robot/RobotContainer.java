@@ -64,7 +64,7 @@ public class RobotContainer {
     var shooterTestCmd = new StartEndCommand(
       () -> {
         var sliderPos = stratComInterface.getLeftSlider();
-        shooter.setRPM(OscarMath.map(sliderPos, 0, 1, 0, 6380));
+        shooter.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
       },
       () -> {
         shooter.idleShooter();
@@ -76,7 +76,7 @@ public class RobotContainer {
     var intakeTestCmd = new StartEndCommand(
       () -> {
         var sliderPos = stratComInterface.getRightSlider();
-        intake.setRPM(OscarMath.map(sliderPos, 0, 1, 0, 6380));
+        intake.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
       },
       () -> {
         intake.idleIntake();

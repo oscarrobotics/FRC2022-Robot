@@ -4,11 +4,14 @@
 
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.robot.Constants.DrivetrainConstants;
+
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -16,6 +19,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 public class DrivetrainSubsystem extends SubsystemBase {
+  private final SimpleMotorFeedforward feedforward = DrivetrainConstants.FEEDFORWARD;
 
   /** Physical devices **/
   public final CANTalonFX m_leftMasterMotor = new CANTalonFX(LEFT_MASTER_TALON_ID);
@@ -96,7 +100,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     };
 
     // initialize drivetrain object
-    m_drivetrain = new OscarDrivetrain(m_leftMasterMotor, m_rightMasterMotor, pigeon, POWER_TRAIN, WHEEBASE_INCHES);
+    m_drivetrain = new OscarDrivetrain(m_leftMasterMotor, m_rightMasterMotor, feedforward, feedforward, pigeon, POWER_TRAIN, WHEEBASE_INCHES);
   }
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
