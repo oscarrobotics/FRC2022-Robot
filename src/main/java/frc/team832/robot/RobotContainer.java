@@ -12,6 +12,13 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.util.OscarMath;
+import frc.team832.robot.commands.AcceptBallCommand;
+import frc.team832.robot.commands.RejectBallCommand;
+import frc.team832.robot.commands.ShootBallCommand;
+import frc.team832.robot.commands.Climb.ExtendClimbCommand;
+import frc.team832.robot.commands.Climb.PivotClimbCommand;
+import frc.team832.robot.commands.Climb.RetractClimbCommand;
+import frc.team832.robot.commands.Climb.StraightenClimbCommand;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -34,7 +41,7 @@ public class RobotContainer {
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
   public final ShooterSubsystem shooter = new ShooterSubsystem();
-  // public final ClimbSubsystem climber = new ClimbSubsystem();
+  public final ClimbSubsystem climb = new ClimbSubsystem();
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
@@ -57,6 +64,15 @@ public class RobotContainer {
   }
 
   public void configOperatorCommands() {
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
+    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
+
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
+
+    stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
+    stratComInterface.sc4().whenHeld(new RetractClimbCommand(climb));
+    stratComInterface.sc2().whenHeld(new PivotClimbCommand(climb));
+    stratComInterface.sc5().whenHeld(new StraightenClimbCommand(climb));
   }
 
   public void configTestingCommands() {

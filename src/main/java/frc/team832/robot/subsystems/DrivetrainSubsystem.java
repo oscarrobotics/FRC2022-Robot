@@ -100,7 +100,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     };
 
     // initialize drivetrain object
-    m_drivetrain = new OscarDrivetrain(m_leftMasterMotor, m_rightMasterMotor, feedforward, feedforward, pigeon, POWER_TRAIN, WHEEBASE_INCHES);
+    m_drivetrain = new OscarDrivetrain(m_leftMasterMotor, m_rightMasterMotor, pigeon, POWER_TRAIN, WHEEBASE_INCHES);
   }
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {

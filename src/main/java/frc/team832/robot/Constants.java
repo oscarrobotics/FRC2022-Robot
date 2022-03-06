@@ -1,5 +1,6 @@
 package frc.team832.robot;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
@@ -63,6 +64,7 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double CONVEYER_QUEUING_POWER = 0;
 		public static final double CONVEYER_FEEDING_POWER = 0;
+		public static final double CONVEYER_OUTTAKE_POWER = 0;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
@@ -82,19 +84,19 @@ public final class Constants {
 	}
 
 	public static final class ClimbConstants {
-			/** CAN IDs **/
-			public static final int CLIMB_LEFT_TALON_ID = 8;
-			public static final int CLIMB_RIGHT_TALON_ID = 9;
+		/** CAN IDs **/
+		public static final int CLIMB_LEFT_TALON_ID = 8;
+		public static final int CLIMB_RIGHT_TALON_ID = 9;
 
-			/** Power **/
-			public static final int CURRENT_LIMIT = 45;
-	
-			/** Mechanical Characteristics **/
-			public static final int EXTEND_TARGET = 0;
-			public static final int RETRACT_TARGET = 0;
-			public static final double KP = 0;
-			public static final double KD = 0;
-			public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		/** Power **/
+		public static final int CURRENT_LIMIT = 45;
+
+		/** Mechanical Characteristics **/
+		public static final int EXTEND_TARGET = 0;
+		public static final int RETRACT_TARGET = 0;
+		public static final double KP = 0;
+		public static final double KD = 0;
+		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(0, 0, 1 / Motor.kFalcon500.kv);
 	}
 
     public static class PneumaticsValues {
@@ -102,6 +104,7 @@ public final class Constants {
 
 		/** Solenoid IDs*/
         public static final int INTAKE_SOLENOID_ID = 0;
-		public static final int CLIMB_SOLENOID_ID = 1;
+		public static final int LEFT_CLIMB_SOLENOID_ID = 1;
+		public static final int RIGHT_CLIMB_SOLENOID_ID = 2;
     }
 }

@@ -1,5 +1,6 @@
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -15,12 +16,13 @@ import static frc.team832.robot.Constants.PneumaticsValues.*;
 public class ClimbSubsystem extends SubsystemBase{
     private final CANTalonFX climbMotorLeft = new CANTalonFX(CLIMB_LEFT_TALON_ID);
     private final CANTalonFX climbMotorRight = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
-    private final Solenoid climbPistons = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
+    private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
+    private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
 
 
     //Instantiate PID Controller and FeedFoward 
     private PIDController climbPID = new PIDController(ClimbConstants.KP, 0, ClimbConstants.KD);
-    private final SimpleMotorFeedforward feedforward = ClimbConstants.FEEDFORWARD;
+    private final ElevatorFeedforward feedforward = ClimbConstants.FEEDFORWARD;
     
     //Instantiate shooter RPM + feedfoward variables
     public double climbTargetPos, climbActualPos, climbPIDEffort, climbFFEffort;
@@ -46,8 +48,9 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void runClimbPID() {
-        double power = climbPID.calculate(climbMotorRight.getSensorPosition(), climbTargetPos);
-        climbMotorRight.set(power);
+        climbFFEffort = feedforward.calculate(climbMotorRight.getSensorVelocity()) / 12.0;
+        climbPIDEffort = climbPID.calculate(climbMotorRight.getSensorPosition(), climbTargetPos);
+        climbMotorRight.set(climbPIDEffort + climbFFEffort);
     }
     
     public void setTargetPosition(double targetPos) {
@@ -66,10 +69,12 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void pivotClimb() {
-        climbPistons.set(true);
+        leftClimbPiston.set(true);
+        rightClimbPiston.set(true);
     }
 
     public void straightenClimb() {
-        climbPistons.set(false);
+        leftClimbPiston.set(false);
+        rightClimbPiston.set(false);
     }
 }
