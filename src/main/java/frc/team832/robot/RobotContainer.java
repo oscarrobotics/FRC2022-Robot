@@ -40,7 +40,7 @@ public class RobotContainer {
   // public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
-  // public final ShooterSubsystem shooter = new ShooterSubsystem();
+  public final ShooterSubsystem shooter = new ShooterSubsystem();
   // public final ClimbSubsystem climb = new ClimbSubsystem();
   
   /** HID Controllers **/
@@ -64,7 +64,7 @@ public class RobotContainer {
 
   public void configOperatorCommands() {
     m_xboxCtrl.a()
-      .whileHeld(new AcceptBallCommand(intake))
+      .whileHeld(new AcceptBallCommand(intake, shooter, conveyer))
       .whileHeld(new StartEndCommand(
         () -> {
           conveyer.setPower(0.5);

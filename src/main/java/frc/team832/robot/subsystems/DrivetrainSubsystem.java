@@ -87,11 +87,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.periodic();
   }
 
+  public void getPose() {
+    m_drivetrain.getPose();
+  }
+
   public void stop() {
     m_leftMasterMotor.set(0);
     m_rightMasterMotor.set(0);
   }
-
   
   public void setWheelVolts(Double leftVolts, Double rightVolts) {
     m_leftMasterMotor.set(leftVolts);
