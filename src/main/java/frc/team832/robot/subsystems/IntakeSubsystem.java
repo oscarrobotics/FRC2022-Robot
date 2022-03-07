@@ -25,6 +25,19 @@ public class IntakeSubsystem extends SubsystemBase{
     /** Creates a new IntakeSubsytem **/
     public IntakeSubsystem() {
         intakeMotor.limitInputCurrent(CURRENT_LIMIT);
+        intakeMotor.getBaseController().configOpenloopRamp(0.125);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("intakeActualRPM", intakeMotor.getSensorVelocity());
+        SmartDashboard.putNumber("intakeTargetRPM", intakeTargetRPM);
+        
+        updateControlLoops();
+    }
+
+    public void updateControlLoops() {
+        // runIntakePID();
     }
 
     @Override

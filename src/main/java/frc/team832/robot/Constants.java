@@ -46,11 +46,11 @@ public final class Constants {
 		public static final int INTAKE_MOTOR_TALON_ID = 5;
 
 		/** Power **/
-		public static final int CURRENT_LIMIT = 45;
+		public static final int CURRENT_LIMIT = 25;
 
 		/** Mechanical Characteristics **/
-		public static final double INTAKE_POWER = -1;
-		public static final double OUTTAKE_SPEED = 0;
+		public static final double INTAKE_POWER = -0.5;
+		public static final double OUTTAKE_SPEED = 0.4;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}
@@ -65,7 +65,7 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double CONVEYER_QUEUING_POWER = 0;
 		public static final double CONVEYER_FEEDING_POWER = 0;
-		public static final double CONVEYER_OUTTAKE_POWER = 0;
+		public static final double CONVEYER_OUTTAKE_POWER = -0.3;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}

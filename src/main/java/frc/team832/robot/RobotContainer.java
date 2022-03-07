@@ -37,68 +37,79 @@ public class RobotContainer {
   // public final Compressor compressor = new Compressor(Constants.RPH_CAN_ID, PneumaticsModuleType.REVPH);
 
   /** Subsystems **/
-  public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  // public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
-  public final ShooterSubsystem shooter = new ShooterSubsystem();
-  public final ClimbSubsystem climb = new ClimbSubsystem();
+  // public final ShooterSubsystem shooter = new ShooterSubsystem();
+  // public final ClimbSubsystem climb = new ClimbSubsystem();
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
-  public final StratComInterface stratComInterface = new StratComInterface(1);
+  // public final StratComInterface stratComInterface = new StratComInterface(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
 
-    drivetrainSubsystem.setDefaultCommand(new RunCommand(() -> {
-      var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
-      drivetrainSubsystem.teleopArcadeDrive(
-        m_xboxCtrl.getLeftY()*.5,
-        -m_xboxCtrl.getRightX()*.5,
-        shouldTurnInPlace,
-        1.2);
-    }, drivetrainSubsystem));
+    // drivetrainSubsystem.setDefaultCommand(new RunCommand(() -> {
+    //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
+    //   drivetrainSubsystem.teleopArcadeDrive(
+    //     m_xboxCtrl.getLeftY()*.5,
+    //     -m_xboxCtrl.getRightX()*.5,
+    //     1.2);
+    // }, drivetrainSubsystem));
 
     configOperatorCommands();
   }
 
   public void configOperatorCommands() {
-    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
-    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
+    
+    m_xboxCtrl.a()
+      .whileHeld(new AcceptBallCommand(intake))
+      .whileHeld(new StartEndCommand(
+        () -> {
+          conveyer.setPower(0.5);
+        }
+      , () -> {
+        conveyer.setPower(0);
+      }, conveyer));
 
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
+    m_xboxCtrl.b().whileHeld(new RejectBallCommand(intake, conveyer));
+    // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
+    // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
-    stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
-    stratComInterface.sc4().whenHeld(new RetractClimbCommand(climb));
-    stratComInterface.sc2().whenHeld(new PivotClimbCommand(climb));
-    stratComInterface.sc5().whenHeld(new StraightenClimbCommand(climb));
+    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
+
+    // stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
+    // stratComInterface.sc4().whenHeld(new RetractClimbCommand(climb));
+    // stratComInterface.sc2().whenHeld(new PivotClimbCommand(climb));
+    // stratComInterface.sc5().whenHeld(new StraightenClimbCommand(climb));
   }
 
   public void configTestingCommands() {
     // Sets shooter rpm proportional to slider position
-    var shooterTestCmd = new StartEndCommand(
-      () -> {
-        var sliderPos = stratComInterface.getLeftSlider();
-        shooter.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
-      },
-      () -> {
-        shooter.idleShooter();
-      },
-      shooter
-    );
+    // var shooterTestCmd = new StartEndCommand(
+    //   () -> {
+    //     var sliderPos = stratComInterface.getLeftSlider();
+    //     shooter.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
+    //   },
+    //   () -> {
+    //     shooter.idleShooter();
+    //   },
+    //   shooter
+    // );
 
     // Sets intake rpm proportional to slider position
-    var intakeTestCmd = new StartEndCommand(
-      () -> {
-        var sliderPos = stratComInterface.getRightSlider();
-        intake.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
-      },
-      () -> {
-        intake.idleIntake();
-      },
-      intake
-    );
+    // var intakeTestCmd = new StartEndCommand(
+    //   () -> {
+    //     var sliderPos = stratComInterface.getRightSlider();
+    //     intake.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
+    //   },
+    //   () -> {
+    //     intake.idleIntake();
+    //   },
+    //   intake
+    // );
   }
 
   /**
