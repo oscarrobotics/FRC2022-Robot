@@ -35,9 +35,10 @@ public final class Constants {
 		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 16.0 / 32.0);
 		public static final Motor MOTOR = Motor.kFalcon500;
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
-		public static final double WHEEBASE_INCHES = 26.0;
+		public static final double WHEELBASE_INCHES = 26.0;
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 	}	
 
 	public static final class IntakeConstants {
