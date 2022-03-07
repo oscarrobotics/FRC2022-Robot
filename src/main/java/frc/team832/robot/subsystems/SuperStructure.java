@@ -10,4 +10,10 @@ public class SuperStructure {
         this.conveyer = conveyer;
         this.shooter = shooter;
     }
+    
+    public void idleAll() {
+        shooter.idleShooter();
+        conveyer.idleConveyer();
+        intake.idleIntake();
+    }
 }

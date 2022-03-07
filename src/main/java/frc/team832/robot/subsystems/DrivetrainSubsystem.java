@@ -67,7 +67,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD,
       m_imu, POWER_TRAIN, WHEELBASE_INCHES);
   }
 
@@ -89,8 +88,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-    m_leftMasterMotor.stopMotor();
-    m_rightMasterMotor.stopMotor();
+    m_leftMasterMotor.set(0);
+    m_rightMasterMotor.set(0);
   }
 
   

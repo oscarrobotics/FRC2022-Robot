@@ -23,16 +23,13 @@ public class RejectBallCommand extends CommandBase {
         conveyer.setPower(Constants.ConveyerConstants.CONVEYER_OUTTAKE_POWER);
     }
 
+    // @Override
+    // public boolean isFinished() {
+    //     return true;
+    // }
+
     @Override
-    public boolean isFinished() {
-        return true;
-    }
-
-
-    //ASK BANKS ABOUT @Override
-
-    //@Override
-    public void end() {
+    public void end(boolean interrupted) {
         intake.retractIntake();
         intake.setPower(0);
     }

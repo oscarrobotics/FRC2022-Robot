@@ -63,7 +63,6 @@ public class RobotContainer {
   }
 
   public void configOperatorCommands() {
-    
     m_xboxCtrl.a()
       .whileHeld(new AcceptBallCommand(intake))
       .whileHeld(new StartEndCommand(
@@ -87,29 +86,6 @@ public class RobotContainer {
   }
 
   public void configTestingCommands() {
-    // Sets shooter rpm proportional to slider position
-    // var shooterTestCmd = new StartEndCommand(
-    //   () -> {
-    //     var sliderPos = stratComInterface.getLeftSlider();
-    //     shooter.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
-    //   },
-    //   () -> {
-    //     shooter.idleShooter();
-    //   },
-    //   shooter
-    // );
-
-    // Sets intake rpm proportional to slider position
-    // var intakeTestCmd = new StartEndCommand(
-    //   () -> {
-    //     var sliderPos = stratComInterface.getRightSlider();
-    //     intake.setRPM(OscarMath.map(sliderPos, -1, 1, 0, 6380));
-    //   },
-    //   () -> {
-    //     intake.idleIntake();
-    //   },
-    //   intake
-    // );
   }
 
   /**
@@ -121,5 +97,4 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     return new PrintCommand("Autonomous!");
   }
-
 }

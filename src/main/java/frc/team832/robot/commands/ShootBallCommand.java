@@ -12,7 +12,6 @@ public class ShootBallCommand extends SequentialCommandGroup {
     public ShootBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(conveyer, shooter);
         addCommands(
-        
             new InstantCommand (() -> conveyer.setPower(-ConveyerConstants.CONVEYER_QUEUING_POWER)),
             new WaitCommand(1),
             new InstantCommand (() -> shooter.setPower(ShooterConstants.SHOOTER_POWER)),

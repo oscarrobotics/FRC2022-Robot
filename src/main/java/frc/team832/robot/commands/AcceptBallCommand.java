@@ -19,6 +19,11 @@ public class AcceptBallCommand extends CommandBase{
         intake.setPower(Constants.IntakeConstants.INTAKE_POWER);
     }
 
+    // @Override
+    // public boolean isFinished() {
+    //     return true;
+    // }
+
     @Override
     public void end(boolean interrupted) {
         intake.retractIntake();
