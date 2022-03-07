@@ -1,5 +1,8 @@
 package frc.team832.robot.commands.AutonomousCommands;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -24,7 +27,7 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
                 // go backwards
                 new SequentialCommandGroup(
                     new InstantCommand(() -> drivetrain.setWheelVolts(-.2, .2)),
-                    new WaitUntilCommand(drivetrain.getPose() == ),
+                    new WaitUntilCommand(drivetrain::isAtBall),
                     new InstantCommand(() -> drivetrain.setWheelVolts(0.0, 0.0))
                 )
             ),

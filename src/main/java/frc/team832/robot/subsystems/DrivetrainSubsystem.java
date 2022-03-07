@@ -4,6 +4,8 @@
 
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.motorcontrol.NeutralMode;
@@ -87,8 +89,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.periodic();
   }
 
-  public void getPose() {
-    m_drivetrain.getPose();
+  public Pose2d getPose() {
+    return m_drivetrain.getPose();
+  }
+
+  public boolean isAtBall() {
+    return m_drivetrain.getPose() == new Pose2d(0.0, 1.5, new Rotation2d(0));
   }
 
   public void stop() {
