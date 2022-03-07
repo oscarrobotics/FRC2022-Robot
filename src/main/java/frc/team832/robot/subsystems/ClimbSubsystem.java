@@ -19,7 +19,6 @@ public class ClimbSubsystem extends SubsystemBase{
     private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
     private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
 
-
     //Instantiate PID Controller and FeedFoward 
     private PIDController climbPID = new PIDController(ClimbConstants.KP, 0, ClimbConstants.KD);
     private final ElevatorFeedforward feedforward = ClimbConstants.FEEDFORWARD;
