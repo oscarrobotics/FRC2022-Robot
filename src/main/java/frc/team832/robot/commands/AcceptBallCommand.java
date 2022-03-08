@@ -23,8 +23,11 @@ public class AcceptBallCommand extends CommandBase{
     
     @Override
     public void initialize() {
+        //extends intake outwards
         intake.extendIntake();
+        //spins intake to accept the ball into the machine
         intake.setPower(IntakeConstants.INTAKE_POWER);
+        //spins internal conveyors to contain the ball
         shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER);
         conveyer.setPower(ConveyerConstants.CONVEYER_QUEUING_POWER);
     }
@@ -36,6 +39,7 @@ public class AcceptBallCommand extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+        //stops spinning
         intake.retractIntake();
         intake.setPower(0);
         shooter.setPower(0);

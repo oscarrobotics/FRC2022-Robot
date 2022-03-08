@@ -69,8 +69,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      m_imu, POWER_TRAIN, WHEELBASE_INCHES);
+      null, null, m_imu, POWER_TRAIN, WHEELBASE_INCHES);
   }
+
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
     m_drivetrain.getDiffDrive().curvatureDrive(xSpeed, zRotation, turnInPlace, inputScalingPow);

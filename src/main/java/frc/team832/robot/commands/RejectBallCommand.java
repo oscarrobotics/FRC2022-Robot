@@ -16,6 +16,7 @@ public class RejectBallCommand extends CommandBase {
         addRequirements(intake, conveyer);
     }
     
+    //When the wrong ball is intaken, the intake and conveyer spin the opposite way to spit it out
     @Override
     public void initialize() {
         intake.extendIntake();

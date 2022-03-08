@@ -10,8 +10,10 @@ import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.robot.Constants.ConveyerConstants;
 
 public class ConveyerSubsystem extends SubsystemBase{
+    /**physical devices */
     private final CANTalonFX conveyerMotor = new CANTalonFX(ConveyerConstants.CONVEYER_MOTOR_TALON_ID);
 
+    //assigns P value of PID + feed forward to conveyOr
     private PIDController conveyerPID = new PIDController(ConveyerConstants.KP, 0, 0);
     private final SimpleMotorFeedforward feedforward = ConveyerConstants.FEEDFORWARD;
     
@@ -56,6 +58,7 @@ public class ConveyerSubsystem extends SubsystemBase{
     }
     
     private void runConveyerPID() {
+        //Determines how much output must be given to reach RPM target
         conveyerActualRPM = conveyerMotor.getSensorVelocity();
         
         if (conveyerTargetRPM != 0) {
@@ -66,6 +69,7 @@ public class ConveyerSubsystem extends SubsystemBase{
             conveyerPIDEffort = 0;
         }
       
+        //adds FF and PID together for accurate energy output
         conveyerMotor.set(conveyerPIDEffort + conveyerFFEffort);
     }
 

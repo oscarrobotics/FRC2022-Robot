@@ -10,6 +10,7 @@ public class PivotClimbCommand extends CommandBase{
         addRequirements(climb);
     }
    
+    //climb system angles itself properly as to reach the next bar
     @Override
     public void initialize() {
         climb.pivotClimb();

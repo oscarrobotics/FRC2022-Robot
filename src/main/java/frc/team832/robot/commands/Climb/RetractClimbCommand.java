@@ -10,6 +10,7 @@ public class RetractClimbCommand extends CommandBase{
         addRequirements(climb);
     }
    
+    //climb system brings arm down to latch onto the next bar
     @Override
     public void initialize() {
         climb.retractClimb();

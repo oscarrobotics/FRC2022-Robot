@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ShooterSubsystem extends SubsystemBase{
+    /**physical object */
     private final CANTalonFX shooterMotor = new CANTalonFX(SHOOTER_MOTOR_TALON_ID);
 
+    /**adds PID + FF constants */
     private PIDController shooterPID = new PIDController(ShooterConstants.KP, 0, 0);
     private final SimpleMotorFeedforward feedforward = ShooterConstants.FEEDFORWARD;
     
@@ -60,6 +62,10 @@ public class ShooterSubsystem extends SubsystemBase{
     } 
     
     private void runShooterPID() {
+        /**Determines how much motor output must be given to reach RPM target
+         * If target RPM is not equal to 0, calculate the deviation and add output
+         * voltage until it reaches the target
+        */
         shooterActualRPM = shooterMotor.getSensorVelocity();
         
         if (shooterTargetRPM != 0) {

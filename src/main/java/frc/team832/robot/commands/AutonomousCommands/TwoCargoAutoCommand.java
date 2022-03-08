@@ -38,7 +38,7 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
                 new WaitCommand(3),
                 new InstantCommand(() -> drivetrain.setWheelVolts(0.0, 0.0))
             ), 
-
+            //shoots balls into the goal
             new ShootBallCommand(conveyer, shooter)
         );
     }

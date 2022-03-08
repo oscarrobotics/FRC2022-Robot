@@ -63,6 +63,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
     
     private void runIntakePID(){
+        //uses motor velocity to determine amnt of outpt needed to reach target
         intakeActualRPM = intakeMotor.getSensorVelocity();
         
         if (intakeTargetRPM != 0) {
@@ -84,6 +85,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.set(power);
     }
 
+    //determines methods for intake cmds
     public void extendIntake() {
         intakePistons.set(true);
     }

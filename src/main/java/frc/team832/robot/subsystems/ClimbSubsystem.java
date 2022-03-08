@@ -15,23 +15,25 @@ import static frc.team832.robot.Constants.ClimbConstants.*;
 import static frc.team832.robot.Constants.PneumaticsValues.*;
 
 public class ClimbSubsystem extends SubsystemBase{
+    /**physical devices */
     private final CANTalonFX climbMotorLeft = new CANTalonFX(CLIMB_LEFT_TALON_ID);
     private final CANTalonFX climbMotorRight = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
     private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
     private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
 
+    /*assigns PID constants + Feed Forward to the climb*/
     private PIDController climbPID = new PIDController(ClimbConstants.KP, 0, ClimbConstants.KD);
     private final ElevatorFeedforward feedforward = ClimbConstants.FEEDFORWARD;
-    
     public double climbTargetPos, climbActualPos, climbPIDEffort, climbFFEffort;
 
+    //visualizes values in the Network Table
     private final NetworkTableEntry dash_climbTargetPos, dash_climbActualPos, dash_climbFFEffort, dash_climbPIDEffort;
     
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
         DashboardManager.addTab(this);
         SmartDashboard.putNumber("Set Climb Target", 0.0);
-
+    
         climbMotorLeft.limitInputCurrent(CURRENT_LIMIT);
         climbMotorRight.limitInputCurrent(CURRENT_LIMIT);
 
@@ -65,6 +67,10 @@ public class ClimbSubsystem extends SubsystemBase{
         climbTargetPos = SmartDashboard.getNumber("Set Climb Target", 0.0);
     }
 
+    /*  FFE = motor's velocity / 12 volts
+        PID = motor's current position compared to its desired position
+          cmnd Adds the FFE and PID effort together for accurate motor effort 
+    */
     public void runClimbPID() {
         climbFFEffort = feedforward.calculate(climbMotorRight.getSensorVelocity()) / 12.0;
         climbPIDEffort = climbPID.calculate(climbMotorRight.getSensorPosition(), climbTargetPos);
@@ -75,7 +81,7 @@ public class ClimbSubsystem extends SubsystemBase{
         climbTargetPos = targetPos;
     }
 
-
+    /**all methods pertaining to Climb cmnds**/
     public void extendClimb() {
         climbMotorLeft.setTargetPosition(EXTEND_TARGET);;
         climbMotorRight.setTargetPosition(EXTEND_TARGET);;

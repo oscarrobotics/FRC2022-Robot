@@ -9,7 +9,8 @@ public class ExtendClimbCommand extends CommandBase{
        this.climb = climb;
         addRequirements(climb);
     }
-   
+
+   //Climb system extends arm outwards
     @Override
     public void initialize() {
         climb.extendClimb();
