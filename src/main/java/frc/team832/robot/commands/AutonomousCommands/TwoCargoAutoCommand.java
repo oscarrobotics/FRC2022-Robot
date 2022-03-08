@@ -35,7 +35,7 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
             // go forwards then stop
             new SequentialCommandGroup(
                 new InstantCommand(() -> drivetrain.setWheelVolts(.2, -.2)),
-                new WaitCommand(3),
+                new WaitUntilCommand(drivetrain::isAtGoal),
                 new InstantCommand(() -> drivetrain.setWheelVolts(0.0, 0.0))
             ), 
             //shoots balls into the goal

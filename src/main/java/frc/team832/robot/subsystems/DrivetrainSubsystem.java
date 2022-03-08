@@ -69,7 +69,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      null, null, m_imu, POWER_TRAIN, WHEELBASE_INCHES);
+      LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, m_imu, POWER_TRAIN, WHEELBASE_INCHES);
   }
 
 
@@ -95,7 +95,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public boolean isAtBall() {
-    return m_drivetrain.getPose() == new Pose2d(0.0, 1.5, new Rotation2d(0));
+    return m_drivetrain.getPose() == new Pose2d(0.0, -1.5, new Rotation2d(0));
+  }
+
+  public boolean isAtGoal() {
+    return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
   }
 
   public void stop() {
