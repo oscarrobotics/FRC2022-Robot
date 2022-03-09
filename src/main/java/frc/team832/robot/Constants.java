@@ -50,9 +50,10 @@ public final class Constants {
 
 		/** Mechanical Characteristics **/
 		public static final double INTAKE_POWER = -0.5;
-		public static final double OUTTAKE_SPEED = 0.4;
+		public static final double OUTTAKE_POWER = 0.4;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final double INTAKE_REDUCTION = 0.0 / 0.0; 
 	}
 
 	public static final class ConveyerConstants {
@@ -63,11 +64,12 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double CONVEYER_QUEUING_POWER = 0;
-		public static final double CONVEYER_FEEDING_POWER = 0;
-		public static final double CONVEYER_OUTTAKE_POWER = -0.3;
+		public static final double QUEUING_POWER = .3;
+		public static final double FEEDING_POWER = .3;
+		public static final double OUTTAKE_POWER = -0.3;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final double CONVEYER_REDUCTION = 0.0 / 0.0; 
 	}
 
 	public static final class ShooterConstants {
@@ -78,10 +80,11 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double SHOOTER_POWER = 0;
-		public static final double SHOOTER_QUEUING_POWER = 0;
+		public static final double SHOOTER_POWER = .4;
+		public static final double SHOOTER_QUEUING_POWER = -.2;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final double SHOOTER_REDUCTION = 0.0 / 0.0; 
 	}
 
 	public static final class ClimbConstants {
@@ -95,6 +98,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final int EXTEND_TARGET = 0;
 		public static final int RETRACT_TARGET = 0;
+		public static final int MAX_EXTEND = 0;
+		public static final int MIN_EXTEND = 0;
 		public static final double KP = 0;
 		public static final double KD = 0;
 		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(0, 0, 1 / Motor.kFalcon500.kv);

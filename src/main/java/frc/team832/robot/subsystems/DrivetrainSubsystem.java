@@ -103,7 +103,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
   }
 
-  public void stop() {
+  public void idleDrivetrain() {
     m_leftMasterMotor.set(0);
     m_rightMasterMotor.set(0);
   }

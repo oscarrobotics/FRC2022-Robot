@@ -19,7 +19,7 @@ public class OneCargoAutoCommand extends SequentialCommandGroup {
             new InstantCommand(() -> drivetrain.setWheelVolts(0.0, 0.0)),
             //spins shooter and conveyer to contain ball
             new InstantCommand(() -> shooter.setPower(Constants.ShooterConstants.SHOOTER_POWER)),
-            new InstantCommand(() -> conveyer.setPower(Constants.ConveyerConstants.CONVEYER_FEEDING_POWER)),
+            new InstantCommand(() -> conveyer.setPower(Constants.ConveyerConstants.FEEDING_POWER)),
             new WaitCommand(.75),
             //stops spinning
             new InstantCommand(() -> shooter.setPower(0)),

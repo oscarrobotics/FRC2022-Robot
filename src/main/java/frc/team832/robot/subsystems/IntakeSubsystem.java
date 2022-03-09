@@ -85,7 +85,6 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.set(power);
     }
 
-    //determines methods for intake cmds
     public void extendIntake() {
         intakePistons.set(true);
     }
@@ -95,6 +94,11 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void idleIntake() {
+        retractIntake();
         intakeMotor.set(0);
+    }
+
+    public void getShit() {
+        
     }
 }

@@ -29,7 +29,7 @@ public class AcceptBallCommand extends CommandBase{
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball
         shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER);
-        conveyer.setPower(ConveyerConstants.CONVEYER_QUEUING_POWER);
+        conveyer.setPower(ConveyerConstants.QUEUING_POWER);
     }
 
     // @Override
@@ -40,9 +40,8 @@ public class AcceptBallCommand extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         //stops spinning
-        intake.retractIntake();
-        intake.setPower(0);
-        shooter.setPower(0);
-        conveyer.setPower(0);
+        intake.idleIntake();
+        shooter.idleShooter();
+        conveyer.idleConveyer();
     }
 }

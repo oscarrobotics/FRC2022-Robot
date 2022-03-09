@@ -1,7 +1,8 @@
 package frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team832.robot.Constants;
+import frc.team832.robot.Constants.ConveyerConstants;
+import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 
@@ -16,12 +17,12 @@ public class RejectBallCommand extends CommandBase {
         addRequirements(intake, conveyer);
     }
     
-    //When the wrong ball is intaken, the intake and conveyer spin the opposite way to spit it out
+    //When the wrong ball is intaken, the intake and conveyer spin the opposite way to spit it out between them
     @Override
     public void initialize() {
         intake.extendIntake();
-        intake.setPower(Constants.IntakeConstants.OUTTAKE_SPEED);
-        conveyer.setPower(Constants.ConveyerConstants.CONVEYER_OUTTAKE_POWER);
+        intake.setPower(IntakeConstants.INTAKE_POWER);
+        conveyer.setPower(ConveyerConstants.OUTTAKE_POWER);
     }
 
     // @Override
@@ -31,7 +32,7 @@ public class RejectBallCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.retractIntake();
-        intake.setPower(0);
+        intake.idleIntake();
+        conveyer.idleConveyer();
     }
 }

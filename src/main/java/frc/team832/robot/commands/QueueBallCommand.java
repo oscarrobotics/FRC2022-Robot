@@ -12,15 +12,14 @@ public class QueueBallCommand extends SequentialCommandGroup {
     public QueueBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(conveyer, shooter);
         addCommands(
-
             //spins shooter and conveyor in opposite directions to hold the ball in place
             new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER)),
-            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.CONVEYER_QUEUING_POWER)),
+            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.QUEUING_POWER)),
             
             //queues ball for a given amount of seconds before the motors turn off
-            new WaitCommand(5),
-            new InstantCommand (() -> conveyer.setPower(0)),
-            new InstantCommand (() -> shooter.setPower(0))
+            new WaitCommand(1),
+            new InstantCommand (() -> conveyer.idleConveyer()),
+            new InstantCommand (() -> shooter.idleShooter())
         );
     }
 }
