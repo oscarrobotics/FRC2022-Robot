@@ -94,10 +94,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return m_drivetrain.getPose();
   }
 
+  // USED FOR BASIC 2 BALL AUTO
   public boolean isAtBall() {
     return m_drivetrain.getPose() == new Pose2d(0.0, -1.5, new Rotation2d(0));
   }
-
+  // USED FOR BASIC 2 BALL AUTO
   public boolean isAtGoal() {
     return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
   }

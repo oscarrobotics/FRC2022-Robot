@@ -13,7 +13,7 @@ public class OneCargoAutoCommand extends SequentialCommandGroup {
     public OneCargoAutoCommand(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(drivetrain, intake, conveyer, shooter);
         addCommands(
-            //moves drivetrain backwards to intake ball
+            // moves dt forward to shoot
             new InstantCommand(() -> drivetrain.setWheelVolts(.5, -.5)),
             new WaitCommand(0.75),
             new InstantCommand(() -> drivetrain.setWheelVolts(0.0, 0.0)),

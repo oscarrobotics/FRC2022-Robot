@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -15,6 +17,9 @@ import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.RejectBallCommand;
 import frc.team832.robot.commands.ShootBallCommand;
+import frc.team832.robot.commands.AutonomousCommands.BasicAutoCommand;
+import frc.team832.robot.commands.AutonomousCommands.OneCargoAutoCommand;
+import frc.team832.robot.commands.AutonomousCommands.TwoCargoAutoCommand;
 import frc.team832.robot.commands.Climb.ExtendClimbCommand;
 import frc.team832.robot.commands.Climb.PivotClimbCommand;
 import frc.team832.robot.commands.Climb.RetractClimbCommand;
@@ -37,7 +42,7 @@ public class RobotContainer {
   // public final Compressor compressor = new Compressor(Constants.RPH_CAN_ID, PneumaticsModuleType.REVPH);
 
   /** Subsystems **/
-  // public final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
   public final ShooterSubsystem shooter = new ShooterSubsystem();
@@ -47,22 +52,31 @@ public class RobotContainer {
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
   // public final StratComInterface stratComInterface = new StratComInterface(1);
 
+  /** Sendable Chooser object **/
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
 
-    // drivetrainSubsystem.setDefaultCommand(new RunCommand(() -> {
+    autoChooser.setDefaultOption("0 Cargo Auto", new BasicAutoCommand(drivetrain));
+    autoChooser.addOption("1 Cargo Auto", new OneCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    autoChooser.addOption("2 Cargo Auto", new TwoCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    SmartDashboard.putData(autoChooser);
+
+    // drivetrain.setDefaultCommand(new RunCommand(() -> {
     //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
-    //   drivetrainSubsystem.teleopArcadeDrive(
+    //   drivetrain.teleopArcadeDrive(
     //     m_xboxCtrl.getLeftY()*.5,
     //     -m_xboxCtrl.getRightX()*.5,
     //     1.2);
-    // }, drivetrainSubsystem));
+    // }, drivetrain));
 
     configOperatorCommands();
   }
 
   public void configOperatorCommands() {
+    // Testing commands
     m_xboxCtrl.a()
       .whileHeld(new AcceptBallCommand(intake, shooter, conveyer))
       .whileHeld(new StartEndCommand(
@@ -74,6 +88,7 @@ public class RobotContainer {
       }, conveyer));
 
     m_xboxCtrl.b().whileHeld(new RejectBallCommand(intake, conveyer));
+
     // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
     // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
@@ -94,7 +109,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new PrintCommand("Autonomous!");
+    // Returns command selected by SendableChooser autoCommand to run in autonomous
+    return autoChooser.getSelected();
   }
 }
