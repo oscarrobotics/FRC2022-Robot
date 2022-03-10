@@ -19,6 +19,7 @@ import frc.team832.robot.commands.RejectBallCommand;
 import frc.team832.robot.commands.ShootBallCommand;
 import frc.team832.robot.commands.AutonomousCommands.BasicAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.OneCargoAutoCommand;
+import frc.team832.robot.commands.AutonomousCommands.ThreeCargoAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.TwoCargoAutoCommand;
 import frc.team832.robot.commands.Climb.ExtendClimbCommand;
 import frc.team832.robot.commands.Climb.PivotClimbCommand;
@@ -62,6 +63,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("0 Cargo Auto", new BasicAutoCommand(drivetrain));
     autoChooser.addOption("1 Cargo Auto", new OneCargoAutoCommand(drivetrain, intake, conveyer, shooter));
     autoChooser.addOption("2 Cargo Auto", new TwoCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    // autoChooser.addOption("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
     SmartDashboard.putData(autoChooser);
 
     // drivetrain.setDefaultCommand(new RunCommand(() -> {

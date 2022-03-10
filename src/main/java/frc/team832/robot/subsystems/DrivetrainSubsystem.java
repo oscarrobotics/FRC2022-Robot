@@ -108,7 +108,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightMasterMotor.set(0);
   }
   
-  public void setWheelVolts(Double leftVolts, Double rightVolts) {
+  public void setWheelPower(Double leftVolts, Double rightVolts) {
     m_leftMasterMotor.set(leftVolts);
     m_rightMasterMotor.set(rightVolts);
 }
