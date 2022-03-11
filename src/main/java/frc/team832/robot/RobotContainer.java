@@ -88,7 +88,7 @@ public class RobotContainer {
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
+    stratComInterface.arcadeBlackLeft().whenPressed(new ShootBallCommand(conveyer, shooter));
 
     stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
         climb.setLeftPow(-.35);
