@@ -120,10 +120,12 @@ public class RobotContainer {
     // TEST CMDS
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     // m_xboxCtrl.leftBumper().whenPressed(new ShootBallCommand(conveyer, shooter));
+    
     // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
     // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
     // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-35);}, () -> {climb.setRightPow(0);}, climb)); // E
     // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
+    
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
   public void configTestingCommands() {
