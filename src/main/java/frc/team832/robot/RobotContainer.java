@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.QueueBallCommand;
@@ -17,6 +19,8 @@ import frc.team832.robot.commands.ShootBallCommand;
 import frc.team832.robot.commands.AutonomousCommands.BasicAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.OneCargoAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.TwoCargoAutoCommand;
+import frc.team832.robot.commands.Climb.PivotClimbCommand;
+import frc.team832.robot.commands.Climb.StraightenClimbCommand;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -43,7 +47,7 @@ public class RobotContainer {
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
-  // public final StratComInterface stratComInterface = new StratComInterface(1);
+  public final StratComInterface stratComInterface = new StratComInterface(1);
 
   /** Sendable Chooser object **/
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -58,46 +62,70 @@ public class RobotContainer {
     // autoChooser.addOption("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
     SmartDashboard.putData(autoChooser);
 
+    drivetrain.setDefaultCommand(new RunCommand(() -> {
+      // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
+      drivetrain.teleopTankDrive(
+        -m_xboxCtrl.getRightY() * 1,
+        -m_xboxCtrl.getLeftY() * 1,
+        2);
+    }, drivetrain));
+
     // drivetrain.setDefaultCommand(new RunCommand(() -> {
-    //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
-    //   drivetrain.teleopArcadeDrive(
-    //     m_xboxCtrl.getLeftY()*.5,
-    //     -m_xboxCtrl.getRightX()*.5,
-    //     1.2);
-    // }, drivetrain));
+    //   drivetrain.teleopTankDrive(
+    //     m_xboxCtrl.getLeftY(),
+    //     m_xboxCtrl.getRightY(), 
+    //     1);
+    //   },
+    // drivetrain));
 
     configOperatorCommands();
   }
 
   public void configOperatorCommands() {
-    // Testing commands
+    // BUTTON BINDINGS
+    // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     
-    m_xboxCtrl.a()
-    .whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-          
-    m_xboxCtrl.x().whenHeld(new ShootBallCommand(conveyer, shooter));
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
+    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
-    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); //  extend 
-    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  //retract
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
 
-    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // extend
-    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // retract   
+    stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
+        climb.setLeftPow(-.35);
+        climb.setRightPow(-.35);
+      }, 
+      () -> {
+        climb.setLeftPow(0);
+        climb.setRightPow(0);
+      }, climb));
 
+      stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
+        climb.setLeftPow(.65);
+        climb.setRightPow(.65);
+      }, 
+      () -> {
+        climb.setLeftPow(0);
+        climb.setRightPow(0);
+      }, climb));
 
+      stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
+      stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
 
-
-    
-    // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
-    // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
-
-    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter));
-
+    // auto climb
     // stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
     // stratComInterface.sc4().whenHeld(new RetractClimbCommand(climb));
     // stratComInterface.sc2().whenHeld(new PivotClimbCommand(climb));
     // stratComInterface.sc5().whenHeld(new StraightenClimbCommand(climb));
-  }
 
+    // TEST CMDS
+    // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
+    // m_xboxCtrl.leftBumper().whenPressed(new ShootBallCommand(conveyer, shooter));
+    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
+    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
+    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-35);}, () -> {climb.setRightPow(0);}, climb)); // E
+    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
+    // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
+  }
   public void configTestingCommands() {
   }
 

@@ -13,7 +13,7 @@ public class QueueBallCommand extends SequentialCommandGroup {
         addCommands(
             //conveyer spins opposite way for x seconds to feed the ball into the shooter
             new InstantCommand(() -> conveyer.setPower(-ConveyerConstants.QUEUING_POWER)),
-            new WaitCommand(.1),
+            new WaitCommand(.3),
             new InstantCommand(() -> conveyer.idleConveyer())
 
 

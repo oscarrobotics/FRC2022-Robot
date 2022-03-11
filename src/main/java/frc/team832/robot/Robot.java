@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -91,6 +92,9 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -103,7 +107,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    // CommandScheduler.getInstance().cancelAll();
 
   }
 

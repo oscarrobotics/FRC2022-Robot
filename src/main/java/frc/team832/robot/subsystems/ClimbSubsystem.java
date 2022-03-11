@@ -28,7 +28,7 @@ public class ClimbSubsystem extends SubsystemBase{
     public double climbTargetPos, climbActualPos, climbPIDEffort, climbFFEffort;
 
     //visualizes values in the Network Table
-    private final NetworkTableEntry dash_climbTargetPos, dash_climbActualPos, dash_climbFFEffort, dash_climbPIDEffort;
+    private final NetworkTableEntry dash_climbTargetPos, dash_climbActualPos;// dash_climbFFEffortRight, dash_climbPIDEffortRight, dash_climbFFEffortLeft, dash_climbPIDEffortLeft;
     
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
@@ -45,8 +45,10 @@ public class ClimbSubsystem extends SubsystemBase{
 
         dash_climbTargetPos = DashboardManager.addTabItem(this, "Climb Target Pos", 0.0);
         dash_climbActualPos = DashboardManager.addTabItem(this, "Climb Actual Pos", 0.0);
-        dash_climbPIDEffort = DashboardManager.addTabItem(this, "Climb PID Effort", 0.0);
-        dash_climbFFEffort = DashboardManager.addTabItem(this,  "Climb FF Effort", 0.0);
+        // dash_climbPIDEffortRight = DashboardManager.addTabItem(this, "Climb PID Effort", 0.0);
+        // dash_climbFFEffortRight = DashboardManager.addTabItem(this,  "Climb FF Effort", 0.0);
+        // dash_climbPIDEffortLeft = DashboardManager.addTabItem(this, "Climb PID Effort", 0.0);
+        // dash_climbFFEffortLeft = DashboardManager.addTabItem(this,  "Climb FF Effort", 0.0);
     }
 
     @Override
@@ -57,13 +59,16 @@ public class ClimbSubsystem extends SubsystemBase{
 
     public void updateControlLoops() {
         // runClimbPID();
+        setTargetPosition();
     }
 
     private void updateDashboardData() {
+        // ADD PID FOR LEFT SIDE
+
         dash_climbTargetPos.setDouble(climbTargetPos);
         dash_climbActualPos.setDouble(climbMotorRight.getSensorPosition());
-        dash_climbPIDEffort.setDouble(climbPIDEffort);
-        dash_climbFFEffort.setDouble(climbFFEffort);
+        // dash_climbPIDEffortRight.setDouble(climbPIDEffort);
+        // dash_climbFFEffortRight.setDouble(climbFFEffort);
 
         climbTargetPos = SmartDashboard.getNumber("Set Climb Target", 0.0);
     }
@@ -73,15 +78,12 @@ public class ClimbSubsystem extends SubsystemBase{
           cmnd Adds the FFE and PID effort together for accurate motor effort 
     */
     public void runClimbPID() {
+        // ADD PID FOR LEFT SIDE
         climbFFEffort = feedforward.calculate(climbMotorRight.getSensorVelocity()) / 12.0;
         climbPIDEffort = climbPID.calculate(climbMotorRight.getSensorPosition(), climbTargetPos);
         climbMotorRight.set(climbPIDEffort + climbFFEffort);
     }
     
-    public void setTargetPosition(double targetPos) {
-        climbTargetPos = targetPos;
-    }
-
     public void setPower(double leftPow, double rightPow) { 
         climbMotorLeft.set(leftPow);  
         climbMotorRight.set(rightPow);
@@ -93,6 +95,17 @@ public class ClimbSubsystem extends SubsystemBase{
 
     public void setRightPow(double rightPow) { 
         climbMotorRight.set(rightPow);  
+    }
+
+    public void setTargetPosition() {
+        if (climbTargetPos > ClimbConstants.MAX_EXTEND_POS) {
+            climbTargetPos = ClimbConstants.MAX_EXTEND_POS;
+        } else if (climbTargetPos < ClimbConstants.MIN_EXTEND_POS) {
+            climbTargetPos = ClimbConstants.MIN_EXTEND_POS;
+        }
+
+        climbMotorLeft.setTargetPosition(climbTargetPos);
+        climbMotorRight.setTargetPosition(climbTargetPos);
     }
 
     /**all methods pertaining to Climb cmnds**/
@@ -114,5 +127,10 @@ public class ClimbSubsystem extends SubsystemBase{
     public void straightenClimb() {
         leftClimbPiston.set(false);
         rightClimbPiston.set(false);
+    }
+
+    public void stopClimb() {
+        climbMotorLeft.set(0);
+        climbMotorRight.set(0);
     }
 }

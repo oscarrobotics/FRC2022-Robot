@@ -17,7 +17,7 @@ public class ShootBallCommand extends SequentialCommandGroup {
             new WaitCommand (.4),
             //conveyer returns to its correct spinning direction
             new InstantCommand(() -> conveyer.setPower(ConveyerConstants.FEEDING_POWER)),
-            new WaitCommand(1),
+            new WaitCommand(1.5),
 
             //both end after the ball is shot out
             new InstantCommand (() -> conveyer.idleConveyer()),
