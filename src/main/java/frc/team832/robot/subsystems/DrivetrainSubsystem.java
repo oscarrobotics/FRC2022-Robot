@@ -6,8 +6,13 @@ package frc.team832.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDrivetrain;
+import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.driverstation.dashboard.DashboardWidget;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 
@@ -23,9 +28,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
+  // private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
 
   private final OscarDrivetrain m_drivetrain;
+
+  private final NetworkTableEntry m_db_leftMeters, m_db_rightMeters;
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
@@ -42,7 +49,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
     }
 
-    m_imu.calibrate();
+    // m_imu.calibrate();
+
 
     // set current limits
     m_leftMasterMotor.limitInputCurrent(CURRENT_LIMIT);
@@ -66,10 +74,48 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // ensure right slave follows master inversion
     m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
 
+    var m_imu = new Gyro() {
+
+      @Override
+      public void close() throws Exception {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void calibrate() {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void reset() {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public double getAngle() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+
+      @Override
+      public double getRate() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+      
+    };
+
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
       LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, m_imu, POWER_TRAIN, WHEELBASE_INCHES);
+
+    DashboardManager.addTab(this);
+    m_db_leftMeters = DashboardManager.addTabItem(this, "Left Meters", 0.0, DashboardWidget.TextView);
+    m_db_rightMeters = DashboardManager.addTabItem(this, "Right Meters", 0.0, DashboardWidget.TextView);
   }
 
 
@@ -88,10 +134,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
+    
+    m_db_leftMeters.setDouble(getLeftMeters());
+    m_db_rightMeters.setDouble(getRightMeters());
   }
 
   public Pose2d getPose() {
     return m_drivetrain.getPose();
+  }
+
+  public double getLeftMeters() {
+    return POWER_TRAIN.calculateWheelDistanceMeters(m_leftMasterMotor.getSensorPosition());
+  }
+
+  public double getRightMeters() {
+    return POWER_TRAIN.calculateWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
   }
 
   // USED FOR BASIC 2 BALL AUTO
@@ -111,5 +168,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void setWheelPower(Double leftVolts, Double rightVolts) {
     m_leftMasterMotor.set(leftVolts);
     m_rightMasterMotor.set(rightVolts);
-}
+  }
+
+  public void setNeutralMode(NeutralMode mode) {
+    m_leftMasterMotor.setNeutralMode(mode);
+    m_leftSlaveMotor.setNeutralMode(mode);
+    m_rightMasterMotor.setNeutralMode(mode);
+    m_rightSlaveMotor.setNeutralMode(mode);
+  }
 }

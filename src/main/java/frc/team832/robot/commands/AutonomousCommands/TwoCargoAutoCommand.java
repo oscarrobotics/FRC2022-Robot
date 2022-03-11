@@ -20,25 +20,38 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
     public TwoCargoAutoCommand(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(drivetrain, intake, conveyer, shooter);
         addCommands(
-            // starts intaking and drives backwards at the same time
+            // moves dt backward to shoot
+            new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),
+            new WaitUntilCommand(() -> drivetrain.getLeftMeters() <= -1),
+            new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
+
+            //spins shooter and conveyer to contain ball
+            new ShootBallCommand(conveyer, shooter),
+
+            // starts intaking and drives forwards at the same time
             new ParallelRaceGroup(
                 // intake ball
                 new AcceptBallCommand(intake, shooter, conveyer),
                 // go backwards
                 new SequentialCommandGroup(
-                    new InstantCommand(() -> drivetrain.setWheelPower(-.2, .2)),
-                    new WaitUntilCommand(drivetrain::isAtBall),
+                    new InstantCommand(() -> drivetrain.setWheelPower(.2, .2)),
+                    new WaitUntilCommand(() -> drivetrain.getLeftMeters() >= 1.5),
                     new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0))
                 )
             ),
 
-            // go forwards then stop
-            new InstantCommand(() -> drivetrain.setWheelPower(.2, -.2)),
-            new WaitUntilCommand(drivetrain::isAtGoal),
-            new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
+             // moves dt backward to shoot
+             new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),
+             new WaitUntilCommand(() -> drivetrain.getLeftMeters() <= -1),
+             new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
+ 
+             //spins shooter and conveyer to contain ball
+             new ShootBallCommand(conveyer, shooter),
 
-            //shoots balls into the goal
-            new ShootBallCommand(conveyer, shooter)
+            // go forwards to clear tarmac
+            new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),
+            new WaitUntilCommand(() -> drivetrain.getLeftMeters() >= 2),
+            new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0))
         );
     }
 }

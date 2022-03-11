@@ -1,6 +1,7 @@
 package frc.team832.robot.subsystems;
 
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.robot.Constants.ShooterConstants;
 
@@ -30,7 +31,9 @@ public class ShooterSubsystem extends SubsystemBase{
         DashboardManager.addTab(this);
         SmartDashboard.putNumber("Set Shooter RPM", 0.0);
 
+        shooterMotor.setNeutralMode(NeutralMode.kCoast);
         shooterMotor.limitInputCurrent(CURRENT_LIMIT);
+        shooterMotor.setInverted(true);
 
         dash_shooterTargetRPM = DashboardManager.addTabItem(this, "Shooter Target RPM", 0.0);
         dash_shooterActualRPM = DashboardManager.addTabItem(this, "Shooter Actual RPM", 0.0);
@@ -40,16 +43,13 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("shooterActualRPM", shooterMotor.getSensorVelocity());
-        // SmartDashboard.putNumber("shooterTargetRPM", shooterTargetRPM);
-        
+    public void periodic() {      
         updateControlLoops();
         updateDashboardData();
     }
 
     public void updateControlLoops() {
-        runShooterPID();
+        // runShooterPID();
     }
 
     private void updateDashboardData() {

@@ -2,8 +2,10 @@ package frc.team832.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -21,11 +23,11 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
-  // private final Compressor compressor = m_robotContainer.compressor;
-  // private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
+  private final Compressor compressor = m_robotContainer.compressor;
+  private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrain;
   private final IntakeSubsystem intake = m_robotContainer.intake;
   private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
-  // private final ShooterSubsystem shooter = m_robotContainer.shooter;
+  private final ShooterSubsystem shooter = m_robotContainer.shooter;
   // private final ClimbSubsystem climber = m_robotContainer.climber;
 
   /**
@@ -54,12 +56,15 @@ public class Robot extends TimedRobot {
     intake.periodic();
     conveyer.periodic();
     // shooter.periodic();
+
+    SmartDashboard.putNumber("Storage PSI", compressor.getPressure());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
     // drivetrain.stop();
+    drivetrain.setNeutralMode(NeutralMode.kCoast);
   }
 
   @Override
@@ -105,6 +110,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_robotContainer.configTestingCommands();
+    // m_robotContainer.configTestingCommands();
   }
 }

@@ -12,12 +12,9 @@ public class ShootBallCommand extends SequentialCommandGroup {
     public ShootBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(conveyer, shooter);
         addCommands(
-            //conveyer spins opposite way for x seconds to feed the ball into the shooter
-            new InstantCommand (() -> conveyer.setPower(-ConveyerConstants.QUEUING_POWER)),
-            new WaitCommand(.25),
             //shooter spins to shoot the ball out for x seconds
             new InstantCommand (() -> shooter.setPower(ShooterConstants.SHOOTER_POWER)),
-            new WaitCommand (.5),
+            new WaitCommand (.4),
             //conveyer returns to its correct spinning direction
             new InstantCommand(() -> conveyer.setPower(ConveyerConstants.FEEDING_POWER)),
             new WaitCommand(1),

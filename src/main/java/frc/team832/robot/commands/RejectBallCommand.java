@@ -25,10 +25,10 @@ public class RejectBallCommand extends CommandBase {
         conveyer.setPower(ConveyerConstants.OUTTAKE_POWER);
     }
 
-    // @Override
-    // public boolean isFinished() {
-    //     return true;
-    // }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
     @Override
     public void end(boolean interrupted) {

@@ -6,20 +6,25 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 import frc.team832.robot.Constants.ConveyerConstants;
-import frc.team832.robot.Constants.ShooterConstants;
 
 public class QueueBallCommand extends SequentialCommandGroup {
     public QueueBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(conveyer, shooter);
         addCommands(
+            //conveyer spins opposite way for x seconds to feed the ball into the shooter
+            new InstantCommand(() -> conveyer.setPower(-ConveyerConstants.QUEUING_POWER)),
+            new WaitCommand(.1),
+            new InstantCommand(() -> conveyer.idleConveyer())
+
+
             //spins shooter and conveyor in opposite directions to hold the ball in place
-            new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER)),
-            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.QUEUING_POWER)),
+            // new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER)),
+            // new InstantCommand(() -> conveyer.setPower(ConveyerConstants.QUEUING_POWER)),
             
-            //queues ball for a given amount of seconds before the motors turn off
-            new WaitCommand(1),
-            new InstantCommand (() -> conveyer.idleConveyer()),
-            new InstantCommand (() -> shooter.idleShooter())
+            // //queues ball for a given amount of seconds before the motors turn off
+            // new WaitCommand(1),
+            // new InstantCommand (() -> conveyer.idleConveyer()),
+            // new InstantCommand (() -> shooter.idleShooter())
         );
     }
 }

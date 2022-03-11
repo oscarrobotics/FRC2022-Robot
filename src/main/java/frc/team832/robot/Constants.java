@@ -49,8 +49,8 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 25;
 
 		/** Mechanical Characteristics **/
-		public static final double INTAKE_POWER = -0.5;
-		public static final double OUTTAKE_POWER = 0.4;
+		public static final double INTAKE_POWER = 0.5;
+		public static final double OUTTAKE_POWER = -0.4;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 		public static final double INTAKE_REDUCTION = 0.0 / 0.0; 
@@ -80,7 +80,7 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double SHOOTER_POWER = .4;
+		public static final double SHOOTER_POWER = .3;
 		public static final double SHOOTER_QUEUING_POWER = -.2;
 		public static final double KP = 0;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
@@ -110,7 +110,7 @@ public final class Constants {
 
 		/** Solenoid IDs*/
         public static final int INTAKE_SOLENOID_ID = 0;
-		public static final int LEFT_CLIMB_SOLENOID_ID = 1;
-		public static final int RIGHT_CLIMB_SOLENOID_ID = 2;
+		public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
+		public static final int LEFT_CLIMB_SOLENOID_ID = 3;
     }
 }

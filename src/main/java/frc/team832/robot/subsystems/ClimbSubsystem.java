@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.robot.Constants.ClimbConstants;
 
@@ -37,7 +38,10 @@ public class ClimbSubsystem extends SubsystemBase{
         climbMotorLeft.limitInputCurrent(CURRENT_LIMIT);
         climbMotorRight.limitInputCurrent(CURRENT_LIMIT);
 
-        climbMotorLeft.follow(climbMotorRight);
+        climbMotorLeft.setNeutralMode(NeutralMode.kBrake);
+        climbMotorRight.setNeutralMode(NeutralMode.kBrake);
+
+        climbMotorLeft.setInverted(true);
 
         dash_climbTargetPos = DashboardManager.addTabItem(this, "Climb Target Pos", 0.0);
         dash_climbActualPos = DashboardManager.addTabItem(this, "Climb Actual Pos", 0.0);
@@ -47,15 +51,12 @@ public class ClimbSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("climbActualPos", climbMotorRight.getSensorPosition());
-        SmartDashboard.putNumber("climbTargetPos", climbTargetPos);
-        
         updateControlLoops();
         updateDashboardData();
     }
 
     public void updateControlLoops() {
-        runClimbPID();
+        // runClimbPID();
     }
 
     private void updateDashboardData() {
@@ -79,6 +80,19 @@ public class ClimbSubsystem extends SubsystemBase{
     
     public void setTargetPosition(double targetPos) {
         climbTargetPos = targetPos;
+    }
+
+    public void setPower(double leftPow, double rightPow) { 
+        climbMotorLeft.set(leftPow);  
+        climbMotorRight.set(rightPow);
+    }
+
+    public void setLeftPow(double leftPow) { 
+        climbMotorLeft.set(leftPow);  
+    }
+
+    public void setRightPow(double rightPow) { 
+        climbMotorRight.set(rightPow);  
     }
 
     /**all methods pertaining to Climb cmnds**/

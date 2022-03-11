@@ -2,29 +2,21 @@ package frc.team832.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.commands.AcceptBallCommand;
+import frc.team832.robot.commands.QueueBallCommand;
 import frc.team832.robot.commands.RejectBallCommand;
 import frc.team832.robot.commands.ShootBallCommand;
 import frc.team832.robot.commands.AutonomousCommands.BasicAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.OneCargoAutoCommand;
-import frc.team832.robot.commands.AutonomousCommands.ThreeCargoAutoCommand;
 import frc.team832.robot.commands.AutonomousCommands.TwoCargoAutoCommand;
-import frc.team832.robot.commands.Climb.ExtendClimbCommand;
-import frc.team832.robot.commands.Climb.PivotClimbCommand;
-import frc.team832.robot.commands.Climb.RetractClimbCommand;
-import frc.team832.robot.commands.Climb.StraightenClimbCommand;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -40,14 +32,14 @@ import frc.team832.robot.subsystems.ShooterSubsystem;
 public class RobotContainer {
   /** Control system objects **/
   // public final PowerDistribution powerDist = new PowerDistribution(Constants.RPD_CAN_ID, ModuleType.kRev);
-  // public final Compressor compressor = new Compressor(Constants.RPH_CAN_ID, PneumaticsModuleType.REVPH);
+  public final Compressor compressor = new Compressor(Constants.RPH_CAN_ID, PneumaticsModuleType.REVPH);
 
   /** Subsystems **/
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
   public final ShooterSubsystem shooter = new ShooterSubsystem();
-  // public final ClimbSubsystem climb = new ClimbSubsystem();
+  public final ClimbSubsystem climb = new ClimbSubsystem();
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
@@ -79,18 +71,22 @@ public class RobotContainer {
 
   public void configOperatorCommands() {
     // Testing commands
+    
     m_xboxCtrl.a()
-      .whileHeld(new AcceptBallCommand(intake, shooter, conveyer))
-      .whileHeld(new StartEndCommand(
-        () -> {
-          conveyer.setPower(0.5);
-        }
-      , () -> {
-        conveyer.setPower(0);
-      }, conveyer));
+    .whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
+          
+    m_xboxCtrl.x().whenHeld(new ShootBallCommand(conveyer, shooter));
 
-    m_xboxCtrl.b().whileHeld(new RejectBallCommand(intake, conveyer));
+    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); //  extend 
+    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  //retract
 
+    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // extend
+    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // retract   
+
+
+
+
+    
     // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake));
     // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.robot.Constants.IntakeConstants;
 
@@ -30,7 +31,10 @@ public class IntakeSubsystem extends SubsystemBase{
         DashboardManager.addTab(this);
         SmartDashboard.putNumber("Set Intake RPM", 0.0);
 
+        intakeMotor.setNeutralMode(NeutralMode.kBrake);
+
         intakeMotor.limitInputCurrent(CURRENT_LIMIT);
+        intakeMotor.setInverted(true);
         intakeMotor.getBaseController().configOpenloopRamp(0.125);
 
         dash_intakeTargetRPM = DashboardManager.addTabItem(this, "Intake Target RPM", 0.0);
@@ -41,10 +45,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("intakeActualRPM", intakeMotor.getSensorVelocity());
-        // SmartDashboard.putNumber("intakeTargetRPM", intakeTargetRPM);
-        
+    public void periodic() {      
         updateControlLoops();
         updateDashboardData();
     }
@@ -96,9 +97,5 @@ public class IntakeSubsystem extends SubsystemBase{
     public void idleIntake() {
         retractIntake();
         intakeMotor.set(0);
-    }
-
-    public void getShit() {
-        
     }
 }

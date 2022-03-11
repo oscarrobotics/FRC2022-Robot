@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.robot.Constants.ConveyerConstants;
 
@@ -13,7 +14,7 @@ public class ConveyerSubsystem extends SubsystemBase{
     /**physical devices */
     private final CANTalonFX conveyerMotor = new CANTalonFX(ConveyerConstants.CONVEYER_MOTOR_TALON_ID);
 
-    //assigns P value of PID + feed forward to conveyOr
+    //assigns P value of PID + feed forward to conveyor
     private PIDController conveyerPID = new PIDController(ConveyerConstants.KP, 0, 0);
     private final SimpleMotorFeedforward feedforward = ConveyerConstants.FEEDFORWARD;
     
@@ -26,6 +27,8 @@ public class ConveyerSubsystem extends SubsystemBase{
         DashboardManager.addTab(this);
         SmartDashboard.putNumber("Set Conveyer RPM", 0.0);
 
+        conveyerMotor.setNeutralMode(NeutralMode.kBrake);
+
         conveyerMotor.limitInputCurrent(ConveyerConstants.CURRENT_LIMIT);
 
         dash_conveyerTargetRPM = DashboardManager.addTabItem(this, "Conveyer Target RPM", 0.0);
@@ -36,10 +39,7 @@ public class ConveyerSubsystem extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("conveyerActualRPM", conveyerMotor.getSensorVelocity());
-        // SmartDashboard.putNumber("conveyerTargetRPM", conveyerTargetRPM);
-        
+    public void periodic() {     
         updateControlLoops();
         updateDashboardData();
     }
