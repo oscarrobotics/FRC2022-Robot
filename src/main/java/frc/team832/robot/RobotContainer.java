@@ -62,13 +62,13 @@ public class RobotContainer {
     // autoChooser.addOption("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
     SmartDashboard.putData(autoChooser);
 
-    drivetrain.setDefaultCommand(new RunCommand(() -> {
-      // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
-      drivetrain.teleopTankDrive(
-        -m_xboxCtrl.getRightY() * 1,
-        -m_xboxCtrl.getLeftY() * 1,
-        2);
-    }, drivetrain));
+    // drivetrain.setDefaultCommand(new RunCommand(() -> {
+    //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
+    //   drivetrain.teleopTankDrive(
+    //     -m_xboxCtrl.getRightY() * 1,
+    //     -m_xboxCtrl.getLeftY() * 1,
+    //     2);
+    // }, drivetrain));
 
     // drivetrain.setDefaultCommand(new RunCommand(() -> {
     //   drivetrain.teleopTankDrive(
@@ -85,31 +85,31 @@ public class RobotContainer {
     // BUTTON BINDINGS
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     
-    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
+    // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
+    // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
-    stratComInterface.arcadeBlackLeft().whenPressed(new ShootBallCommand(conveyer, shooter));
+    // stratComInterface.arcadeBlackLeft().whenPressed(new ShootBallCommand(conveyer, shooter));
 
-    stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
-        climb.setLeftPow(-.35);
-        climb.setRightPow(-.35);
-      }, 
-      () -> {
-        climb.setLeftPow(0);
-        climb.setRightPow(0);
-      }, climb));
+    // stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
+    //     climb.setLeftPow(-.35);
+    //     climb.setRightPow(-.35);
+    //   }, 
+    //   () -> {
+    //     climb.setLeftPow(0);
+    //     climb.setRightPow(0);
+    //   }, climb));
 
-      stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
-        climb.setLeftPow(.65);
-        climb.setRightPow(.65);
-      }, 
-      () -> {
-        climb.setLeftPow(0);
-        climb.setRightPow(0);
-      }, climb));
+    //   stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
+    //     climb.setLeftPow(.65);
+    //     climb.setRightPow(.65);
+    //   }, 
+    //   () -> {
+    //     climb.setLeftPow(0);
+    //     climb.setRightPow(0);
+    //   }, climb));
 
-      stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
-      stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
+    //   stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
+    //   stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
 
     // auto climb
     // stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
@@ -121,11 +121,13 @@ public class RobotContainer {
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     // m_xboxCtrl.leftBumper().whenPressed(new ShootBallCommand(conveyer, shooter));
     
-    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
-    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
-    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-35);}, () -> {climb.setRightPow(0);}, climb)); // E
-    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
+    m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
+    m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
+    m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // E
+    m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
     
+    // m_xboxCtrl.rightBumper().whenPressed(() -> {climb.rezeroClimb();}, climb);
+
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
   public void configTestingCommands() {

@@ -10,7 +10,7 @@ public class BasicAutoCommand extends SequentialCommandGroup{
         addRequirements(drivetrain);
         addCommands(
             // commands to back robot out of zone
-            new InstantCommand(() -> drivetrain.setWheelPower(.35, .35)),
+            new InstantCommand(() -> drivetrain.setWheelPower(.6, .6)),
             new WaitUntilCommand(() -> drivetrain.getLeftMeters() >= 1.5),
             new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)))
         ;
