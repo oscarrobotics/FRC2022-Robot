@@ -126,8 +126,6 @@ public class RobotContainer {
     m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // E
     m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
     
-    // m_xboxCtrl.rightBumper().whenPressed(() -> {climb.rezeroClimb();}, climb);
-
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
   public void configTestingCommands() {
