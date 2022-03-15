@@ -78,7 +78,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     var drivetrainCharacteristics = new OscarDTCharacteristics(
       POWER_TRAIN, WHEELBASE_INCHES, 
       LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, 
-      LEFT_KP, RIGHT_KP
+      LEFT_KP, RIGHT_KP,
+      MASS_KG, MOI_KGM2
     );
 
     // initialize drivetrain object

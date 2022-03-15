@@ -2,6 +2,7 @@ package frc.team832.robot;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
@@ -37,10 +38,12 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
+		public static final double MASS_KG = Units.lbsToKilograms(118.9);
+		public static final double MOI_KGM2 = 5.120993184;
 
 		/** System Control Values **/
-		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
-		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
+		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 		public static final double LEFT_KP = 0.0;
 		public static final double RIGHT_KP = 0.0;
 	}	
@@ -56,7 +59,7 @@ public final class Constants {
 		public static final double INTAKE_POWER = 0.7;
 		public static final double OUTTAKE_POWER = -0.4;
 		public static final double KP = 0;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 		public static final double INTAKE_REDUCTION = 0.0 / 0.0; 
 	}
 
@@ -72,7 +75,7 @@ public final class Constants {
 		public static final double FEEDING_POWER = .3;
 		public static final double OUTTAKE_POWER = -0.3;
 		public static final double KP = 0;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 		public static final double CONVEYER_REDUCTION = 0.0 / 0.0; 
 	}
 
@@ -87,7 +90,7 @@ public final class Constants {
 		public static final double SHOOTER_POWER = .4;
 		public static final double SHOOTER_QUEUING_POWER = -.3;
 		public static final double KP = 0;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 		public static final double SHOOTER_REDUCTION = 0.0 / 0.0; 
 	}
 
@@ -106,7 +109,7 @@ public final class Constants {
 		public static final int MIN_EXTEND_POS = 0;
 		public static final double KP = 0;
 		public static final double KD = 0;
-		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(0, 0, 1 / Motor.kFalcon500.kv);
+		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(0, 0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 	}
 
     public static class PneumaticsValues {
