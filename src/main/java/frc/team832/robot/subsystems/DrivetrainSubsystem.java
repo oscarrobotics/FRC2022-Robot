@@ -54,10 +54,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 
     // set current limits
-    m_leftMasterMotor.limitInputCurrent(CURRENT_LIMIT);
-    m_leftSlaveMotor.limitInputCurrent(CURRENT_LIMIT);
-    m_rightMasterMotor.limitInputCurrent(CURRENT_LIMIT);
-    m_rightSlaveMotor.limitInputCurrent(CURRENT_LIMIT);
+    m_leftMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
+    m_leftSlaveMotor.limitOutputCurrent(CURRENT_LIMIT);
+    m_rightMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
+    m_rightSlaveMotor.limitOutputCurrent(CURRENT_LIMIT);
 
     // invert right side
     m_rightMasterMotor.setInverted(true);
