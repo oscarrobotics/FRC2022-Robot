@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.driverstation.dashboard.DashboardWidget;
@@ -74,6 +75,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // ensure right slave follows master inversion
     m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
 
+    // TODO: Install real gyro so we don't have to have this dummy one.
     var m_imu = new Gyro() {
 
       @Override
@@ -108,10 +110,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
       
     };
 
+    var drivetrainCharacteristics = new OscarDTCharacteristics(
+      POWER_TRAIN, WHEELBASE_INCHES, 
+      LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, 
+      LEFT_KP, RIGHT_KP
+    );
+
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, m_imu, POWER_TRAIN, WHEELBASE_INCHES);
+      m_imu, drivetrainCharacteristics
+    );
 
     DashboardManager.addTab(this);
     m_db_leftMeters = DashboardManager.addTabItem(this, "Left Meters", 0.0, DashboardWidget.TextView);

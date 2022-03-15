@@ -37,8 +37,12 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
+
+		/** System Control Values **/
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.kv);
+		public static final double LEFT_KP = 0.0;
+		public static final double RIGHT_KP = 0.0;
 	}	
 
 	public static final class IntakeConstants {
