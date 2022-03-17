@@ -70,13 +70,13 @@ public class RobotContainer {
     //     2);
     // }, drivetrain));
 
-    // drivetrain.setDefaultCommand(new RunCommand(() -> {
-    //   drivetrain.teleopTankDrive(
-    //     m_xboxCtrl.getLeftY(),
-    //     m_xboxCtrl.getRightY(), 
-    //     1);
-    //   },
-    // drivetrain));
+    drivetrain.setDefaultCommand(new RunCommand(() -> {
+      drivetrain.teleopArcadeDrive(
+        -m_xboxCtrl.getLeftY(),
+        m_xboxCtrl.getRightX(), 
+        2);
+      },
+    drivetrain));
 
     configOperatorCommands();
   }
