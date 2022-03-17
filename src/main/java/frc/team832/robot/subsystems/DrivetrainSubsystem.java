@@ -6,14 +6,10 @@ package frc.team832.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
-import frc.team832.lib.driverstation.dashboard.DashboardWidget;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 
@@ -32,8 +28,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
 
   private final OscarDrivetrain m_drivetrain;
-
-  private final NetworkTableEntry m_db_leftMeters, m_db_rightMeters;
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
@@ -89,8 +83,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
 
     DashboardManager.addTab(this);
-    m_db_leftMeters = DashboardManager.addTabItem(this, "Left Meters", 0.0, DashboardWidget.TextView);
-    m_db_rightMeters = DashboardManager.addTabItem(this, "Right Meters", 0.0, DashboardWidget.TextView);
   }
 
 
@@ -109,9 +101,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
-    
-    m_db_leftMeters.setDouble(getLeftMeters());
-    m_db_rightMeters.setDouble(getRightMeters());
   }
 
   public Pose2d getPose() {
