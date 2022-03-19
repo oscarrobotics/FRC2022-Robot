@@ -14,8 +14,8 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX m_frontMotor = new CANTalonFX(FRONT_MOTOR_CAN_ID);
     private final CANTalonFX m_rearMotor = new CANTalonFX(REAR_MOTOR_CAN_ID);
 
-    private final OscarFlywheel m_frontFlywheel= new OscarFlywheel(m_frontMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
-    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel(m_rearMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
+    private final OscarFlywheel m_frontFlywheel= new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
+    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
 
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem() {
@@ -47,5 +47,9 @@ public class ShooterSubsystem extends SubsystemBase{
     public void idleShooter() {
         m_frontFlywheel.setTargetVelocityRpm(0);
         m_rearFlywheel.setTargetVelocityRpm(0);
+    }
+
+    public void setPower(double ignored) {
+        // stub method to make this compile for now.
     }
 }

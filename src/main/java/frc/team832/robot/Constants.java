@@ -40,19 +40,19 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 2);
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 1);
 
 		public static final double MASS_KG = Units.lbsToKilograms(118.9);
 		public static final double MOI_KGM2 = 5.120993184;
 
 		/** System Control Values **/
 		public static final double LEFT_KS = 0.1;
-		public static final double LEFT_KV = Motor.kFalcon500.KvRPMPerVolt * GEARBOX.getTotalReduction();
+		public static final double LEFT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
 		public static final double LEFT_KP = 0.0;
 
 		public static final double RIGHT_KS = 0.1;
-		public static final double RIGHT_KV = Motor.kFalcon500.KvRPMPerVolt * GEARBOX.getTotalReduction();
+		public static final double RIGHT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 		public static final double RIGHT_KP = 0.0;
 	}	
@@ -105,9 +105,9 @@ public final class Constants {
 		private static final double COLSON_4x2IN_MOI_KG_M2 = 0.929 * LB_IN2_TO_KG_M2;
 		public static final double KP = 0.05;
 		public static final double SHOOTER_REDUCTION = 1; 
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 4);
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 4, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, Motor.kFalcon500.KvRPMPerVolt);
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 	}
 
 	public static final class ClimbConstants {

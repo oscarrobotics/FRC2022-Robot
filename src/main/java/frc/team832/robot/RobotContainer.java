@@ -82,6 +82,10 @@ public class RobotContainer {
   }
 
   public void configOperatorCommands() {
+    m_xboxCtrl.a()
+      .whenPressed(() -> shooter.setRPM(2600, 2600), shooter)
+      .whenReleased(shooter::idleShooter, shooter);
+
     // BUTTON BINDINGS
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     

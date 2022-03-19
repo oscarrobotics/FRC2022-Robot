@@ -108,11 +108,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getLeftMeters() {
-    return POWER_TRAIN.calculateWheelDistanceMeters(m_leftMasterMotor.getSensorPosition());
+    return POWER_TRAIN.calcWheelDistanceMeters(m_leftMasterMotor.getSensorPosition());
   }
 
   public double getRightMeters() {
-    return POWER_TRAIN.calculateWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
+    return POWER_TRAIN.calcWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
   }
 
   // USED FOR BASIC 2 BALL AUTO
