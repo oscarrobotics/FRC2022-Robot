@@ -18,6 +18,8 @@ import frc.team832.lib.motors.WheeledPowerTrain;
 public final class Constants {
 	private Constants() {}
 
+	public static final double LB_IN2_TO_KG_M2 = 0.000292639653;
+
 	public static final int RPD_CAN_ID = 1;
 	public static final int RPH_CAN_ID = 1;
 
@@ -38,10 +40,7 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 5.9;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES);
-		static {
-			POWER_TRAIN.setEncoderRatioIndex(2);
-		}
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 2);
 
 		public static final double MASS_KG = Units.lbsToKilograms(118.9);
 		public static final double MOI_KGM2 = 5.120993184;
@@ -96,12 +95,16 @@ public final class Constants {
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
 
+		// MoIs
+		private static final double COLSON_4x2IN_MOI_KG_M2 = 0.929 * LB_IN2_TO_KG_M2;
+
 		/** Mechanical Characteristics **/
 		public static final double SHOOTER_POWER = .4;
 		public static final double SHOOTER_QUEUING_POWER = -.3;
 		public static final double KP = 0;
+		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, Motor.kFalcon500.KvRPMPerVolt);
-		public static final double SHOOTER_REDUCTION = 0.0 / 0.0; 
+		public static final double SHOOTER_REDUCTION = 1; 
 	}
 
 	public static final class ClimbConstants {
