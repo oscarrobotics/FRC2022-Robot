@@ -1,28 +1,43 @@
 package frc.team832.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
-import frc.team832.robot.Constants.ConveyerConstants;
-import frc.team832.robot.Constants.ShooterConstants;
 
 public class ShootBallCommand extends SequentialCommandGroup {
-    public ShootBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
+    private final ConveyerSubsystem conveyor;
+    private final ShooterSubsystem shooter;
+    public ShootBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM) {
         addRequirements(conveyer, shooter);
+        this.conveyor = conveyer;
+        this.shooter = shooter;
         addCommands(
-            //shooter spins to shoot the ball out for x seconds
-            new InstantCommand (() -> shooter.setBottomPower(ShooterConstants.SHOOTER_POWER)), //.4
-            new InstantCommand (() -> shooter.setTopPower(ShooterConstants.SHOOTER_POWER)), //.4
-            new WaitCommand (.4),
-            //conveyer returns to its correct spinning direction
-            new InstantCommand(() -> conveyer.setPower(ConveyerConstants.FEEDING_POWER)),
-            new WaitCommand(1.5),
+            //shooter spins flywheels to target rpms
+            new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
 
-            //both end after the ball is shot out
-            new InstantCommand (() -> conveyer.idleConveyer()),
-            new InstantCommand (() -> shooter.idleShooter())
+            // checks to see if flywheels at target before feeding
+            new WaitUntilCommand(() -> shooter.atTarget()),
+
+            // feeds 1 ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
+            new FeedBallCommand(conveyer, shooter)
+
+            // // checks to see if flywheels at target before feeding
+            // new WaitUntilCommand(() -> shooter.atTarget()),
+
+            // // feeds 2nd ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
+            // new FeedBallCommand(conveyer, shooter)
         );
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        conveyor.idleConveyer();
+        shooter.idleShooter();
     }
 }

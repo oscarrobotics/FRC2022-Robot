@@ -50,13 +50,11 @@ public final class Constants {
 		public static final double LEFT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
 		public static final double LEFT_KP = 0.0;
-		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
 
 		public static final double RIGHT_KS = 0.1;
 		public static final double RIGHT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 		public static final double RIGHT_KP = 0.0;
-		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 	}	
 
 	public static final class IntakeConstants {

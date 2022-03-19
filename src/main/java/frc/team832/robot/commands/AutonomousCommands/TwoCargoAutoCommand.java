@@ -26,7 +26,7 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
             new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
 
             //spins shooter and conveyer to contain ball
-            new ShootBallCommand(conveyer, shooter),
+            // new ShootBallCommand(conveyer, shooter),
 
             // starts intaking and drives forwards at the same time
             new ParallelRaceGroup(
@@ -46,7 +46,7 @@ public class TwoCargoAutoCommand extends SequentialCommandGroup{
              new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
  
              //spins shooter and conveyer to contain ball
-             new ShootBallCommand(conveyer, shooter),
+            //  new ShootBallCommand(conveyer, shooter),
 
             // go forwards to clear tarmac
             new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),

@@ -21,7 +21,7 @@ public class OneCargoAutoCommand extends SequentialCommandGroup {
             // new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
 
             //spins shooter and conveyer to contain ball
-            new ShootBallCommand(conveyer, shooter),
+            // new ShootBallCommand(conveyer, shooter),
 
             //moves drivetrain forward to clear tarmac
             new InstantCommand(() -> drivetrain.setWheelPower(-.45, -.45)),

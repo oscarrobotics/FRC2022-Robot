@@ -1,5 +1,7 @@
 package frc.team832.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -16,6 +18,7 @@ import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.Constants.ConveyerConstants;
 import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.commands.AcceptBallCommand;
+import frc.team832.robot.commands.FeedBallCommand;
 import frc.team832.robot.commands.QueueBallCommand;
 import frc.team832.robot.commands.RejectBallCommand;
 import frc.team832.robot.commands.ShootBallCommand;
@@ -81,7 +84,7 @@ public class RobotContainer {
       },
     drivetrain));
 
-    configOperatorCommands();
+    configTestingCommands();
   }
 
   public void configOperatorCommands() {
@@ -138,11 +141,12 @@ public class RobotContainer {
  
   public void configTestingCommands() {
     // map sliders to each flywheel
-    stratComInterface.arcadeBlackLeft().whileHeld(
+    stratComInterface.singleToggle().whileHeld(
       new RunEndCommand(
         () -> {
-          shooter.setTopRPM(OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380));
-          shooter.setBottomRPM(OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380));
+          double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
+          double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
+          shooter.setRPM(botRpm, topRpm);
         },
         () -> {
           shooter.idleShooter();
@@ -150,6 +154,9 @@ public class RobotContainer {
         shooter
       )
     );
+    DoubleSupplier leftSliderRpm = () -> OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
+    DoubleSupplier rightSliderRpm = () -> OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCommand(conveyer, shooter, leftSliderRpm, rightSliderRpm));
 
     // intake
     stratComInterface.arcadeBlackRight().whileHeld(
@@ -158,12 +165,50 @@ public class RobotContainer {
           intake.extendIntake();
           intake.setPower(IntakeConstants.INTAKE_POWER);
           conveyer.setPower(ConveyerConstants.FEEDING_POWER);
+          shooter.setRPM(0, -2500);
         }, 
         () -> {
           intake.idleIntake();
           conveyer.idleConveyer();
         }, 
         intake
+      )
+    );
+
+    // feed shooter
+    stratComInterface.arcadeWhiteRight().whileHeld(
+      new RunEndCommand(
+        () -> {
+          // intake.extendIntake();
+          // intake.setPower(IntakeConstants.INTAKE_POWER);
+          conveyer.setPower(ConveyerConstants.FEEDING_POWER);
+        }, 
+        () -> {
+          // intake.idleIntake();
+          conveyer.idleConveyer();
+        }, 
+        conveyer
+      )
+    );
+    // current sensing feed
+    // stratComInterface.arcadeWhiteRight().whenHeld(new FeedBallCommand(conveyer, shooter));
+
+
+    // reverse conveyer
+    stratComInterface.arcadeWhiteLeft().whileHeld(
+      new RunEndCommand(
+        () -> {
+          // intake.extendIntake();
+          // intake.setPower(IntakeConstants.INTAKE_POWER);
+          conveyer.setPower(-ConveyerConstants.FEEDING_POWER);
+          shooter.setRPM(-1000, -1000);
+        }, 
+        () -> {
+          // intake.idleIntake();
+          conveyer.idleConveyer();
+          shooter.idleShooter();
+        }, 
+        conveyer
       )
     );
   }

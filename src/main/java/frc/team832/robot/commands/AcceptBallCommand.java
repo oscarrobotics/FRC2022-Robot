@@ -28,7 +28,7 @@ public class AcceptBallCommand extends CommandBase{
         //spins intake to accept the ball into the machine
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball
-        shooter.setBottomPower(ShooterConstants.SHOOTER_QUEUING_POWER);
+        // shooter.setBottomPower(ShooterConstants.SHOOTER_QUEUING_POWER);
         conveyer.setPower(ConveyerConstants.QUEUING_POWER);
     }
 

@@ -4,6 +4,8 @@ import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motion.OscarFlywheel;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.lib.power.monitoring.StallDetector;
+import frc.team832.lib.power.monitoring.StallDetector.StallDetectorStatus;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
 
@@ -14,8 +16,10 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX m_frontMotor = new CANTalonFX(FRONT_MOTOR_CAN_ID);
     private final CANTalonFX m_rearMotor = new CANTalonFX(REAR_MOTOR_CAN_ID);
 
-    private final OscarFlywheel m_frontFlywheel= new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
+    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
     private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
+
+    private final StallDetector stallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem() {
@@ -27,10 +31,11 @@ public class ShooterSubsystem extends SubsystemBase{
 
         m_rearMotor.setNeutralMode(NeutralMode.kCoast);
         m_rearMotor.limitInputCurrent(CURRENT_LIMIT);
-        m_rearMotor.setInverted(true);
 
         m_frontFlywheel.setClosedLoop(false);
         m_rearFlywheel.setClosedLoop(false);
+
+        // stallDetector.setStallCurrent();
     }
 
     @Override
@@ -47,6 +52,14 @@ public class ShooterSubsystem extends SubsystemBase{
     public void idleShooter() {
         m_frontFlywheel.setTargetVelocityRpm(0);
         m_rearFlywheel.setTargetVelocityRpm(0);
+    }
+
+    public boolean atTarget() {
+        return m_frontFlywheel.atTarget(50) && m_rearFlywheel.atTarget(50);
+    }
+
+    public boolean isStalling() {
+        return stallDetector.getStallStatus().isStalled;
     }
 
     public void setPower(double ignored) {
