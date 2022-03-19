@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.util.OscarMath;
+import frc.team832.robot.Constants.ConveyerConstants;
+import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.QueueBallCommand;
 import frc.team832.robot.commands.RejectBallCommand;
@@ -125,14 +128,44 @@ public class RobotContainer {
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     // m_xboxCtrl.leftBumper().whenPressed(new ShootBallCommand(conveyer, shooter));
     
-    m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
-    m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
-    m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // E
-    m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
+    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
+    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
+    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // E
+    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
     
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
+ 
   public void configTestingCommands() {
+    // map sliders to each flywheel
+    stratComInterface.arcadeBlackLeft().whileHeld(
+      new RunEndCommand(
+        () -> {
+          shooter.setTopRPM(OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380));
+          shooter.setBottomRPM(OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380));
+        },
+        () -> {
+          shooter.idleShooter();
+        }, 
+        shooter
+      )
+    );
+
+    // intake
+    stratComInterface.arcadeBlackRight().whileHeld(
+      new RunEndCommand(
+        () -> {
+          intake.extendIntake();
+          intake.setPower(IntakeConstants.INTAKE_POWER);
+          conveyer.setPower(ConveyerConstants.FEEDING_POWER);
+        }, 
+        () -> {
+          intake.idleIntake();
+          conveyer.idleConveyer();
+        }, 
+        intake
+      )
+    );
   }
 
   /**

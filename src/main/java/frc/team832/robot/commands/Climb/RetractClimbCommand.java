@@ -6,7 +6,7 @@ public class RetractClimbCommand extends CommandBase{
     private final ClimbSubsystem climb;
     
     public RetractClimbCommand(ClimbSubsystem climb) {
-       this.climb = climb;
+        this.climb = climb;
         addRequirements(climb);
     }
    

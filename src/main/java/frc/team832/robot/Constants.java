@@ -50,11 +50,13 @@ public final class Constants {
 		public static final double LEFT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
 		public static final double LEFT_KP = 0.0;
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
 
 		public static final double RIGHT_KS = 0.1;
 		public static final double RIGHT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 		public static final double RIGHT_KP = 0.0;
+		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 	}	
 
 	public static final class IntakeConstants {
@@ -67,9 +69,13 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double INTAKE_POWER = 0.7;
 		public static final double OUTTAKE_POWER = -0.4;
-		public static final double KP = 0;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, Motor.kFalcon500.KvRPMPerVolt);
 		public static final double INTAKE_REDUCTION = 0.0 / 0.0; 
+
+		/** System Control Values **/
+		public static final double KP = 0.0;
+		public static final double KS = 0.0;
+		public static final double KV = Motor.kFalcon500.KvRPMPerVolt;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(KS, KV);
 	}
 
 	public static final class ConveyerConstants {
@@ -83,9 +89,13 @@ public final class Constants {
 		public static final double QUEUING_POWER = .3;
 		public static final double FEEDING_POWER = .3;
 		public static final double OUTTAKE_POWER = -0.3;
-		public static final double KP = 0;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, Motor.kFalcon500.KvRPMPerVolt);
 		public static final double CONVEYER_REDUCTION = 0.0 / 0.0; 
+
+		/** System Control Values **/
+		public static final double KP = 0.0;
+		public static final double KS = 0.0;
+		public static final double KV = Motor.kFalcon500.KvRPMPerVolt;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(KS, KV);
 	}
 
 	public static final class ShooterConstants {
@@ -123,9 +133,14 @@ public final class Constants {
 		public static final int RETRACT_TARGET = 0;
 		public static final int MAX_EXTEND_POS = 0;
 		public static final int MIN_EXTEND_POS = 0;
-		public static final double KP = 0;
-		public static final double KD = 0;
-		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(0, 0, Motor.kFalcon500.KvRPMPerVolt);
+
+		/** System Control Values **/
+		public static final double KP = 0.0;
+		public static final double KD = 0.0;
+		public static final double KS = 0.0;
+		public static final double KV = Motor.kFalcon500.KvRPMPerVolt;
+		public static final double KG = 0.0;
+		public static final ElevatorFeedforward FEEDFORWARD = new ElevatorFeedforward(KS, KG, KV);
 	}
 
     public static class PneumaticsValues {

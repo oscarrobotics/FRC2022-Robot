@@ -14,15 +14,8 @@ public class AutoClimbCommand extends SequentialCommandGroup{
             4. other arm latches onto the next bar
             5. rinse and repeat
             */
-            new RetractClimbCommand(climb),
-            new PivotClimbCommand(climb),
-            new ExtendClimbCommand(climb),
-            new StraightenClimbCommand(climb),
-            new RetractClimbCommand(climb),
-            new PivotClimbCommand(climb),
-            new ExtendClimbCommand(climb),
-            new StraightenClimbCommand(climb),
-            new RetractClimbCommand(climb)
+            
+            
         );
     }
 }
