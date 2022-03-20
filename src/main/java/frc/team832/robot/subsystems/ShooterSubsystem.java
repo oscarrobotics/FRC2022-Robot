@@ -35,7 +35,7 @@ public class ShooterSubsystem extends SubsystemBase{
         m_frontFlywheel.setClosedLoop(false);
         m_rearFlywheel.setClosedLoop(false);
 
-        // stallDetector.setStallCurrent();
+        // stallDetector.setStallCurrent(7);
     }
 
     @Override
