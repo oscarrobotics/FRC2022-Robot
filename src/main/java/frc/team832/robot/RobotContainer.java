@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.Constants.ConveyerConstants;
@@ -53,7 +55,8 @@ public class RobotContainer {
   
   /** HID Controllers **/
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
-  public final StratComInterface stratComInterface = new StratComInterface(1);
+  private final StratComInterface stratComInterface = new StratComInterface(1);
+  public final Trigger userButton = new Trigger(RobotController::getUserButton);
 
   /** Sendable Chooser object **/
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -83,8 +86,6 @@ public class RobotContainer {
         2);
       },
     drivetrain));
-
-    configTestingCommands();
   }
 
   public void configOperatorCommands() {
@@ -139,7 +140,7 @@ public class RobotContainer {
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
  
-  public void configTestingCommands() {
+  public void configTestingCommands() {  
     // map sliders to each flywheel
     stratComInterface.singleToggle().whileHeld(
       new RunEndCommand(

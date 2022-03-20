@@ -4,8 +4,7 @@
 
 package frc.team832.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
@@ -17,6 +16,7 @@ import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
@@ -25,7 +25,40 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
+  // private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
+
+  Gyro pigeon = new Gyro() {
+      
+    @Override
+    public void close() throws Exception {
+      // no-op
+    }
+
+    @Override
+    public void calibrate() {
+      // m_imu.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
+    }
+
+    @Override
+    public void reset() {
+      // m_imu.setFusedHeading(0);
+    }
+
+    @Override
+    public double getAngle() {
+      // return m_imu.getFusedHeading();
+      return 0;
+    }
+
+    @Override
+    public double getRate() {
+      // double[] angles = new double[3];
+      // m_imu.getAccelerometerAngles(angles);
+      // return angles[2];
+      return 0;
+    }
+    
+  };
 
   private final OscarDrivetrain m_drivetrain;
 
@@ -44,8 +77,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
     }
 
-    m_imu.calibrate();
-
+    // m_imu.calibrate();
 
     // set current limits
     m_leftMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
@@ -61,6 +93,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftSlaveMotor.setNeutralMode(NeutralMode.kBrake);
     m_rightMasterMotor.setNeutralMode(NeutralMode.kBrake);
     m_rightSlaveMotor.setNeutralMode(NeutralMode.kBrake);
+
+    // zero encodors
+    m_leftMasterMotor.rezeroSensor();
+    m_rightMasterMotor.rezeroSensor();
+    m_leftSlaveMotor.rezeroSensor();
+    m_rightSlaveMotor.rezeroSensor();
 
     // set slave motors to follow masters
     m_leftSlaveMotor.follow(m_leftMasterMotor);
@@ -79,12 +117,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      m_imu, drivetrainCharacteristics
+      pigeon, drivetrainCharacteristics
     );
 
     DashboardManager.addTab(this);
   }
-
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
     m_drivetrain.getDiffDrive().curvatureDrive(xSpeed, zRotation, turnInPlace, inputScalingPow);
@@ -103,9 +140,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.periodic();
   }
 
-  public Pose2d getPose() {
-    return m_drivetrain.getPose();
-  }
+  // public Pose2d getPose() {
+  //   return m_drivetrain.getPose();
+  // }
 
   public double getLeftMeters() {
     return POWER_TRAIN.calcWheelDistanceMeters(m_leftMasterMotor.getSensorPosition());
@@ -115,14 +152,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return POWER_TRAIN.calcWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
   }
 
-  // USED FOR BASIC 2 BALL AUTO
-  public boolean isAtBall() {
-    return m_drivetrain.getPose() == new Pose2d(0.0, -1.5, new Rotation2d(0));
-  }
-  // USED FOR BASIC 2 BALL AUTO
-  public boolean isAtGoal() {
-    return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
-  }
+  // // USED FOR BASIC 2 BALL AUTO
+  // public boolean isAtBall() {
+  //   return m_drivetrain.getPose() == new Pose2d(0.0, -1.5, new Rotation2d(0));
+  // }
+  // // USED FOR BASIC 2 BALL AUTO
+  // public boolean isAtGoal() {
+  //   return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
+  // }
 
   public void idleDrivetrain() {
     m_leftMasterMotor.set(0);
@@ -132,6 +169,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void setWheelPower(Double leftVolts, Double rightVolts) {
     m_leftMasterMotor.set(leftVolts);
     m_rightMasterMotor.set(rightVolts);
+  }
+
+  public void resetPose() {
+    m_drivetrain.resetPose();
+  }
+
+  public void zeroEncoders() {
+    // zero encodors
+    m_leftMasterMotor.rezeroSensor();
+    m_rightMasterMotor.rezeroSensor();
+    m_leftSlaveMotor.rezeroSensor();
+    m_rightSlaveMotor.rezeroSensor();
   }
 
   public void setNeutralMode(NeutralMode mode) {

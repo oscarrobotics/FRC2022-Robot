@@ -1,6 +1,7 @@
 package frc.team832.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,6 +57,10 @@ public class Robot extends TimedRobot {
     intake.periodic();
     conveyer.periodic();
     // shooter.periodic();
+
+    if (m_robotContainer.userButton.get()) {
+      drivetrain.resetPose();
+    }
 
     SmartDashboard.putNumber("Storage PSI", compressor.getPressure());
   }
@@ -114,6 +119,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
 
+    drivetrain.setNeutralMode(NeutralMode.kCoast);
   }
 
   /** This function is called periodically during test mode. */
