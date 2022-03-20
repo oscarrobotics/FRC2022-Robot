@@ -16,8 +16,8 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX m_frontMotor = new CANTalonFX(FRONT_MOTOR_CAN_ID);
     private final CANTalonFX m_rearMotor = new CANTalonFX(REAR_MOTOR_CAN_ID);
 
-    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
-    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, FEEDFORWARD, KP, MOI_KGM2);
+    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, BOTTOM_FEEDFORWARD, KP, MOI_KGM2);
+    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, TOP_FEEDFORWARD, KP, MOI_KGM2);
 
     private final StallDetector stallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 

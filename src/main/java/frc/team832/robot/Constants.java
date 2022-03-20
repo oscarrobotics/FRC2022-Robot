@@ -41,20 +41,21 @@ public final class Constants {
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 1);
-
 		public static final double MASS_KG = Units.lbsToKilograms(118.9);
 		public static final double MOI_KGM2 = 5.120993184;
 
 		/** System Control Values **/
-		public static final double LEFT_KS = 0.1;
-		public static final double LEFT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
+		public static final double LEFT_KS = 0.66639;
+		public static final double LEFT_KV = 2.5477;
+		public static final double LEFT_KA = 0.2459;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
-		public static final double LEFT_KP = 0.0;
+		public static final double LEFT_KP = 3.1833;
 
-		public static final double RIGHT_KS = 0.1;
-		public static final double RIGHT_KV = (1 / Motor.kFalcon500.KvRPMPerVolt) * GEARBOX.totalReduction;
+		public static final double RIGHT_KS = 0.63619;
+		public static final double RIGHT_KV = 2.5305;
+		public static final double RIGHT_KA = 0.13119;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
-		public static final double RIGHT_KP = 0.0;
+		public static final double RIGHT_KP = 2.463;
 	}	
 
 	public static final class IntakeConstants {
@@ -115,7 +116,20 @@ public final class Constants {
 		public static final double SHOOTER_REDUCTION = 1; 
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 4, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
+		// public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
+
+		/** System Control Values **/ // Data from sysid
+		public static final double BOTTOM_KS = 0.52828;
+		public static final double BOTTOM_KV = 0.10848;
+		public static final double BOTTOM_KA = 0.0067908;
+		public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = new SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV);
+		public static final double BOTTOM_KP = 0.11439;
+
+		public static final double TOP_KS = 0.6101;
+		public static final double TOP_KV = 0.10885;
+		public static final double TOP_KA = 0.0069025;
+		public static final SimpleMotorFeedforward TOP_FEEDFORWARD = new SimpleMotorFeedforward(TOP_KS, TOP_KV);
+		public static final double TOP_KP = 0.11589 ;
 	}
 
 	public static final class ClimbConstants {
