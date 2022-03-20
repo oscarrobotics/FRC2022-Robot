@@ -147,8 +147,8 @@ public class RobotContainer {
   }
  
   public void configTestingCommands() {
-    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test1MeterTraj).withName("RamseteTestCommand"); 
-    stratComInterface.arcadeBlackLeft().whenPressed(ramseteTestCommand);
+    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand"); 
+    stratComInterface.arcadeBlackLeft().whenHeld(ramseteTestCommand);
 
     // map sliders to each flywheel
     // stratComInterface.singleToggle().whileHeld(
