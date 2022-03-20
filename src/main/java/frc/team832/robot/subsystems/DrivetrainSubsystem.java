@@ -4,11 +4,17 @@
 
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
+import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 
@@ -188,5 +194,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftSlaveMotor.setNeutralMode(mode);
     m_rightMasterMotor.setNeutralMode(mode);
     m_rightSlaveMotor.setNeutralMode(mode);
+  }
+
+  public void getTestTrajectory() {
+    PathHelper.generatePath(m_drivetrain.getPose(), new Pose2d(1, 0, new Rotation2d(0)), new TrajectoryConfig(4, 2));
   }
 }

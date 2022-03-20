@@ -2,10 +2,17 @@ package frc.team832.robot;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
+import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
+import frc.team832.robot.subsystems.DrivetrainSubsystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -37,10 +44,10 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 16.0 / 32.0);
 		public static final Motor MOTOR = Motor.kFalcon500;
-		public static final double WHEEL_DIAMETER_INCHES = 5.9;
+		public static final double WHEEL_DIAMETER_INCHES = 6.25;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 1);
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 1/GEARBOX.totalReduction);
 		public static final double MASS_KG = Units.lbsToKilograms(118.9);
 		public static final double MOI_KGM2 = 5.120993184;
 
@@ -56,6 +63,12 @@ public final class Constants {
 		public static final double RIGHT_KA = 0.13119;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
 		public static final double RIGHT_KP = 2.463;
+
+		// TEST PATH FOLLOWING TRAJECTORY
+		public static Trajectory test1MeterTraj;
+		static {
+			test1MeterTraj = PathHelper.generatePath(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(1, 0, new Rotation2d(0)), new TrajectoryConfig(4, 2));
+		}	
 	}	
 
 	public static final class IntakeConstants {
