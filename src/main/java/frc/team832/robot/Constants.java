@@ -55,20 +55,21 @@ public final class Constants {
 		public static final double LEFT_KS = 0.66639;
 		public static final double LEFT_KV = 2.5477;
 		public static final double LEFT_KA = 0.2459;
-		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV);
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
 		public static final double LEFT_KP = 3.1833;
 
 		public static final double RIGHT_KS = 0.63619;
 		public static final double RIGHT_KV = 2.5305;
 		public static final double RIGHT_KA = 0.13119;
-		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV);
+		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
 		public static final double RIGHT_KP = 2.463;
 
 		// TEST PATH FOLLOWING TRAJECTORY
-		public static Trajectory test1MeterTraj;
-		static {
-			test1MeterTraj = PathHelper.generatePath(new Pose2d(0, 0, new Rotation2d(0)), new Pose2d(1, 0, new Rotation2d(0)), new TrajectoryConfig(4, 2));
-		}	
+		private static final Pose2d zero_zero_StartPose = new Pose2d();
+		private static final Pose2d threeMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
+		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(2.5, 2);
+		public static final TrajectoryConfig AGGRESSIVE_TRAJCONFIG = new TrajectoryConfig(4, 6);
+		public static Trajectory test3MeterForwardTraj = PathHelper.generatePath(zero_zero_StartPose, threeMeterX_Pose, CALM_TRAJCONFIG);
 	}	
 
 	public static final class IntakeConstants {
