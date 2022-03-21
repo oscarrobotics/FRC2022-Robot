@@ -19,7 +19,7 @@ public class ShooterSubsystem extends SubsystemBase{
     private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, BOTTOM_FEEDFORWARD, BOTTOM_KP, MOI_KGM2);
     private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, TOP_FEEDFORWARD, TOP_KP, MOI_KGM2);
 
-    private final StallDetector stallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
+    private final StallDetector m_frontStallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem() {
@@ -54,12 +54,18 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearFlywheel.setTargetVelocityRpm(0);
     }
 
+    public void setRPMForDistanceHigh(double feet) {
+        var frontRpm = FRONT_SHOOTER_RPM_MAP.get(feet);
+        var rearRpm = REAR_SHOOTER_RPM_MAP.get(feet);
+        setRPM(frontRpm, rearRpm);
+    }
+
     public boolean atTarget() {
         return m_frontFlywheel.atTarget(50) && m_rearFlywheel.atTarget(50);
     }
 
     public boolean isStalling() {
-        return stallDetector.getStallStatus().isStalled;
+        return m_frontStallDetector.getStallStatus().isStalled;
     }
 
     public void setPower(double ignored) {

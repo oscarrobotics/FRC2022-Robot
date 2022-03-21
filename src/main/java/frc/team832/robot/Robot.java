@@ -1,7 +1,8 @@
 package frc.team832.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +38,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    if (RobotBase.isSimulation()) {
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
   }
 
   /**
@@ -56,7 +60,7 @@ public class Robot extends TimedRobot {
 
     intake.periodic();
     conveyer.periodic();
-    // shooter.periodic();
+    shooter.periodic();
 
     if (m_robotContainer.userButton.get()) {
       drivetrain.resetPose();

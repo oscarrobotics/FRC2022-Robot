@@ -143,9 +143,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.periodic();
   }
 
-  // public Pose2d getPose() {
-  //   return m_drivetrain.getPose();
-  // }
+  public Pose2d getPose() {
+    return m_drivetrain.getPose();
+  }
 
   public double getLeftMeters() {
     return POWER_TRAIN.calcWheelDistanceMeters(m_leftMasterMotor.getSensorPosition());
@@ -154,15 +154,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public double getRightMeters() {
     return POWER_TRAIN.calcWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
   }
-
-  // // USED FOR BASIC 2 BALL AUTO
-  // public boolean isAtBall() {
-  //   return m_drivetrain.getPose() == new Pose2d(0.0, -1.5, new Rotation2d(0));
-  // }
-  // // USED FOR BASIC 2 BALL AUTO
-  // public boolean isAtGoal() {
-  //   return m_drivetrain.getPose() == new Pose2d(0.0, 2, new Rotation2d(0));
-  // }
 
   public void idleDrivetrain() {
     m_leftMasterMotor.set(0);
@@ -194,6 +185,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public CommandBase getTrajectoryCommand(Trajectory path) {
-    return m_drivetrain.generateRamseteCommand(path, this);  
+    return m_drivetrain.generateRamseteCommand(path, this);
+  }
+
+  public void stop() {
+    m_drivetrain.stop();
   }
 }

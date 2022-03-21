@@ -62,24 +62,25 @@ public class RobotContainer {
     //     2);
     // }, drivetrain));
 
-    var arcadeDriveCommand = new RunCommand(() -> {
-      drivetrain.teleopArcadeDrive(
-        -m_xboxCtrl.getLeftY(),
-        m_xboxCtrl.getRightX(), 
-        2);
+    var arcadeDriveCommand = new RunEndCommand(
+      () -> {
+        drivetrain.teleopArcadeDrive(
+          -m_xboxCtrl.getLeftY(),
+          m_xboxCtrl.getRightX(), 
+          2
+        );
       },
-    drivetrain).withName("ArcadeDriveCommand");
+      drivetrain::stop,
+      drivetrain)
+    .withName("ArcadeDriveCommand");
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
     configTestingCommands();
+    configSimTestingCommands();
   }
 
   public void configOperatorCommands() {
-    m_xboxCtrl.a()
-      .whenPressed(() -> shooter.setRPM(2600, 2600), shooter)
-      .whenReleased(shooter::idleShooter, shooter);
-
     // BUTTON BINDINGS
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     
@@ -127,6 +128,18 @@ public class RobotContainer {
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
  
+  public void configSimTestingCommands() {
+    m_xboxCtrl.a()
+      .whenPressed(() -> shooter.setRPM(2600, 2600), shooter)
+      .whenReleased(shooter::idleShooter, shooter);
+
+    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
+    .andThen(drivetrain::stop);
+
+    m_xboxCtrl.b()
+      .whenPressed(ramseteTestCommand);
+  }
+
   public void configTestingCommands() {
     var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand"); 
     stratComInterface.arcadeBlackLeft().whenHeld(ramseteTestCommand);
