@@ -9,6 +9,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import frc.team832.lib.motion.PathHelper;
+import edu.wpi.first.util.InterpolatingTreeMap;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
@@ -129,6 +130,28 @@ public final class Constants {
 		public static final double SHOOTER_REDUCTION = 1; 
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 4, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
+		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
+
+		/** Speeds **/
+		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		static {
+			FRONT_SHOOTER_RPM_MAP.put(0.0, 2940.0);
+			FRONT_SHOOTER_RPM_MAP.put(1.0, 2220.0);
+			FRONT_SHOOTER_RPM_MAP.put(2.0, 2120.0);
+			FRONT_SHOOTER_RPM_MAP.put(3.0, 1695.0);
+			FRONT_SHOOTER_RPM_MAP.put(4.0, 1695.0);
+			FRONT_SHOOTER_RPM_MAP.put(5.0, 1395.0);
+		}
+
+		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		static {
+			REAR_SHOOTER_RPM_MAP.put(0.0, 1000.0);
+			REAR_SHOOTER_RPM_MAP.put(1.0, 1820.0);
+			REAR_SHOOTER_RPM_MAP.put(2.0, 1870.0);
+			REAR_SHOOTER_RPM_MAP.put(3.0, 2170.0);
+			REAR_SHOOTER_RPM_MAP.put(4.0, 2420.0);
+			REAR_SHOOTER_RPM_MAP.put(5.0, 3090.0);
+		}
 
 		/** System Control Values **/ // Data from sysid
 		public static final double BOTTOM_KS = 0.52828;
