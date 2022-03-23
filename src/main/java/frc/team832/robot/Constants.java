@@ -126,7 +126,7 @@ public final class Constants {
 		/** Mechanical Characteristics **/ // Note: both flywheels are mechanically identical.
 		private static final double COLSON_4x2IN_MOI_KG_M2 = 0.929 * LB_IN2_TO_KG_M2;
 		public static final double SHOOTER_REDUCTION = 1; 
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 4, 1);
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION), Motor.kFalcon500, 1, 3.9, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 
@@ -155,13 +155,15 @@ public final class Constants {
 		public static final double BOTTOM_KS = 0.52828;
 		public static final double BOTTOM_KV = 0.10848;
 		public static final double BOTTOM_KA = 0.0067908;
-		public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = new SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV);
+		// public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = new SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV / 60.0);
+		public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = FEEDFORWARD;
 		public static final double BOTTOM_KP = 0.11439;
 
 		public static final double TOP_KS = 0.6101;
 		public static final double TOP_KV = 0.10885;
 		public static final double TOP_KA = 0.0069025;
-		public static final SimpleMotorFeedforward TOP_FEEDFORWARD = new SimpleMotorFeedforward(TOP_KS, TOP_KV);
+		// public static final SimpleMotorFeedforward TOP_FEEDFORWARD = new SimpleMotorFeedforward(TOP_KS, TOP_KV / 60.0);
+		public static final SimpleMotorFeedforward TOP_FEEDFORWARD = BOTTOM_FEEDFORWARD;
 		public static final double TOP_KP = 0.11589 ;
 	}
 

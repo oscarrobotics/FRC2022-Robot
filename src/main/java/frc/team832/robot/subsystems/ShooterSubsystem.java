@@ -9,6 +9,10 @@ import frc.team832.lib.power.monitoring.StallDetector.StallDetectorStatus;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
 
+import org.opencv.photo.Photo;
+import org.photonvision.PhotonCamera;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase{
@@ -21,8 +25,13 @@ public class ShooterSubsystem extends SubsystemBase{
 
     private final StallDetector m_frontStallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 
+    private double m_frontFlywheelTargetRPM, m_frontFlywheelActualRPM, m_rearFlywheelTargetRPM, m_rearFlywheelActualRPM;
+    private final NetworkTableEntry dash_frontFlywheelTargetRPM, dash_frontFlywheelActualRPM, dash_rearFlywheelTargetRPM, dash_rearFlywheelActualRPM;
+    
+    private final PhotonCamera camera;
+
     /** Creates a new ShooterSubsystem **/
-    public ShooterSubsystem() {
+    public ShooterSubsystem(PhotonCamera camera) {
         DashboardManager.addTab(this);
 
         m_frontMotor.setNeutralMode(NeutralMode.kCoast);
@@ -36,12 +45,28 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearFlywheel.setClosedLoop(false);
 
         // stallDetector.setStallCurrent(7);
+
+        dash_frontFlywheelTargetRPM = DashboardManager.addTabItem(this, "Front Flywheel Target RPM", 0.0);
+        dash_frontFlywheelActualRPM = DashboardManager.addTabItem(this, "Front Flywheel Actual RPM", 0.0);;
+        dash_rearFlywheelTargetRPM = DashboardManager.addTabItem(this, "Rear Flywheel Target RPM", 0.0);;
+        dash_rearFlywheelActualRPM = DashboardManager.addTabItem(this, "Rear Flywheel Actual RPM", 0.0);;
+
+        this.camera = camera;
     }
 
     @Override
     public void periodic() {
         m_frontFlywheel.periodic();
         m_rearFlywheel.periodic();
+
+        updateDashboardData();
+    }
+
+    public void updateDashboardData() {
+        dash_frontFlywheelTargetRPM.setDouble(m_frontFlywheelTargetRPM);
+        dash_frontFlywheelActualRPM.setDouble(m_frontMotor.getSensorVelocity());
+        dash_rearFlywheelTargetRPM.setDouble(m_rearFlywheelTargetRPM);
+        dash_rearFlywheelActualRPM.setDouble(m_rearMotor.getSensorVelocity());
     }
 
     public void setRPM(double frontTarget, double rearTarget) {

@@ -7,6 +7,7 @@ package frc.team832.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
@@ -18,8 +19,10 @@ import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
-// import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-// import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+
+import org.photonvision.PhotonCamera;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
@@ -28,45 +31,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  // private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
-
-  Gyro pigeon = new Gyro() {
-      
-    @Override
-    public void close() throws Exception {
-      // no-op
-    }
-
-    @Override
-    public void calibrate() {
-      // m_imu.enterCalibrationMode(CalibrationMode.BootTareGyroAccel);
-    }
-
-    @Override
-    public void reset() {
-      // m_imu.setFusedHeading(0);
-    }
-
-    @Override
-    public double getAngle() {
-      // return m_imu.getFusedHeading();
-      return 0;
-    }
-
-    @Override
-    public double getRate() {
-      // double[] angles = new double[3];
-      // m_imu.getAccelerometerAngles(angles);
-      // return angles[2];
-      return 0;
-    }
-    
-  };
+  private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
 
   private final OscarDrivetrain m_drivetrain;
 
+  private final PhotonCamera camera;
+
   /** Creates a new DrivetrainSubsystem. */
-  public DrivetrainSubsystem() {
+  public DrivetrainSubsystem(PhotonCamera camera) {
     if (!m_leftMasterMotor.getCANConnection()) {
       System.out.println("[DRIVETRAIN] LeftMasterMotor not on CAN!");
     }
@@ -80,7 +52,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
     }
 
-    // m_imu.calibrate();
+    m_imu.reset();
 
     // set current limits
     m_leftMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
@@ -120,8 +92,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
       m_leftMasterMotor, m_rightMasterMotor,
-      pigeon, drivetrainCharacteristics
+      m_imu, drivetrainCharacteristics
     );
+
+    this.camera = camera;
 
     DashboardManager.addTab(this);
   }
@@ -141,6 +115,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
+    SmartDashboard.putNumber("dt yaw", getYaw());
   }
 
   public Pose2d getPose() {
@@ -153,6 +128,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getRightMeters() {
     return POWER_TRAIN.calcWheelDistanceMeters(m_rightMasterMotor.getSensorPosition());
+  }
+
+  public double getYaw() {
+    return m_imu.getFusedHeading();
   }
 
   public void idleDrivetrain() {
@@ -190,5 +169,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void stop() {
     m_drivetrain.stop();
+  }
+
+  public void trackTarget() {
+         
   }
 }
