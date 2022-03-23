@@ -55,8 +55,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
       System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
     }
 
-    m_imu.reset();
-
     // set current limits
     m_leftMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
     m_leftSlaveMotor.limitOutputCurrent(CURRENT_LIMIT);
@@ -156,6 +154,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d newPose) {
     m_drivetrain.resetPose(newPose);
+    m_imu.setYaw(newPose.getRotation().getDegrees());
   }
 
   public void resetPose() {
@@ -179,7 +178,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public CommandBase getTrajectoryCommand(Trajectory path) {
     var setField2dPathCmd = new InstantCommand(() -> {
-      m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
+      // m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
     });
     return setField2dPathCmd.andThen(m_drivetrain.generateRamseteCommand(path, this));
   }
@@ -189,6 +188,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setCurrentField2dTrajectory(Trajectory path) {
-    m_drivetrain.addTrajectoryToField(path, "Current Path");
+    // m_drivetrain.addTrajectoryToField(path, "Current Path");
   }
 }
