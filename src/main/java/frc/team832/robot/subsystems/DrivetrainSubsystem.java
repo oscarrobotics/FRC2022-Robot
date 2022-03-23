@@ -9,12 +9,15 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.robot.Constants.FieldConstants;
+import frc.team832.robot.Constants.RobotConstants;
 
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
@@ -98,6 +101,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     this.camera = camera;
 
     DashboardManager.addTab(this);
+
+    // m_drivetrain.addPoseToField(FieldConstants.LeftOuterTarmacCorner, "LeftOuterTarmacCorner");
+    // m_drivetrain.addPoseToField(FieldConstants.RightOuterTarmacCorner, "RightOuterTarmacCorner");
+    // m_drivetrain.addPoseToField(FieldConstants.LeftInnerTarmacCorner, "LeftInnerTarmacCorner");
+    // m_drivetrain.addPoseToField(FieldConstants.RightInnerTarmacCorner, "RightInnerTarmacCorner");
+    // m_drivetrain.addPoseToField(FieldConstants.LeftTarmacTrueCorner, "LeftTarmacTrueCorner");
+    // m_drivetrain.addPoseToField(FieldConstants.RightTarmacTrueCorner, "RightTarmacTrueCorner");
   }
 
   public void teleopCurvatureDrive(double xSpeed, double zRotation, boolean turnInPlace, double inputScalingPow) {
@@ -144,6 +154,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightMasterMotor.set(rightVolts);
   }
 
+  public void resetPose(Pose2d newPose) {
+    m_drivetrain.resetPose(newPose);
+  }
+
   public void resetPose() {
     m_drivetrain.resetPose();
   }
@@ -164,14 +178,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public CommandBase getTrajectoryCommand(Trajectory path) {
-    return m_drivetrain.generateRamseteCommand(path, this);
+    var setField2dPathCmd = new InstantCommand(() -> {
+      m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
+    });
+    return setField2dPathCmd.andThen(m_drivetrain.generateRamseteCommand(path, this));
   }
 
   public void stop() {
     m_drivetrain.stop();
   }
 
-  public void trackTarget() {
-         
+  public void setCurrentField2dTrajectory(Trajectory path) {
+    m_drivetrain.addTrajectoryToField(path, "Current Path");
   }
 }
