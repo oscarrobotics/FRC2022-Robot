@@ -60,22 +60,13 @@ public class RobotContainer {
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
 
+    var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
+    var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
+    autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
     autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
     autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
     autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
     autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter));
-
-    var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
-    var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
-    autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
-
-    // drivetrain.setDefaultCommand(new RunCommand(() -> {
-    //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
-    //   drivetrain.teleopTankDrive(
-    //     -m_xboxCtrl.getRightY() * 1,
-    //     -m_xboxCtrl.getLeftY() * 1,
-    //     2);
-    // }, drivetrain));
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(

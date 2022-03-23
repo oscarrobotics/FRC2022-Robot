@@ -1,6 +1,5 @@
 package frc.team832.robot;
 
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -31,7 +30,7 @@ public class Robot extends TimedRobot {
   private final IntakeSubsystem intake = m_robotContainer.intake;
   private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
   private final ShooterSubsystem shooter = m_robotContainer.shooter;
-  // private final ClimbSubsystem climber = m_robotContainer.climber;
+  private final ClimbSubsystem climb = m_robotContainer.climb;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -87,12 +86,12 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     CommandScheduler.getInstance().cancelAll();
 
-    drivetrain.setNeutralMode(NeutralMode.kBrake);
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -107,12 +106,12 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     CommandScheduler.getInstance().cancelAll();
 
-
-    drivetrain.setNeutralMode(NeutralMode.kBrake);
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
+
   }
 
   /** This function is called periodically during operator control. */
