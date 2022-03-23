@@ -26,6 +26,8 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
@@ -38,10 +40,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final OscarDrivetrain m_drivetrain;
 
-  private final PhotonCamera camera;
+  private final PhotonCamera gloworm;
 
   /** Creates a new DrivetrainSubsystem. */
-  public DrivetrainSubsystem(PhotonCamera camera) {
+  public DrivetrainSubsystem(PhotonCamera gloworm) {
     if (!m_leftMasterMotor.getCANConnection()) {
       System.out.println("[DRIVETRAIN] LeftMasterMotor not on CAN!");
     }
@@ -96,7 +98,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_imu, drivetrainCharacteristics
     );
 
-    this.camera = camera;
+    this.gloworm = gloworm;
 
     DashboardManager.addTab(this);
 
@@ -123,7 +125,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
-    SmartDashboard.putNumber("dt yaw", getYaw());
+    updateVision();
   }
 
   public Pose2d getPose() {
@@ -189,5 +191,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void setCurrentField2dTrajectory(Trajectory path) {
     // m_drivetrain.addTrajectoryToField(path, "Current Path");
+  }
+
+  public void updateVision() {
+    PhotonPipelineResult latestResult = gloworm.getLatestResult();
+    boolean hasTargets = latestResult.hasTargets();
+    if (hasTargets) {
+			PhotonTrackedTarget target = latestResult.getBestTarget();
+			// ShooterCalculations.update(target.getPitch(), target.getYaw());
+		}
+  }
+
+  public void trackTarget() {
+    
   }
 }

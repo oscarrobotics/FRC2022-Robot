@@ -37,13 +37,13 @@ public class RobotContainer {
   public final Compressor compressor = new Compressor(Constants.RPH_CAN_ID, PneumaticsModuleType.REVPH);
 
   /** Vision Camera**/
-  public static final PhotonCamera camera = new PhotonCamera("camera");
+  public static final PhotonCamera gloworm = new PhotonCamera("gloworm");
 
   /** Subsystems **/
-  public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(camera);
+  public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(gloworm);
   public final IntakeSubsystem intake = new IntakeSubsystem();
   public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
-  public final ShooterSubsystem shooter = new ShooterSubsystem(camera);
+  public final ShooterSubsystem shooter = new ShooterSubsystem(gloworm);
   public final ClimbSubsystem climb = new ClimbSubsystem();
    
   /** HID Controllers **/
@@ -60,10 +60,10 @@ public class RobotContainer {
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
 
-    autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCommand(drivetrain));
-    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoAutoCommand(drivetrain, intake, conveyer, shooter));
-    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCommand(drivetrain, intake, conveyer, shooter));
-    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
+    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter));
 
     var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
     var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
@@ -77,37 +77,31 @@ public class RobotContainer {
     //     2);
     // }, drivetrain));
 
-    var arcadeDriveCommand = new RunEndCommand(
-      () -> {
+    var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           -m_xboxCtrl.getLeftY(),
           m_xboxCtrl.getRightX(), 
           2
         );
       },
-      drivetrain::stop,
-      drivetrain)
-    .withName("ArcadeDriveCommand");
+      drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
-    var tankDriveCommand = new RunEndCommand(
-      () -> {
+    var tankDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopTankDrive(
           -m_xboxCtrl.getRightY(),
           -m_xboxCtrl.getRightX(), 
           2
         );
       },
-      drivetrain::stop,
-      drivetrain)
-    .withName("ArcadeDriveCommand");
+      drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
+
     configTestingCommands();
     // configSimTestingCommands();
   }
 
   public void configOperatorCommands() {
-    // BUTTON BINDINGS
     // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     
     // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
@@ -155,10 +149,6 @@ public class RobotContainer {
   }
  
   public void configSimTestingCommands() {
-    // m_xboxCtrl.a()
-    //   .whenPressed(() -> shooter.setRPM(2600, 2600), shooter)
-    //   .whenReleased(shooter::idleShooter, shooter);
-
     var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
     .andThen(drivetrain::stop);
 

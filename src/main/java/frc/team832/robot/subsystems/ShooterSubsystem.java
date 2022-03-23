@@ -9,7 +9,6 @@ import frc.team832.lib.power.monitoring.StallDetector.StallDetectorStatus;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
 
-import org.opencv.photo.Photo;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -28,10 +27,10 @@ public class ShooterSubsystem extends SubsystemBase{
     private double m_frontFlywheelTargetRPM, m_frontFlywheelActualRPM, m_rearFlywheelTargetRPM, m_rearFlywheelActualRPM;
     private final NetworkTableEntry dash_frontFlywheelTargetRPM, dash_frontFlywheelActualRPM, dash_rearFlywheelTargetRPM, dash_rearFlywheelActualRPM;
     
-    private final PhotonCamera camera;
+    private final PhotonCamera gloworm;
 
     /** Creates a new ShooterSubsystem **/
-    public ShooterSubsystem(PhotonCamera camera) {
+    public ShooterSubsystem(PhotonCamera gloworm) {
         DashboardManager.addTab(this);
 
         m_frontMotor.setNeutralMode(NeutralMode.kCoast);
@@ -51,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase{
         dash_rearFlywheelTargetRPM = DashboardManager.addTabItem(this, "Rear Flywheel Target RPM", 0.0);;
         dash_rearFlywheelActualRPM = DashboardManager.addTabItem(this, "Rear Flywheel Actual RPM", 0.0);;
 
-        this.camera = camera;
+        this.gloworm = gloworm;
     }
 
     @Override

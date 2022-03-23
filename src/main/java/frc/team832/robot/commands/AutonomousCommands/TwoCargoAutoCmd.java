@@ -10,8 +10,8 @@ import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
-public class TwoCargoAutoCommand extends SequentialCommandGroup{
-    public TwoCargoAutoCommand(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
+public class TwoCargoAutoCmd extends SequentialCommandGroup{
+    public TwoCargoAutoCmd(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(drivetrain, intake, conveyer, shooter);
         addCommands(
             // moves dt backward to shoot

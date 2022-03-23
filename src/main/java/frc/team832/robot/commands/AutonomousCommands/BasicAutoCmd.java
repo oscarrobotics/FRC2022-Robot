@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 
-public class BasicAutoCommand extends SequentialCommandGroup{
-    public BasicAutoCommand(DrivetrainSubsystem drivetrain) {
+public class BasicAutoCmd extends SequentialCommandGroup{
+    public BasicAutoCmd(DrivetrainSubsystem drivetrain) {
         addRequirements(drivetrain);
         addCommands(
             // commands to drive robot out of zone

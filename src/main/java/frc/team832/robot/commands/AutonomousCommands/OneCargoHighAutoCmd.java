@@ -9,8 +9,8 @@ import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
-public class OneCargoAutoCommand extends SequentialCommandGroup {
-    public OneCargoAutoCommand(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
+public class OneCargoHighAutoCmd extends SequentialCommandGroup {
+    public OneCargoHighAutoCmd(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
         addRequirements(drivetrain, intake, conveyer, shooter);
         addCommands(
             //spins shooter and conveyer to contain ball
