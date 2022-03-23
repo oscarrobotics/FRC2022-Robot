@@ -1,5 +1,6 @@
 package frc.team832.robot;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -63,7 +64,7 @@ public class Robot extends TimedRobot {
     shooter.periodic();
 
     if (m_robotContainer.userButton.get()) {
-      drivetrain.resetPose();
+      m_robotContainer.setAutoPose();
     }
 
     SmartDashboard.putNumber("Storage PSI", compressor.getPressure());

@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
@@ -28,6 +29,37 @@ public final class Constants {
 
 	public static final int RPD_CAN_ID = 1;
 	public static final int RPH_CAN_ID = 1;
+
+	public static final class RobotConstants {
+		public static final double RobotBumperedSizeMeters = Units.inchesToMeters(32.25);
+		public static final Translation2d RobotBumperEdgeFromCenter = new Translation2d(RobotBumperedSizeMeters / 2, RobotBumperedSizeMeters / 2);
+		public static final double RobotHalfBumperedWidth = RobotBumperedSizeMeters / 2;
+	}
+
+	public static final class FieldConstants {
+		public static final Pose2d RightTarmacTrueCorner = new Pose2d(7.012, 1.664, Rotation2d.fromDegrees(67.5));
+		public static final Pose2d LeftTarmacTrueCorner = new Pose2d(5.500, 5.075, Rotation2d.fromDegrees(-22.5));
+		// public static final Translation2d OuterCornerTrx = new Translation2d()
+			// .plus(RobotConstants.RobotBumperEdgeFromCenter)
+			// .plus(new Translation2d(RobotConstants.RobotBumperedSizeMeters / 2, 0));
+
+		// public static final Translation2d InnerCornerTrx = new Translation2d()
+			// .minus(RobotConstants.RobotBumperEdgeFromCenter)
+			// .plus(new Translation2d(RobotConstants.RobotBumperedSizeMeters / 2, 0));
+
+		private static final Translation2d RightOuterTarmacCornerTrx = RightTarmacTrueCorner.getTranslation()
+			.plus(new Translation2d(RobotConstants.RobotHalfBumperedWidth, RobotConstants.RobotHalfBumperedWidth));
+
+		private static final Translation2d RightInnerTarmacCornerTrx = RightTarmacTrueCorner.getTranslation()
+			.plus(new Translation2d(0, RobotConstants.RobotHalfBumperedWidth))
+			.plus(new Translation2d(0.085, 0.125)); // magic fudge factor
+
+
+		public static final Pose2d RightOuterTarmacCorner = new Pose2d(RightOuterTarmacCornerTrx, Rotation2d.fromDegrees(90));
+		public static final Pose2d RightInnerTarmacCorner = new Pose2d(RightInnerTarmacCornerTrx, Rotation2d.fromDegrees(45));
+		public static final Pose2d LeftInnerTarmacCorner = new Pose2d(5.930, 4.680, Rotation2d.fromDegrees(0));
+		public static final Pose2d LeftOuterTarmacCorner = new Pose2d(6.083, 5.033, Rotation2d.fromDegrees(-45));
+	}
 
 	public static final class DrivetrainConstants {
 		/** CAN IDs **/ 
@@ -189,11 +221,9 @@ public final class Constants {
 	}
 
     public static class PneumaticsValues {
-        public static final int PCM_MODULE_NUM = 0;
-
-		/** Solenoid IDs*/
-        public static final int INTAKE_SOLENOID_ID = 0;
-		public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
-		public static final int LEFT_CLIMB_SOLENOID_ID = 3;
+			/** Solenoid IDs*/
+			public static final int INTAKE_SOLENOID_ID = 0;
+			public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
+			public static final int LEFT_CLIMB_SOLENOID_ID = 3;
     }
 }

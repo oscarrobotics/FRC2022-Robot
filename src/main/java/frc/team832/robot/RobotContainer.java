@@ -1,5 +1,7 @@
 package frc.team832.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
@@ -8,10 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.team832.AutonomousSelector;
+import frc.team832.AutonomousSelector.AutonomousMode;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
 // import frc.team832.lib.util.OscarMath;
-
+import frc.team832.lib.motion.PathHelper;
 import frc.team832.robot.Constants.*;
 // import frc.team832.robot.commands.*;
 // import frc.team832.robot.commands.Climb.*;
@@ -41,18 +44,23 @@ public class RobotContainer {
   private final StratComInterface stratComInterface = new StratComInterface(1);
   public final Trigger userButton = new Trigger(RobotController::getUserButton);
 
-  /** Sendable Chooser object **/
-  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  // /** Sendable Chooser object **/
+  // private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  public final AutonomousSelector autoSelector = new AutonomousSelector();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
 
-    autoChooser.setDefaultOption("0 Cargo Auto", new BasicAutoCommand(drivetrain));
-    autoChooser.addOption("1 Cargo Auto", new OneCargoAutoCommand(drivetrain, intake, conveyer, shooter));
-    autoChooser.addOption("2 Cargo Auto", new TwoCargoAutoCommand(drivetrain, intake, conveyer, shooter));
-    // autoChooser.addOption("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
-    SmartDashboard.putData(autoChooser);
+    autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCommand(drivetrain));
+    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCommand(drivetrain, intake, conveyer, shooter));
+
+    var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
+    var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
+    autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
 
     // drivetrain.setDefaultCommand(new RunCommand(() -> {
     //   // var shouldTurnInPlace = m_xboxCtrl.rightStick().getAsBoolean();
@@ -224,6 +232,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Returns command selected by SendableChooser autoCommand to run in autonomous
-    return autoChooser.getSelected();
+    return autoSelector.getSelectedAutonomous().autoCommand;
+  }
+
+  public void setAutoPose() {
+    var selectedAuto = autoSelector.getSelectedAutonomous();
+    System.out.println("USR BTN | Resetting Robot Pose to " + selectedAuto.startPose.toString());
+    drivetrain.resetPose(selectedAuto.startPose);
+    if (selectedAuto.path != null) {
+      drivetrain.setCurrentField2dTrajectory(selectedAuto.path);
+    }
   }
 }
