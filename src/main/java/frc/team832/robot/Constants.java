@@ -13,6 +13,7 @@ import edu.wpi.first.util.InterpolatingTreeMap;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
+import frc.team832.lib.util.OscarMath;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -223,9 +224,15 @@ public final class Constants {
 	}
 
     public static class PneumaticsValues {
-			/** Solenoid IDs*/
-			public static final int INTAKE_SOLENOID_ID = 0;
-			public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
-			public static final int LEFT_CLIMB_SOLENOID_ID = 3;
+		/** Solenoid IDs*/
+		public static final int INTAKE_SOLENOID_ID = 0;
+		public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
+		public static final int LEFT_CLIMB_SOLENOID_ID = 3;
     }
+
+	public static class VisionConstants {
+		public static final double CAMERA_HEIGHT_METERS = .720344; // 28.36 in
+		public static final double CAMERA_PITCH_RADIANS = OscarMath.degreesToRadians(45); // 45 degrees
+		public static final double TARGET_HEIGHT_METERS = 2.58; // to bottom of target
+	}
 }

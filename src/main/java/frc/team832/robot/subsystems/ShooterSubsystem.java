@@ -7,6 +7,7 @@ import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.lib.power.monitoring.StallDetector;
 import frc.team832.lib.power.monitoring.StallDetector.StallDetectorStatus;
 import frc.team832.robot.Constants.ShooterConstants;
+import frc.team832.robot.Constants.VisionConstants;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
 
@@ -34,7 +35,6 @@ public class ShooterSubsystem extends SubsystemBase{
     private final PhotonCamera gloworm;
     private PhotonTrackedTarget target = new PhotonTrackedTarget();
     private double distanceToTarget;
-    private double cameraHeightMeters, targetHeightMeters, cameraPitchRadians, targetPitchRadians;
     
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem(PhotonCamera gloworm) {
@@ -113,7 +113,7 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public void setVisionRpms() {
-        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(cameraHeightMeters, targetHeightMeters, cameraPitchRadians, targetPitchRadians);
+        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.CAMERA_HEIGHT_METERS, VisionConstants.TARGET_HEIGHT_METERS, VisionConstants.CAMERA_PITCH_RADIANS, target.getPitch());
         var frontRpm = FRONT_SHOOTER_RPM_MAP.get(distanceToTarget);
         var rearRpm = REAR_SHOOTER_RPM_MAP.get(distanceToTarget);
         setRPM(frontRpm, rearRpm);
