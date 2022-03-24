@@ -4,8 +4,8 @@
   "encoding": false,
   "gearing denominator": 1.0,
   "gearing numerator": 10.91,
-  "gyro": "None",
-  "gyro ctor": "1",
+  "gyro": "Pigeon",
+  "gyro ctor": "0",
   "is drivetrain": true,
   "motor controllers": [
     "TalonFX",
@@ -22,8 +22,8 @@
     2
   ],
   "primary motors inverted": [
-    true,
-    true
+    false,
+    false
   ],
   "secondary encoder inverted": false,
   "secondary encoder ports": [
@@ -35,8 +35,8 @@
     4
   ],
   "secondary motors inverted": [
-    false,
-    false
+    true,
+    true
   ],
   "velocity measurement period": 100
 }

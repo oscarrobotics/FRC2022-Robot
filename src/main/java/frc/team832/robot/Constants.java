@@ -1,5 +1,8 @@
 package frc.team832.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -7,9 +10,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.util.Units;
 import frc.team832.lib.motion.PathHelper;
 import edu.wpi.first.util.InterpolatingTreeMap;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.team832.lib.motors.Gearbox;
 import frc.team832.lib.motors.Motor;
 import frc.team832.lib.motors.WheeledPowerTrain;
@@ -74,7 +80,7 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 16.0 / 32.0);
+		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 18.0 / 30.0);
 		public static final Motor MOTOR = Motor.kFalcon500;
 		public static final double WHEEL_DIAMETER_INCHES = 6.25;
 		public static final double WHEELBASE_INCHES = 26.0;
@@ -82,6 +88,7 @@ public final class Constants {
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2, WHEEL_DIAMETER_INCHES, 1/GEARBOX.totalReduction);
 		public static final double MASS_KG = Units.lbsToKilograms(118.9);
 		public static final double MOI_KGM2 = 5.120993184;
+		// WHEEL CIRCUMFERENCE IN METERES = .4985
 
 		/** System Control Values **/
 		public static final double LEFT_KS = 0.66639;
@@ -96,12 +103,17 @@ public final class Constants {
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
 		public static final double RIGHT_KP = 2.463;
 
+		public static final double ANGULAR_KS = 0.8;
+
 		// TEST PATH FOLLOWING TRAJECTORY
 		private static final Pose2d zero_zero_StartPose = new Pose2d();
 		private static final Pose2d threeMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
 		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(2.5, 2);
 		public static final TrajectoryConfig AGGRESSIVE_TRAJCONFIG = new TrajectoryConfig(4, 6);
 		public static Trajectory test3MeterForwardTraj = PathHelper.generatePath(zero_zero_StartPose, threeMeterX_Pose, CALM_TRAJCONFIG);
+
+		// PATHS
+		public static final Path THREE_BALL_AUTO_PATH = Filesystem.getDeployDirectory().toPath().resolve("deploy/pathplanner/generatedJSON/3BallAuto.wpilib.json");
 	}	
 
 	public static final class IntakeConstants {

@@ -8,22 +8,20 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
-public class ShootBallCommand extends SequentialCommandGroup {
+public class ShootBallManualCmd extends SequentialCommandGroup {
     private final ConveyerSubsystem conveyor;
     private final ShooterSubsystem shooter;
-    public ShootBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM) {
+    public ShootBallManualCmd(ConveyerSubsystem conveyer, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM) {
         addRequirements(conveyer, shooter);
         this.conveyor = conveyer;
         this.shooter = shooter;
         addCommands(
-            // //shooter spins flywheels to target rpms
-            // new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
-
-            // shooter spins flywheels to rpms based on distance
-            new InstantCommand(() -> shooter.setVisionRpms(), shooter),
+            //shooter spins flywheels to target rpms
+            new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
 
             // checks to see if flywheels at target before feeding
             new WaitUntilCommand(() -> shooter.atTarget()),
+            
             // feeds 1 ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
             new FeedBallCommand(conveyer, shooter)
         );

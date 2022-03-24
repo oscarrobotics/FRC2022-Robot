@@ -42,7 +42,7 @@ public class ClimbSubsystem extends SubsystemBase{
         climbMotorRight.setNeutralMode(NeutralMode.kBrake);
 
         // climbMotorLeft.setInverted(true);
-        climbMotorRight.setInverted(true);
+        // climbMotorRight.setInverted(true);
 
         rezeroClimb();
 

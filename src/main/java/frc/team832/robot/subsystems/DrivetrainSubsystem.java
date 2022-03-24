@@ -7,6 +7,9 @@ package frc.team832.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
@@ -16,9 +19,12 @@ import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.robot.Constants.DrivetrainConstants;
 
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -41,7 +47,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final PhotonCamera gloworm;
   private PhotonTrackedTarget target = new PhotonTrackedTarget();
-  private PIDController targetingPID = new PIDController(.025, 0, 0);
+  
+  private double m_aimKp = 0.2;
+  private double m_aimKd = 0;
+  private PIDController targetingPID = new PIDController(m_aimKp, 0, m_aimKd);
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem(PhotonCamera gloworm) {
@@ -57,6 +66,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (!m_rightSlaveMotor.getCANConnection()) {
       System.out.println("[DRIVETRAIN] RightSlaveMotor not on CAN!");
     }
+
+    m_leftSlaveMotor.wipeSettings();
+    m_rightSlaveMotor.wipeSettings();
 
     // set current limits
     m_leftMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
@@ -76,12 +88,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // zero encodors
     m_leftMasterMotor.rezeroSensor();
     m_rightMasterMotor.rezeroSensor();
-    m_leftSlaveMotor.rezeroSensor();
-    m_rightSlaveMotor.rezeroSensor();
+    // m_leftSlaveMotor.rezeroSensor();
+    // m_rightSlaveMotor.rezeroSensor();
 
     // set slave motors to follow masters
-    m_leftSlaveMotor.follow(m_leftMasterMotor);
-    m_rightSlaveMotor.follow(m_rightMasterMotor);
+    m_leftSlaveMotor.getBaseController().follow(m_leftMasterMotor.getBaseController());
+    m_rightSlaveMotor.getBaseController().follow(m_rightMasterMotor.getBaseController());
+    // m_leftSlaveMotor.follow(m_leftMasterMotor);
+    // m_rightSlaveMotor.follow(m_rightMasterMotor);
 
     // ensure right slave follows master inversion
     m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
@@ -102,6 +116,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     this.gloworm = gloworm;
 
     DashboardManager.addTab(this);
+    SmartDashboard.putNumber("vision kp", m_aimKp);
+    SmartDashboard.putNumber("vision kd", m_aimKd);
 
     // m_drivetrain.addPoseToField(FieldConstants.LeftOuterTarmacCorner, "LeftOuterTarmacCorner");
     // m_drivetrain.addPoseToField(FieldConstants.RightOuterTarmacCorner, "RightOuterTarmacCorner");
@@ -126,6 +142,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drivetrain.periodic();
+
+    double new_m_aimKp = SmartDashboard.getNumber("vision kp", 0);
+    double new_m_aimKd = SmartDashboard.getNumber("vision kd", 0);
+
+    if (m_aimKp != new_m_aimKp) {
+      m_aimKp = new_m_aimKp;
+      targetingPID.setP(m_aimKp);
+    }
+
+    if (m_aimKd != new_m_aimKd) {
+      m_aimKd = new_m_aimKd;
+      targetingPID.setD(m_aimKd);
+    }
+
     updateVision();
   }
 
@@ -168,8 +198,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // zero encodors
     m_leftMasterMotor.rezeroSensor();
     m_rightMasterMotor.rezeroSensor();
-    m_leftSlaveMotor.rezeroSensor();
-    m_rightSlaveMotor.rezeroSensor();
+    // m_leftSlaveMotor.rezeroSensor();
+    // m_rightSlaveMotor.rezeroSensor();
   }
 
   public void setNeutralMode(NeutralMode mode) {
@@ -181,7 +211,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public CommandBase getTrajectoryCommand(Trajectory path) {
     var setField2dPathCmd = new InstantCommand(() -> {
-      // m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
+      m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
     });
     return setField2dPathCmd.andThen(m_drivetrain.generateRamseteCommand(path, this));
   }
@@ -191,7 +221,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void setCurrentField2dTrajectory(Trajectory path) {
-    // m_drivetrain.addTrajectoryToField(path, "Current Path");
+    m_drivetrain.addTrajectoryToField(path, "Current Path");
+  }
+
+  public Trajectory initializePaths(Path newPath) {
+    Trajectory trajectory = new Trajectory();
+
+    try {
+      trajectory = TrajectoryUtil.fromPathweaverJson(newPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory", ex.getStackTrace());
+    }
+
+    return trajectory;
   }
 
   public void updateVision() {
@@ -199,17 +241,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     if (latestResult.hasTargets()) {
 			target = latestResult.getBestTarget();
+      SmartDashboard.putNumber("target yaw", target.getYaw());
+      SmartDashboard.putNumber("vision pid effort", getTargetingRotationSpeed());
 		}
   }
 
   public double getTargetingRotationSpeed() {
-    return targetingPID.calculate(target.getYaw(), 0);
+    double errorSign = Math.signum(target.getYaw());
+    double errorPercentage = Math.abs(target.getYaw() / 27.0);
+    errorPercentage *= errorSign;
+    SmartDashboard.putNumber("AimError", errorPercentage);
+    double ksEffort = (DrivetrainConstants.ANGULAR_KS / 12.0) * -errorSign;
+    double effort = targetingPID.calculate(errorPercentage, 0);
+    return effort + ksEffort;
   }
 
   public CommandBase getTargetingCommand(DoubleSupplier xPow) {
     return new RunEndCommand(() -> {
       teleopArcadeDrive(
-        xPow.getAsDouble(),
+        xPow.getAsDouble()*.6,
+        // 0,
         getTargetingRotationSpeed(), 
         1
       );

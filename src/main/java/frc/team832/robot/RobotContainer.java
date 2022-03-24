@@ -19,10 +19,12 @@ import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.Constants.*;
-import frc.team832.robot.commands.ShootBallCommand;
+import frc.team832.robot.commands.ShootBallVisionCmd;
 // import frc.team832.robot.commands.*;
 // import frc.team832.robot.commands.Climb.*;
 import frc.team832.robot.commands.AutonomousCommands.*;
+import frc.team832.robot.commands.Climb.PivotClimbCommand;
+import frc.team832.robot.commands.Climb.StraightenClimbCommand;
 import frc.team832.robot.subsystems.*;
 
 /**
@@ -60,16 +62,16 @@ public class RobotContainer {
 
     var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
     var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
-    autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
+    // autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
     autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
     autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
     autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
-    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter));
+    autoSelector.addDefaultAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter));
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           -m_xboxCtrl.getLeftY(),
-          m_xboxCtrl.getRightX(), 
+          -m_xboxCtrl.getRightX(), 
           2
         );
       },
@@ -86,12 +88,12 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configTestingCommands();
+    // configTestingCommands();
+    // configSimTestingCommands();
+    configOperatorCommands();
   }
 
-  public void configOperatorCommands() {
-    // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-    
+  public void configOperatorCommands() {   
     // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
 
@@ -137,16 +139,22 @@ public class RobotContainer {
   }
 
   public void configSimTestingCommands() {
-    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
-    .andThen(drivetrain::stop);
+    // var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
+    // .andThen(drivetrain::stop);
 
-    m_xboxCtrl.b()
-      .whenPressed(ramseteTestCommand);
+    // m_xboxCtrl.b()
+    //   .whenPressed(ramseteTestCommand);
+
+    // m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
+
+    m_xboxCtrl.a().whileHeld(drivetrain.getTrajectoryCommand(drivetrain.initializePaths(DrivetrainConstants.THREE_BALL_AUTO_PATH)));
+
+    
   }
 
   public void configTestingCommands() {
     // track target command
-    m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
+    // m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
 
     // shooting with vision
 
@@ -213,6 +221,10 @@ public class RobotContainer {
         conveyer
       )
     );
+  }
+
+  public void runGearboxCmd() {
+    drivetrain.setWheelPower(1.0, 1.0);
   }
 
   /**

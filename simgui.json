@@ -14,6 +14,7 @@
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/Talon FX [10]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [1]": "Motor Controller",
@@ -30,6 +31,7 @@
       "/Shuffleboard/DrivetrainSubsystem/DrivetrainSubsystem": "Subsystem",
       "/Shuffleboard/IntakeSubsystem/IntakeSubsystem": "Subsystem",
       "/Shuffleboard/ShooterSubsystem/ShooterSubsystem": "Subsystem",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Oscar Drivetrain/Field": "Field2d",
       "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
