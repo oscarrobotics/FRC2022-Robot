@@ -116,7 +116,7 @@ public final class Constants {
 		public static Trajectory test3MeterForwardTraj = PathHelper.generatePath(zero_zero_StartPose, threeMeterX_Pose, CALM_TRAJCONFIG);
 
 		// PATHS
-		public static final Path THREE_BALL_AUTO_PATH = Filesystem.getDeployDirectory().toPath().resolve("deploy/pathplanner/generatedJSON/3BallAuto.wpilib.json");
+		// public static final Path THREE_BALL_AUTO_PATH = Filesystem.getDeployDirectory().toPath().resolve("/deploy/pathplanner/generatedJSON/3BallAuto.wpilib.json");
 	}	
 
 	public static final class IntakeConstants {

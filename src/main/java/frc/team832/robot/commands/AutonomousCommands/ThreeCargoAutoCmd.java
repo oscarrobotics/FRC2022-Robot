@@ -27,7 +27,7 @@ public class ThreeCargoAutoCmd extends SequentialCommandGroup {
                 new AcceptBallCommand(intake, shooter, conveyer),
                 
                 // Follow path
-                drivetrain.getTrajectoryCommand(drivetrain.initializePaths(DrivetrainConstants.THREE_BALL_AUTO_PATH))
+                drivetrain.getTrajectoryCommand(drivetrain.initializePaths("3 Ball Auto"))
             ),
 
             // shoot ball

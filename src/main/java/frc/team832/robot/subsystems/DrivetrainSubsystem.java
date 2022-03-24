@@ -29,6 +29,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.pathplanner.lib.PathPlanner;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -224,15 +225,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.addTrajectoryToField(path, "Current Path");
   }
 
-  public Trajectory initializePaths(Path newPath) {
-    Trajectory trajectory = new Trajectory();
-
-    try {
-      trajectory = TrajectoryUtil.fromPathweaverJson(newPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory", ex.getStackTrace());
-    }
-
+  public Trajectory initializePaths(String pathName) {
+    Trajectory trajectory = PathPlanner.loadPath(pathName, 2.5, 2);
     return trajectory;
   }
 
