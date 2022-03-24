@@ -4,12 +4,14 @@
 
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
@@ -20,6 +22,8 @@ import frc.team832.robot.Constants.FieldConstants;
 import frc.team832.robot.Constants.RobotConstants;
 
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
+
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
@@ -41,6 +45,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final OscarDrivetrain m_drivetrain;
 
   private final PhotonCamera gloworm;
+  private PhotonTrackedTarget target = new PhotonTrackedTarget();
+  private PIDController targetingPID = new PIDController(.15, 0, 0);
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem(PhotonCamera gloworm) {
@@ -195,14 +201,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void updateVision() {
     PhotonPipelineResult latestResult = gloworm.getLatestResult();
-    boolean hasTargets = latestResult.hasTargets();
-    if (hasTargets) {
-			PhotonTrackedTarget target = latestResult.getBestTarget();
-			// ShooterCalculations.update(target.getPitch(), target.getYaw());
+
+    if (latestResult.hasTargets()) {
+			target = latestResult.getBestTarget();
 		}
   }
 
-  public void trackTarget() {
-    
+  public double getTargetingRotationSpeed() {
+    return targetingPID.calculate(target.getYaw(), 0);
+  }
+
+  public CommandBase getTargetingCommand(DoubleSupplier xPow) {
+    return new RunEndCommand(() -> {
+      teleopArcadeDrive(
+        xPow.getAsDouble(),
+        getTargetingRotationSpeed(), 
+        2
+      );
+    }, 
+    () -> stop(), 
+    this);
   }
 }

@@ -51,9 +51,7 @@ public class RobotContainer {
   private final StratComInterface stratComInterface = new StratComInterface(1);
   public final Trigger userButton = new Trigger(RobotController::getUserButton);
 
-  // /** Sendable Chooser object **/
-  // private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-
+  /** Autonomous Selector **/
   public final AutonomousSelector autoSelector = new AutonomousSelector();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -88,8 +86,8 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configTestingCommands();
-    // configSimTestingCommands();
+    // configTestingCommands();
+    configSimTestingCommands();
   }
 
   public void configOperatorCommands() {
@@ -138,19 +136,23 @@ public class RobotContainer {
     
     // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
- 
-  public void configSimTestingCommands() {
-    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
-    .andThen(drivetrain::stop);
 
-    m_xboxCtrl.b()
-      .whenPressed(ramseteTestCommand);
+  public void configSimTestingCommands() {
+    // var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
+    // .andThen(drivetrain::stop);
+
+    // m_xboxCtrl.b()
+    //   .whenPressed(ramseteTestCommand);
+
+    m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
   }
 
   public void configTestingCommands() {
-    // map sliders to each flywheel
-    stratComInterface.singleToggle().whileHeld(
-      new RunEndCommand(
+    // track target command
+    // m_xboxCtrl.a().whileHeld(drivetrain.targetingCommand());
+
+    // map sliders to each flywheel and turn on shooter with single toggle
+    stratComInterface.singleToggle().whileHeld(new RunEndCommand(
         () -> {
           double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
           double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
@@ -164,13 +166,9 @@ public class RobotContainer {
         shooter
       )
     );
-    // DoubleSupplier leftSliderRpm = () -> OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
-    // DoubleSupplier rightSliderRpm = () -> OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
-    // stratComInterface.singleToggle().whileHeld(new ShootBallCommand(conveyer, shooter, leftSliderRpm, rightSliderRpm));
-
-    // // intake
-    stratComInterface.arcadeBlackRight().whileHeld(
-      new RunEndCommand(
+    
+    // intake
+    stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
         () -> {
           intake.extendIntake();
           intake.setPower(IntakeConstants.INTAKE_POWER);
@@ -185,9 +183,8 @@ public class RobotContainer {
       )
     );
 
-    // // feed shooter
-    stratComInterface.arcadeWhiteRight().whileHeld(
-      new RunEndCommand(
+    // feed shooter (spin conveyer forward)
+    stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
         () -> {
           // intake.extendIntake();
           // intake.setPower(IntakeConstants.INTAKE_POWER);
@@ -200,13 +197,9 @@ public class RobotContainer {
         conveyer
       )
     );
-    // // current sensing feed
-    // // stratComInterface.arcadeWhiteRight().whenHeld(new FeedBallCommand(conveyer, shooter));
-
-
-    // // reverse conveyer
-    stratComInterface.arcadeWhiteLeft().whileHeld(
-      new RunEndCommand(
+    
+    // reverse conveyer (to feed fron shooter)
+    stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
         () -> {
           // intake.extendIntake();
           // intake.setPower(IntakeConstants.INTAKE_POWER);
