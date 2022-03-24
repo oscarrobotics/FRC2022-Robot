@@ -225,8 +225,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.addTrajectoryToField(path, "Current Path");
   }
 
-  public Trajectory initializePaths(String pathName) {
-    Trajectory trajectory = PathPlanner.loadPath(pathName, 2.5, 2);
+  public Trajectory initializePaths(String pathName, double maxVel, double maxAccel) {
+    Trajectory trajectory = PathPlanner.loadPath(pathName, maxVel, maxAccel);
     return trajectory;
   }
 
