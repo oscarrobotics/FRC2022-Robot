@@ -6,10 +6,14 @@ import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.lib.power.monitoring.StallDetector;
 import frc.team832.lib.power.monitoring.StallDetector.StallDetectorStatus;
+import frc.team832.robot.Constants.ShooterConstants;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +32,10 @@ public class ShooterSubsystem extends SubsystemBase{
     private final NetworkTableEntry dash_frontFlywheelTargetRPM, dash_frontFlywheelActualRPM, dash_rearFlywheelTargetRPM, dash_rearFlywheelActualRPM;
     
     private final PhotonCamera gloworm;
-
+    private PhotonTrackedTarget target = new PhotonTrackedTarget();
+    private double distanceToTarget;
+    private double cameraHeightMeters, targetHeightMeters, cameraPitchRadians, targetPitchRadians;
+    
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem(PhotonCamera gloworm) {
         DashboardManager.addTab(this);
@@ -94,5 +101,21 @@ public class ShooterSubsystem extends SubsystemBase{
 
     public void setPower(double ignored) {
         // stub method to make this compile for now.
+    }
+
+    public void updateVision() {
+        PhotonPipelineResult latestResult = gloworm.getLatestResult();
+    
+        if (latestResult.hasTargets()) {
+            target = latestResult.getBestTarget();
+        }
+        
+    }
+
+    public void setVisionRpms() {
+        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(cameraHeightMeters, targetHeightMeters, cameraPitchRadians, targetPitchRadians);
+        var frontRpm = FRONT_SHOOTER_RPM_MAP.get(distanceToTarget);
+        var rearRpm = REAR_SHOOTER_RPM_MAP.get(distanceToTarget);
+        setRPM(frontRpm, rearRpm);
     }
 }

@@ -7,8 +7,6 @@ package frc.team832.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
@@ -18,8 +16,6 @@ import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
-import frc.team832.robot.Constants.FieldConstants;
-import frc.team832.robot.Constants.RobotConstants;
 
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
@@ -27,7 +23,6 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -46,7 +41,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final PhotonCamera gloworm;
   private PhotonTrackedTarget target = new PhotonTrackedTarget();
-  private PIDController targetingPID = new PIDController(.15, 0, 0);
+  private PIDController targetingPID = new PIDController(.025, 0, 0);
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem(PhotonCamera gloworm) {
@@ -216,10 +211,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
       teleopArcadeDrive(
         xPow.getAsDouble(),
         getTargetingRotationSpeed(), 
-        2
+        1
       );
     }, 
-    () -> stop(), 
+    () -> {}, 
     this);
   }
 }

@@ -86,8 +86,7 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configTestingCommands();
-    configSimTestingCommands();
+    configTestingCommands();
   }
 
   public void configOperatorCommands() {
@@ -138,18 +137,18 @@ public class RobotContainer {
   }
 
   public void configSimTestingCommands() {
-    // var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
-    // .andThen(drivetrain::stop);
+    var ramseteTestCommand = drivetrain.getTrajectoryCommand(DrivetrainConstants.test3MeterForwardTraj).withName("RamseteTestCommand")
+    .andThen(drivetrain::stop);
 
-    // m_xboxCtrl.b()
-    //   .whenPressed(ramseteTestCommand);
-
-    m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
+    m_xboxCtrl.b()
+      .whenPressed(ramseteTestCommand);
   }
 
   public void configTestingCommands() {
     // track target command
-    // m_xboxCtrl.a().whileHeld(drivetrain.targetingCommand());
+    m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
+
+    // shooting with vision
 
     // map sliders to each flywheel and turn on shooter with single toggle
     stratComInterface.singleToggle().whileHeld(new RunEndCommand(

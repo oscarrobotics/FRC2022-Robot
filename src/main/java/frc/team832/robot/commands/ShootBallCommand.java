@@ -16,20 +16,16 @@ public class ShootBallCommand extends SequentialCommandGroup {
         this.conveyor = conveyer;
         this.shooter = shooter;
         addCommands(
-            //shooter spins flywheels to target rpms
-            new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
+            // //shooter spins flywheels to target rpms
+            // new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
+
+            // shooter spins flywheels to rpms based on distance
+            new InstantCommand(() -> shooter.setVisionRpms(), shooter),
 
             // checks to see if flywheels at target before feeding
             new WaitUntilCommand(() -> shooter.atTarget()),
-
             // feeds 1 ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
             new FeedBallCommand(conveyer, shooter)
-
-            // // checks to see if flywheels at target before feeding
-            // new WaitUntilCommand(() -> shooter.atTarget()),
-
-            // // feeds 2nd ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
-            // new FeedBallCommand(conveyer, shooter)
         );
     }
 
