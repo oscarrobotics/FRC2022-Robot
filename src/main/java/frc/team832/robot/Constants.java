@@ -91,19 +91,22 @@ public final class Constants {
 		// WHEEL CIRCUMFERENCE IN METERES = .4985
 
 		/** System Control Values **/
-		public static final double LEFT_KS = 0.66639;
-		public static final double LEFT_KV = 2.5477;
-		public static final double LEFT_KA = 0.2459;
+		public static final double LEFT_KS = 0.6953;
+		public static final double LEFT_KV = 2.2981;
+		public static final double LEFT_KA = 0.54892;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
-		public static final double LEFT_KP = 3.1833;
+		public static final double LEFT_KP = 3.4267;
 
-		public static final double RIGHT_KS = 0.63619;
-		public static final double RIGHT_KV = 2.5305;
-		public static final double RIGHT_KA = 0.13119;
+		public static final double RIGHT_KS = 0.69347;
+		public static final double RIGHT_KV = 2.3149;
+		public static final double RIGHT_KA = 0.23937;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
-		public static final double RIGHT_KP = 2.463;
+		public static final double RIGHT_KP = 2.9336;
 
-		public static final double ANGULAR_KS = 0.8;
+		public static final double ANGULAR_KS = 0.49291;
+		public static final double ANGULAR_KV = 0.13429;
+		public static final double ANGULAR_KA = 0.0030209;
+		public static final double ANGULAR_KP = 0.064151;
 
 		// TEST PATH FOLLOWING TRAJECTORY
 		private static final Pose2d zero_zero_StartPose = new Pose2d();
