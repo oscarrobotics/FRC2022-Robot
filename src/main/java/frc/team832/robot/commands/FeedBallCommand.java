@@ -10,7 +10,7 @@ import frc.team832.robot.subsystems.ShooterSubsystem;
 
 public class FeedBallCommand extends SequentialCommandGroup{
     public FeedBallCommand(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
-        addRequirements(conveyer, shooter);
+        addRequirements(conveyer);
         addCommands(
             // feeds only 1 ball
 

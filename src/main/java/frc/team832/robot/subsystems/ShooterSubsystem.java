@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase{
     
     private final PhotonCamera gloworm;
     private PhotonTrackedTarget target = new PhotonTrackedTarget();
-    private double distanceToTarget;
+    private double distanceToTargetMeters;
     
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem(PhotonCamera gloworm) {
@@ -68,6 +68,8 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearFlywheel.periodic();
 
         updateDashboardData();
+        updateVision();
+        updateVisionDistance();
     }
 
     public void updateDashboardData() {
@@ -88,8 +90,8 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public void setRPMForDistanceHigh(double feet) {
-        var frontRpm = FRONT_SHOOTER_RPM_MAP.get(feet);
-        var rearRpm = REAR_SHOOTER_RPM_MAP.get(feet);
+        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(feet);
+        var rearRpm = TOP_SHOOTER_RPM_MAP.get(feet);
         setRPM(frontRpm, rearRpm);
     }
 
@@ -113,18 +115,31 @@ public class ShooterSubsystem extends SubsystemBase{
         }
     }
 
-    public void setVisionRpms() {
-        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(
+    public void updateVisionDistance() {
+        distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
             VisionConstants.CAMERA_HEIGHT_METERS, 
             VisionConstants.TARGET_HEIGHT_METERS, 
             VisionConstants.CAMERA_PITCH_RADIANS, 
             Units.degreesToRadians(target.getPitch())
           ) + .0762;
-        SmartDashboard.putNumber("distance to target", distanceToTarget);
-        var frontRpm = FRONT_SHOOTER_RPM_MAP.get(distanceToTarget);
-        var rearRpm = REAR_SHOOTER_RPM_MAP.get(distanceToTarget);
+        SmartDashboard.putNumber("distance to target", distanceToTargetMeters);
+    }
+
+    public void setVisionRpms() {
+        updateVisionDistance();
+        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(Units.metersToInches(distanceToTargetMeters));
+        var rearRpm = TOP_SHOOTER_RPM_MAP.get(Units.metersToInches(distanceToTargetMeters));
         SmartDashboard.putNumber("front rpm via vision", frontRpm);
         SmartDashboard.putNumber("rear rpm via vision", rearRpm);
         setRPM(frontRpm, rearRpm);
+    }
+
+    public double getFrontVisionRPM() {
+        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(distanceToTargetMeters);
+        return frontRpm;
+    }
+    public double getRearVisionRPM() {
+        var rearRpm = TOP_SHOOTER_RPM_MAP.get(distanceToTargetMeters);
+        return rearRpm;
     }
 }

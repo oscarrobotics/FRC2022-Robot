@@ -179,25 +179,28 @@ public final class Constants {
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 
 		/** Speeds **/
-		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		public static final double FRONT_RPM_FENDER = 3165;
+		public static final double REAR_RPM_FENDER = 648;
+
+		public static final InterpolatingTreeMap<Double, Double> BOTTOM_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
 		static {
-			FRONT_SHOOTER_RPM_MAP.put(0.0, 2940.0);
-			FRONT_SHOOTER_RPM_MAP.put(1.0, 2220.0);
-			FRONT_SHOOTER_RPM_MAP.put(2.0, 2120.0);
-			FRONT_SHOOTER_RPM_MAP.put(3.0, 1695.0);
-			FRONT_SHOOTER_RPM_MAP.put(4.0, 1695.0);
-			FRONT_SHOOTER_RPM_MAP.put(5.0, 1395.0);
+			BOTTOM_SHOOTER_RPM_MAP.put(0.0, FRONT_RPM_FENDER);
+			BOTTOM_SHOOTER_RPM_MAP.put(24.75, 2118.36);
+			BOTTOM_SHOOTER_RPM_MAP.put(40.75, 2043.59);
+			BOTTOM_SHOOTER_RPM_MAP.put(53.5, 1570.08);
+			BOTTOM_SHOOTER_RPM_MAP.put(76.0, 1520.23);
 		}
 
-		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		public static final InterpolatingTreeMap<Double, Double> TOP_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
 		static {
-			REAR_SHOOTER_RPM_MAP.put(0.0, 1000.0);
-			REAR_SHOOTER_RPM_MAP.put(1.0, 1820.0);
-			REAR_SHOOTER_RPM_MAP.put(2.0, 1870.0);
-			REAR_SHOOTER_RPM_MAP.put(3.0, 2170.0);
-			REAR_SHOOTER_RPM_MAP.put(4.0, 2420.0);
-			REAR_SHOOTER_RPM_MAP.put(5.0, 3090.0);
+			TOP_SHOOTER_RPM_MAP.put(0.0, REAR_RPM_FENDER);
+			TOP_SHOOTER_RPM_MAP.put(24.75, 1794.38);
+			TOP_SHOOTER_RPM_MAP.put(40.75, 2018.67);
+			TOP_SHOOTER_RPM_MAP.put(53.5, 2556.95);
+			TOP_SHOOTER_RPM_MAP.put(76.0, 3315.59);
 		}
+
+
 
 		/** System Control Values **/ // Data from sysid
 		public static final double BOTTOM_KS = 0.52828;

@@ -92,9 +92,9 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configTestingCommands();
+    // configTestingCommands();
     // configSimTestingCommands();
-    // configOperatorCommands();
+    configOperatorCommands();
   }
 
   public void configOperatorCommands() {   
@@ -103,26 +103,26 @@ public class RobotContainer {
 
     // stratComInterface.arcadeBlackLeft().whenPressed(new ShootBallCommand(conveyer, shooter));
 
-    // stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
-    //     climb.setLeftPow(-.35);
-    //     climb.setRightPow(-.35);
-    //   }, 
-    //   () -> {
-    //     climb.setLeftPow(0);
-    //     climb.setRightPow(0);
-    //   }, climb));
+    stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
+        climb.setLeftPow(-.65);
+        climb.setRightPow(-.65);
+      }, 
+      () -> {
+        climb.setLeftPow(0);
+        climb.setRightPow(0);
+      }, climb));
 
-    //   stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
-    //     climb.setLeftPow(.65);
-    //     climb.setRightPow(.65);
-    //   }, 
-    //   () -> {
-    //     climb.setLeftPow(0);
-    //     climb.setRightPow(0);
-    //   }, climb));
+      stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
+        climb.setLeftPow(.65);
+        climb.setRightPow(.65);
+      }, 
+      () -> {
+        climb.setLeftPow(0);
+        climb.setRightPow(0);
+      }, climb));
 
-    //   stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
-    //   stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
+      stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
+      stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
 
     // auto climb
     // stratComInterface.sc1().whenHeld(new ExtendClimbCommand(climb));
@@ -159,24 +159,13 @@ public class RobotContainer {
     m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
 
     // map sliders to each flywheel and turn on shooter with single toggle
-    // stratComInterface.singleToggle().whileHeld(new RunEndCommand(
-    //     () -> {
-    //       double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
-    //       double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
-    //       SmartDashboard.putNumber("Top Flywheel Target RPM", topRpm);
-    //       SmartDashboard.putNumber("Bottom Flywheel Target RPM", botRpm);
-    //       shooter.setRPM(botRpm, topRpm);
-    //     },
-    //     () -> {
-    //       shooter.idleShooter();
-    //     }, 
-    //     shooter
-    //   )
-    // );
-
     stratComInterface.singleToggle().whileHeld(new RunEndCommand(
         () -> {
-          shooter.setVisionRpms();
+          double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
+          double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
+          SmartDashboard.putNumber("Top Flywheel Target RPM", topRpm);
+          SmartDashboard.putNumber("Bottom Flywheel Target RPM", botRpm);
+          shooter.setRPM(botRpm, topRpm);
         },
         () -> {
           shooter.idleShooter();
@@ -185,9 +174,22 @@ public class RobotContainer {
       )
     );
 
+    // stratComInterface.singleToggle().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       shooter.setVisionRpms();
+    //     },
+    //     () -> {
+    //       shooter.idleShooter();
+    //     }, 
+    //     shooter
+    //   )
+    // );
+
     // shooting with vision
     stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
-    
+      
+    // stratComInterface.scSideTop().whileHeld(ne);
+      
     // intake
     stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
         () -> {
