@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -19,7 +20,9 @@ import frc.team832.lib.drive.OscarDrivetrain;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.Constants.DrivetrainConstants;
+import frc.team832.robot.Constants.VisionConstants;
 
 import static frc.team832.robot.Constants.DrivetrainConstants.*;
 
@@ -32,6 +35,7 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.pathplanner.lib.PathPlanner;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -119,6 +123,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     DashboardManager.addTab(this);
     SmartDashboard.putNumber("vision kp", m_aimKp);
     SmartDashboard.putNumber("vision kd", m_aimKd);
+    
 
     // m_drivetrain.addPoseToField(FieldConstants.LeftOuterTarmacCorner, "LeftOuterTarmacCorner");
     // m_drivetrain.addPoseToField(FieldConstants.RightOuterTarmacCorner, "RightOuterTarmacCorner");
@@ -247,15 +252,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("AimError", errorPercentage);
     double ksEffort = (DrivetrainConstants.ANGULAR_KS / 12.0) * -errorSign;
     double effort = targetingPID.calculate(errorPercentage, 0);
+
+    var dist = PhotonUtils.calculateDistanceToTargetMeters(
+      VisionConstants.CAMERA_HEIGHT_METERS, 
+      VisionConstants.TARGET_HEIGHT_METERS, 
+      VisionConstants.CAMERA_PITCH_RADIANS, 
+      Units.degreesToRadians(target.getPitch())
+    ) + .0762;
+    SmartDashboard.putNumber("Dist", dist);
+
+
     return effort + ksEffort;
   }
 
   public CommandBase getTargetingCommand(DoubleSupplier xPow) {
     return new RunEndCommand(() -> {
+      var cmdVisEff = getTargetingRotationSpeed();
+      SmartDashboard.putNumber("CmdVisEff", cmdVisEff);
       teleopArcadeDrive(
         xPow.getAsDouble()*.6,
         // 0,
-        getTargetingRotationSpeed(), 
+        cmdVisEff,
         1
       );
     }, 

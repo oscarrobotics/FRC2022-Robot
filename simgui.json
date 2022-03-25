@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "RoboRIO": {
+      "window": {
+        "visible": true
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -37,6 +44,11 @@
     },
     "windows": {
       "/SmartDashboard/Oscar Drivetrain/Field": {
+        "RamseteCommandPath": {
+          "arrows": false,
+          "style": "Track"
+        },
+        "image": "C:\\Users\\Programming\\Documents\\Robotics\\Source\\FRC2022-Robot\\2022-field.png",
         "window": {
           "visible": true
         }

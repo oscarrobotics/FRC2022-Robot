@@ -16,7 +16,9 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase{
@@ -109,13 +111,20 @@ public class ShooterSubsystem extends SubsystemBase{
         if (latestResult.hasTargets()) {
             target = latestResult.getBestTarget();
         }
-        
     }
 
     public void setVisionRpms() {
-        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.CAMERA_HEIGHT_METERS, VisionConstants.TARGET_HEIGHT_METERS, VisionConstants.CAMERA_PITCH_RADIANS, target.getPitch());
+        distanceToTarget = PhotonUtils.calculateDistanceToTargetMeters(
+            VisionConstants.CAMERA_HEIGHT_METERS, 
+            VisionConstants.TARGET_HEIGHT_METERS, 
+            VisionConstants.CAMERA_PITCH_RADIANS, 
+            Units.degreesToRadians(target.getPitch())
+          ) + .0762;
+        SmartDashboard.putNumber("distance to target", distanceToTarget);
         var frontRpm = FRONT_SHOOTER_RPM_MAP.get(distanceToTarget);
         var rearRpm = REAR_SHOOTER_RPM_MAP.get(distanceToTarget);
+        SmartDashboard.putNumber("front rpm via vision", frontRpm);
+        SmartDashboard.putNumber("rear rpm via vision", rearRpm);
         setRPM(frontRpm, rearRpm);
     }
 }

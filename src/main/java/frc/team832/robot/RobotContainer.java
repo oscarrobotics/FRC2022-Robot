@@ -5,6 +5,7 @@ import org.photonvision.PhotonCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -52,6 +53,7 @@ public class RobotContainer {
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
   private final StratComInterface stratComInterface = new StratComInterface(1);
   public final Trigger userButton = new Trigger(RobotController::getUserButton);
+  private final GenericHID keyboard = new GenericHID(2);
 
   /** Autonomous Selector **/
   public final AutonomousSelector autoSelector = new AutonomousSelector();
@@ -66,7 +68,9 @@ public class RobotContainer {
     autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
     autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
     autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
-    autoSelector.addDefaultAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter));
+
+    var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter);
+    autoSelector.addDefaultAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
@@ -88,9 +92,9 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configTestingCommands();
+    configTestingCommands();
     // configSimTestingCommands();
-    configOperatorCommands();
+    // configOperatorCommands();
   }
 
   public void configOperatorCommands() {   
@@ -148,24 +152,31 @@ public class RobotContainer {
     // m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
 
     // m_xboxCtrl.a().whileHeld(drivetrain.getTrajectoryCommand(drivetrain.initializePaths(DrivetrainConstants.THREE_BALL_AUTO_PATH)));
-
-    
   }
 
   public void configTestingCommands() {
     // track target command
-    // m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
-
-    // shooting with vision
+    m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
 
     // map sliders to each flywheel and turn on shooter with single toggle
+    // stratComInterface.singleToggle().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
+    //       double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
+    //       SmartDashboard.putNumber("Top Flywheel Target RPM", topRpm);
+    //       SmartDashboard.putNumber("Bottom Flywheel Target RPM", botRpm);
+    //       shooter.setRPM(botRpm, topRpm);
+    //     },
+    //     () -> {
+    //       shooter.idleShooter();
+    //     }, 
+    //     shooter
+    //   )
+    // );
+
     stratComInterface.singleToggle().whileHeld(new RunEndCommand(
         () -> {
-          double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
-          double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
-          SmartDashboard.putNumber("Top Flywheel Target RPM", topRpm);
-          SmartDashboard.putNumber("Bottom Flywheel Target RPM", botRpm);
-          shooter.setRPM(botRpm, topRpm);
+          shooter.setVisionRpms();
         },
         () -> {
           shooter.idleShooter();
@@ -173,6 +184,9 @@ public class RobotContainer {
         shooter
       )
     );
+
+    // shooting with vision
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
     
     // intake
     stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
@@ -205,7 +219,7 @@ public class RobotContainer {
       )
     );
     
-    // reverse conveyer (to feed fron shooter)
+    // reverse conveyer (to feed from shooter)
     stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
         () -> {
           // intake.extendIntake();
@@ -221,10 +235,6 @@ public class RobotContainer {
         conveyer
       )
     );
-  }
-
-  public void runGearboxCmd() {
-    drivetrain.setWheelPower(1.0, 1.0);
   }
 
   /**
