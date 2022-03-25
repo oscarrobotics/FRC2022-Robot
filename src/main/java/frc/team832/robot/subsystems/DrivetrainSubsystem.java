@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.pathplanner.lib.PathPlanner;
 
@@ -46,7 +47,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  private final WPI_PigeonIMU m_imu = new WPI_PigeonIMU(PIGEON_ID);
+  private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
 
   private final OscarDrivetrain m_drivetrain;
 
@@ -178,7 +179,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getYaw() {
-    return m_imu.getFusedHeading();
+    return m_imu.getYaw();
   }
 
   public void idleDrivetrain() {
