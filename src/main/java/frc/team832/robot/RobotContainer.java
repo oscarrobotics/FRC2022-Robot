@@ -31,7 +31,6 @@ import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.QueueBallCommand;
 import frc.team832.robot.commands.RejectBallCommand;
 import frc.team832.robot.commands.ShootBallCmd;
-import frc.team832.robot.commands.ShootBallManualCmd;
 import frc.team832.robot.commands.ShootBallVisionCmd;
 // import frc.team832.robot.commands.*;
 // import frc.team832.robot.commands.Climb.*;
@@ -114,9 +113,9 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configTestingCommands();
+    // configTestingCommands();
     // configSimTestingCommands();
-    // configOperatorCommands();
+    configOperatorCommands();
   }
 
   public void configOperatorCommands() {
