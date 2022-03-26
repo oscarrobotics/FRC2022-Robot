@@ -80,6 +80,8 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public void setRPM(double frontTarget, double rearTarget) {
+        m_frontFlywheelTargetRPM = frontTarget;
+        m_rearFlywheelTargetRPM = rearTarget;
         m_frontFlywheel.setTargetVelocityRpm(frontTarget);
         m_rearFlywheel.setTargetVelocityRpm(rearTarget);
     }
@@ -96,7 +98,11 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public boolean atTarget() {
-        return m_frontFlywheel.atTarget(50) && m_rearFlywheel.atTarget(50);
+        return atTarget(50);
+    }
+
+    public boolean atTarget(double error) {
+        return m_frontFlywheel.atTarget(error) && m_rearFlywheel.atTarget(error);
     }
 
     public boolean isStalling() {
@@ -121,7 +127,7 @@ public class ShooterSubsystem extends SubsystemBase{
             VisionConstants.TARGET_HEIGHT_METERS, 
             VisionConstants.CAMERA_PITCH_RADIANS, 
             Units.degreesToRadians(target.getPitch())
-          ) + .0762;
+          );
         SmartDashboard.putNumber("distance to target", distanceToTargetMeters);
     }
 

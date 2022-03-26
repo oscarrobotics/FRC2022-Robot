@@ -3,6 +3,8 @@ package frc.team832.robot.commands.AutonomousCommands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team832.robot.Constants.ShooterConstants;
+import frc.team832.robot.commands.ShootBallCmd;
 import frc.team832.robot.commands.ShootBallVisionCmd;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -15,7 +17,7 @@ public class OneCargoHighAutoCmd extends SequentialCommandGroup {
         addCommands(
             //spins shooter and conveyer to contain ball
             // TODO: new ShootBallHigh command, with fender distance as parameter
-            new ShootBallVisionCmd(conveyer, shooter),
+            // new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_FENDER, ShooterConstants.REAR_RPM_FENDER),
 
             //moves drivetrain forward to clear tarmac
             // TODO: replace with a path.

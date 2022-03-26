@@ -1,9 +1,16 @@
 package frc.team832.robot;
 
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.net.PortForwarder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -20,11 +27,18 @@ import frc.team832.lib.driverinput.controllers.StratComInterface;
 import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.util.OscarMath;
 import frc.team832.robot.Constants.*;
+import frc.team832.robot.commands.AcceptBallCommand;
+import frc.team832.robot.commands.QueueBallCommand;
+import frc.team832.robot.commands.RejectBallCommand;
+import frc.team832.robot.commands.ShootBallCmd;
+import frc.team832.robot.commands.ShootBallManualCmd;
 import frc.team832.robot.commands.ShootBallVisionCmd;
 // import frc.team832.robot.commands.*;
 // import frc.team832.robot.commands.Climb.*;
 import frc.team832.robot.commands.AutonomousCommands.*;
+import frc.team832.robot.commands.Climb.ExtendClimbCommand;
 import frc.team832.robot.commands.Climb.PivotClimbCommand;
+import frc.team832.robot.commands.Climb.RetractClimbCommand;
 import frc.team832.robot.commands.Climb.StraightenClimbCommand;
 import frc.team832.robot.subsystems.*;
 
@@ -61,51 +75,65 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     LiveWindow.disableAllTelemetry();
+    PortForwarder.add(5800, "gloworm.local", 5800);
+    PortForwarder.add(5800, "gloworm.local", 1181);
+    PortForwarder.add(5800, "gloworm.local", 1182);
 
-    var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
-    var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
+    var zeroHeadingRot = Rotation2d.fromDegrees(0);
+
+    // var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
+    var trajPoses = List.of(new Pose2d(0, 0, zeroHeadingRot), new Pose2d(0.75, 0, zeroHeadingRot), new Pose2d(3, 0, zeroHeadingRot));
+    var twoBallPath = TrajectoryGenerator.generateTrajectory(trajPoses, DrivetrainConstants.CALM_TRAJCONFIG);
+    var twoBallTestCmd = drivetrain.getTrajectoryCommand(twoBallPath);
+    // var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
     // autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
     autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
     autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
-    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
-
+    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("2 Cargo Path Test", twoBallPath, twoBallTestCmd);
     var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter);
-    autoSelector.addDefaultAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
+    autoSelector.addAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           -m_xboxCtrl.getLeftY(),
           -m_xboxCtrl.getRightX(), 
-          2
+          1
         );
       },
       drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
-    var tankDriveCommand = new RunEndCommand(() -> {
-        drivetrain.teleopTankDrive(
-          -m_xboxCtrl.getRightY(),
-          -m_xboxCtrl.getRightX(), 
-          2
-        );
-      },
-      drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
+    // var tankDriveCommand = new RunEndCommand(() -> {
+    //     drivetrain.teleopTankDrive(
+    //       -m_xboxCtrl.getRightY(),
+    //       -m_xboxCtrl.getRightX(), 
+    //       2
+    //     );
+    //   },
+    //   drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configTestingCommands();
+    configTestingCommands();
     // configSimTestingCommands();
-    configOperatorCommands();
+    // configOperatorCommands();
   }
 
-  public void configOperatorCommands() {   
-    // stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-    // stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
+  public void configOperatorCommands() {
+    m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
+    
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
+    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
+    // stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_FENDER, ShooterConstants.REAR_RPM_FENDER));
 
-    // stratComInterface.arcadeBlackLeft().whenPressed(new ShootBallCommand(conveyer, shooter));
+    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_TARMAC, ShooterConstants.REAR_RPM_TARMAC));
+    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_FENDER, ShooterConstants.REAR_RPM_FENDER));
+
 
     stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
-        climb.setLeftPow(-.65);
-        climb.setRightPow(-.65);
+        climb.setLeftPow(-.45);
+        climb.setRightPow(-.45);
       }, 
       () -> {
         climb.setLeftPow(0);
@@ -129,17 +157,6 @@ public class RobotContainer {
     // stratComInterface.sc4().whenHeld(new RetractClimbCommand(climb));
     // stratComInterface.sc2().whenHeld(new PivotClimbCommand(climb));
     // stratComInterface.sc5().whenHeld(new StraightenClimbCommand(climb));
-
-    // TEST CMDS
-    // m_xboxCtrl.rightBumper().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-    // m_xboxCtrl.leftBumper().whenPressed(new ShootBallCommand(conveyer, shooter));
-    
-    // m_xboxCtrl.x().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(.35);}, () -> {climb.setLeftPow(0);}, climb)); // E 
-    // m_xboxCtrl.b().whileHeld(new RunEndCommand(() -> {climb.setLeftPow(-.35);}, () -> {climb.setLeftPow(0);}, climb));  // R
-    // m_xboxCtrl.y().whileHeld(new RunEndCommand(() -> {climb.setRightPow(.35);}, () -> {climb.setRightPow(0);}, climb)); // E
-    // m_xboxCtrl.a().whileHeld(new RunEndCommand(() -> {climb.setRightPow(-.35);}, () -> {climb.setRightPow(0);}, climb)); // R 
-    
-    // m_xboxCtrl.rightBumper().whenPressed(new PivotClimbCommand(climb)).whenReleased(new StraightenClimbCommand(climb));
   }
 
   public void configSimTestingCommands() {

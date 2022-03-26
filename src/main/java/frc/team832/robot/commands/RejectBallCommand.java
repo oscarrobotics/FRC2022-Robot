@@ -22,7 +22,7 @@ public class RejectBallCommand extends CommandBase {
     public void initialize() {
         intake.extendIntake();
         intake.setPower(-IntakeConstants.INTAKE_POWER);
-        // conveyer.setPower(ConveyerConstants.OUTTAKE_POWER);
+        conveyer.setPower(ConveyerConstants.OUTTAKE_POWER);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class RejectBallCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         intake.idleIntake();
-        // conveyer.idleConveyer();
+        conveyer.idleConveyer();
     }
 }

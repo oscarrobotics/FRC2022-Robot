@@ -8,13 +8,13 @@ import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 
-public class AcceptBallCommand extends CommandBase{
+public class AcceptBallAutoCmd extends CommandBase{
   
     private final IntakeSubsystem intake;
     private final ShooterSubsystem shooter;
     private final ConveyerSubsystem conveyer;
 
-    public AcceptBallCommand(IntakeSubsystem intake, ShooterSubsystem shooter, ConveyerSubsystem conveyer) {
+    public AcceptBallAutoCmd(IntakeSubsystem intake, ShooterSubsystem shooter, ConveyerSubsystem conveyer) {
         this.intake = intake;
         this.shooter = shooter;
         this.conveyer = conveyer;
@@ -29,7 +29,7 @@ public class AcceptBallCommand extends CommandBase{
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball
         // shooter.setBottomPower(ShooterConstants.SHOOTER_QUEUING_POWER);
-        conveyer.setPower(ConveyerConstants.QUEUING_POWER);
+        // conveyer.setPower(ConveyerConstants.QUEUING_POWER);
     }
 
     @Override

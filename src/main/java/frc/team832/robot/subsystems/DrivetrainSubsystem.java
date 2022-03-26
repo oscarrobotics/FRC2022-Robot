@@ -54,7 +54,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PhotonCamera gloworm;
   private PhotonTrackedTarget target = new PhotonTrackedTarget();
   
-  private double m_aimKp = 0.2;
+  private double m_aimKp = 0.4;
   private double m_aimKd = 0;
   private PIDController targetingPID = new PIDController(m_aimKp, 0, m_aimKd);
 
@@ -259,7 +259,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       VisionConstants.TARGET_HEIGHT_METERS, 
       VisionConstants.CAMERA_PITCH_RADIANS, 
       Units.degreesToRadians(target.getPitch())
-    ) + .0762;
+    );
     SmartDashboard.putNumber("Dist", dist);
 
 

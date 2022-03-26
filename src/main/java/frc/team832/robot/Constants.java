@@ -77,7 +77,7 @@ public final class Constants {
 		public static final int PIGEON_ID = 0;
 
 		/** Power **/ 
-		public static final int CURRENT_LIMIT = 45;
+		public static final int CURRENT_LIMIT = 55;
 
 		/** Mechanical Characteristics **/
 		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 18.0 / 30.0);
@@ -91,15 +91,17 @@ public final class Constants {
 		// WHEEL CIRCUMFERENCE IN METERES = .4985
 
 		/** System Control Values **/
+		private static final double KS_KA_ADJUSTMENT_OLD = 10.90909;
+		private static final double KS_KA_ADJUSTMENT_NEW = 9.09090909;
 		public static final double LEFT_KS = 0.6953;
-		public static final double LEFT_KV = 2.2981;
-		public static final double LEFT_KA = 0.54892;
+		public static final double LEFT_KV = (2.2981 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
+		public static final double LEFT_KA = (0.54892 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
 		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
 		public static final double LEFT_KP = 3.4267;
 
 		public static final double RIGHT_KS = 0.69347;
-		public static final double RIGHT_KV = 2.3149;
-		public static final double RIGHT_KA = 0.23937;
+		public static final double RIGHT_KV = (2.3149 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
+		public static final double RIGHT_KA = (0.23937 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
 		public static final double RIGHT_KP = 2.9336;
 
@@ -111,7 +113,7 @@ public final class Constants {
 		// TEST PATH FOLLOWING TRAJECTORY
 		private static final Pose2d zero_zero_StartPose = new Pose2d();
 		private static final Pose2d threeMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
-		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(2.5, 2);
+		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(1.2, 1);
 		public static final TrajectoryConfig AGGRESSIVE_TRAJCONFIG = new TrajectoryConfig(4, 6);
 		public static Trajectory test3MeterForwardTraj = PathHelper.generatePath(zero_zero_StartPose, threeMeterX_Pose, CALM_TRAJCONFIG);
 
@@ -179,8 +181,14 @@ public final class Constants {
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0, 1 / Motor.kFalcon500.KvRPMPerVolt);
 
 		/** Speeds **/
-		public static final double FRONT_RPM_FENDER = 3165;
-		public static final double REAR_RPM_FENDER = 648;
+		// public static final double FRONT_RPM_FENDER = 3165;
+		// public static final double REAR_RPM_FENDER = 648;
+
+		public static final double FRONT_RPM_FENDER = 2946;
+		public static final double REAR_RPM_FENDER = 971.5;
+
+		public static final double FRONT_RPM_TARMAC = 1943.9;
+		public static final double REAR_RPM_TARMAC = 2766.3;
 
 		public static final InterpolatingTreeMap<Double, Double> BOTTOM_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
 		static {
