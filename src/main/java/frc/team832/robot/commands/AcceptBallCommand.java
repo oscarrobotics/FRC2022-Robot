@@ -18,7 +18,7 @@ public class AcceptBallCommand extends CommandBase{
         this.intake = intake;
         this.shooter = shooter;
         this.conveyer = conveyer;
-        addRequirements(intake, conveyer);
+        addRequirements(intake, conveyer, shooter);
     }
     
     @Override
@@ -28,7 +28,7 @@ public class AcceptBallCommand extends CommandBase{
         //spins intake to accept the ball into the machine
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball
-        // shooter.setBottomPower(ShooterConstants.SHOOTER_QUEUING_POWER);
+        shooter.setRPM(-1000, -1000);
         conveyer.setPower(ConveyerConstants.QUEUING_POWER);
     }
 

@@ -2,7 +2,6 @@ package frc.team832.robot.commands.AutonomousCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team832.robot.commands.ShootBallCmd;
-import frc.team832.robot.commands.ShootBallManualCmd;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
@@ -14,7 +13,7 @@ public class OneCargoLowAutoCmd extends SequentialCommandGroup{
 		ConveyerSubsystem conveyor, ShooterSubsystem shooter) {
 			addRequirements(drivetrain, intake, conveyor, shooter);
 			addCommands(
-				new ShootBallCmd(conveyor, shooter, () -> 1500, () -> 1200)
+				// new ShootBallCmd(conveyor, shooter, () -> 1500, () -> 1200)
 				
 				// TODO: drive out of tarmac fully with a RamseteCommand
 			);

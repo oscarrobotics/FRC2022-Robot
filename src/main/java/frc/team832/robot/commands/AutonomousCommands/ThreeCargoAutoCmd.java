@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team832.robot.Constants.DrivetrainConstants;
 import frc.team832.robot.Constants.ShooterConstants;
 import frc.team832.robot.commands.AcceptBallCommand;
-import frc.team832.robot.commands.ShootBallManualCmd;
 import frc.team832.robot.commands.ShootBallVisionCmd;
 import frc.team832.robot.subsystems.ConveyerSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;

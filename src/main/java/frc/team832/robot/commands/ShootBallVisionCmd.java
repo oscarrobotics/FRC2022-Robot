@@ -19,7 +19,7 @@ public class ShootBallVisionCmd extends SequentialCommandGroup {
             new InstantCommand(() -> shooter.setVisionRpms(), shooter),
 
             // checks to see if flywheels at target before feeding
-            new WaitCommand(.25),
+            new WaitCommand(0),
             new WaitUntilCommand(() -> shooter.atTarget()),
             
             // feeds 1 ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
