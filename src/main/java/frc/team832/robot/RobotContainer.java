@@ -125,10 +125,10 @@ public class RobotContainer {
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
     stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
-    // stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_FENDER, ShooterConstants.REAR_RPM_FENDER));
+    stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER));
 
-    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_TARMAC, ShooterConstants.REAR_RPM_TARMAC));
-    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyer, shooter, ShooterConstants.FRONT_RPM_FENDER, ShooterConstants.REAR_RPM_FENDER));
+    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_TARMAC, () -> ShooterConstants.REAR_RPM_TARMAC));
+    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_HIGH_FENDER, () -> ShooterConstants.REAR_RPM_HIGH_FENDER));
 
 
     stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {

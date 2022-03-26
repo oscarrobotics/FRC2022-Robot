@@ -13,14 +13,14 @@ import frc.team832.robot.subsystems.ShooterSubsystem;
 public class ShootBallCmd extends SequentialCommandGroup {
     private final ConveyerSubsystem conveyor;
     private final ShooterSubsystem shooter;
-    public ShootBallCmd(ConveyerSubsystem conveyer, ShooterSubsystem shooter, Double frontRPM, Double rearRPM) {
+    public ShootBallCmd(ConveyerSubsystem conveyer, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM) {
         addRequirements(conveyer, shooter);
         this.conveyor = conveyer;
         this.shooter = shooter;
 
         addCommands(
             //shooter spins flywheels to target rpms
-            new InstantCommand(() -> shooter.setRPM(frontRPM, rearRPM), shooter),
+            new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
 
             // checks to see if flywheels at target before feeding
             // new WaitUntilCommand(() -> shooter.atTarget(50)),

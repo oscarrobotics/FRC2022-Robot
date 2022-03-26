@@ -184,15 +184,18 @@ public final class Constants {
 		// public static final double FRONT_RPM_FENDER = 3165;
 		// public static final double REAR_RPM_FENDER = 648;
 
-		public static final double FRONT_RPM_FENDER = 2946;
-		public static final double REAR_RPM_FENDER = 971.5;
+		public static final double FRONT_RPM_HIGH_FENDER = 2946;
+		public static final double REAR_RPM_HIGH_FENDER = 971.5;
+
+		public static final double FRONT_RPM_LOW_FENDER = 673;
+		public static final double REAR_RPM_LOW_FENDER = 2093;
 
 		public static final double FRONT_RPM_TARMAC = 1943.9;
 		public static final double REAR_RPM_TARMAC = 2766.3;
 
 		public static final InterpolatingTreeMap<Double, Double> BOTTOM_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
 		static {
-			BOTTOM_SHOOTER_RPM_MAP.put(0.0, FRONT_RPM_FENDER);
+			BOTTOM_SHOOTER_RPM_MAP.put(0.0, FRONT_RPM_HIGH_FENDER);
 			BOTTOM_SHOOTER_RPM_MAP.put(24.75, 2118.36);
 			BOTTOM_SHOOTER_RPM_MAP.put(40.75, 2043.59);
 			BOTTOM_SHOOTER_RPM_MAP.put(53.5, 1570.08);
@@ -201,7 +204,7 @@ public final class Constants {
 
 		public static final InterpolatingTreeMap<Double, Double> TOP_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
 		static {
-			TOP_SHOOTER_RPM_MAP.put(0.0, REAR_RPM_FENDER);
+			TOP_SHOOTER_RPM_MAP.put(0.0, REAR_RPM_HIGH_FENDER);
 			TOP_SHOOTER_RPM_MAP.put(24.75, 1794.38);
 			TOP_SHOOTER_RPM_MAP.put(40.75, 2018.67);
 			TOP_SHOOTER_RPM_MAP.put(53.5, 2556.95);
