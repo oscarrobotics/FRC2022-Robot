@@ -2,8 +2,10 @@ package frc.team832.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
@@ -14,7 +16,7 @@ import frc.team832.robot.Constants.ConveyorConstants;
 public class ConveyorSubsystem extends SubsystemBase{
     /**physical devices */
     private final CANTalonFX conveyorMotor = new CANTalonFX(ConveyorConstants.CONVEYOR_MOTOR_TALON_ID);
-    private final AnalogInput ultrasonicSensor = new AnalogInput(1);
+    private final DigitalInput ballSensor = new DigitalInput(0);
 
     //assigns P value of PID + feed forward to conveyor
     private PIDController conveyorPID = new PIDController(ConveyorConstants.KP, 0, 0);
@@ -44,7 +46,6 @@ public class ConveyorSubsystem extends SubsystemBase{
     public void periodic() {     
         updateControlLoops();
         updateDashboardData();
-        getUltrasonic();
     }
 
     public void updateControlLoops() {
@@ -58,6 +59,7 @@ public class ConveyorSubsystem extends SubsystemBase{
         dash_conveyorFFEffort.setDouble(conveyorFFEffort);
 
         conveyorTargetRPM = SmartDashboard.getNumber("Set Conveyor RPM", 0.0);
+        SmartDashboard.putBoolean("TopCargoSensor", isCargo());
     }
     
     private void runConveyorPID() {
@@ -88,13 +90,7 @@ public class ConveyorSubsystem extends SubsystemBase{
         conveyorMotor.set(0);
     }
 
-    public double getUltrasonic() {
-        double voltage = ultrasonicSensor.getVoltage();
-        SmartDashboard.putNumber("ultrasonic sensor voltage", voltage);
-        return voltage;
-    }
-
-    public boolean seesCargo() {
-        return getUltrasonic() >= 0;
+    public boolean isCargo() {
+        return ballSensor.get();
     }
 }

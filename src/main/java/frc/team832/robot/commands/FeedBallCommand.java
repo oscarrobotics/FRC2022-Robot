@@ -17,9 +17,13 @@ public class FeedBallCommand extends SequentialCommandGroup{
             // feeds 1 ball - starts conveyor, waits until current spike from shooting ball, then stops conveyor
             new InstantCommand(() -> conveyor.setPower(ConveyorConstants.FEEDING_POWER)),
             // new WaitUntilCommand(() -> shooter.isStalling()),
-            new WaitCommand(.5),
+            new WaitUntilCommand(conveyor::isCargo),
+            new WaitUntilCommand(() -> !conveyor.isCargo()),
+            new WaitCommand(.3),
+            // new WaitCommand(.5),
             new InstantCommand(() -> conveyor.setPower(0)),
-            new WaitCommand(.5)
+            // new WaitCommand(.5)
+            new QueueBallCommand(conveyor, shooter)
         );
     }
 }

@@ -129,8 +129,10 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 25;
 
 		/** Mechanical Characteristics **/
-		public static final double INTAKE_POWER = 0.7;
-		public static final double OUTTAKE_POWER = -0.4;
+		// public static final double INTAKE_POWER = 0.7;
+		// public static final double OUTTAKE_POWER = -0.4;
+		public static final double INTAKE_POWER = 0.2;
+		public static final double OUTTAKE_POWER = -0.2;
 		public static final double INTAKE_REDUCTION = 0.0 / 0.0; 
 
 		/** System Control Values **/

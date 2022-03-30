@@ -25,9 +25,6 @@ public class ShootBallCmd extends SequentialCommandGroup {
             waitTime = .75;
         }
 
-
-
-
         addCommands(
             //shooter spins flywheels to target rpms
             new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),

@@ -113,9 +113,9 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configTestingCommands();
+    // configTestingCommands();
     // configSimTestingCommands();
-    // configOperatorCommands();
+    configOperatorCommands();
   }
 
   public void configOperatorCommands() {
@@ -124,7 +124,7 @@ public class RobotContainer {
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyor));
     stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
-    stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER, true));
+    stratComInterface.arcadeWhiteLeft().whenPressed(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER, true));
 
     stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_TARMAC, () -> ShooterConstants.REAR_RPM_TARMAC, false));
     stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_HIGH_FENDER, () -> ShooterConstants.REAR_RPM_HIGH_FENDER, false));

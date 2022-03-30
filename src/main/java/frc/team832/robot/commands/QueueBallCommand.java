@@ -16,8 +16,10 @@ public class QueueBallCommand extends SequentialCommandGroup {
             new InstantCommand(() -> conveyor.setPower(-ConveyorConstants.QUEUING_POWER)),
 
             // check if ball is in position via sensor
-            new WaitUntilCommand(conveyor::seesCargo),
-            
+            new WaitCommand(.2),
+            // new WaitUntilCommand(conveyor::isCargo),
+            // new WaitCommand(.5),
+
             new InstantCommand(() -> conveyor.idle())
 
 
