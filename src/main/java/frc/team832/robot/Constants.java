@@ -140,9 +140,9 @@ public final class Constants {
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(KS, KV);
 	}
 
-	public static final class ConveyerConstants {
+	public static final class ConveyorConstants {
 		/** CAN IDs **/
-		public static final int CONVEYER_MOTOR_TALON_ID = 6;
+		public static final int CONVEYOR_MOTOR_TALON_ID = 6;
 
 		/** Power **/
 		public static final int CURRENT_LIMIT = 45;
@@ -151,7 +151,7 @@ public final class Constants {
 		public static final double QUEUING_POWER = .3;
 		public static final double FEEDING_POWER = .3;
 		public static final double OUTTAKE_POWER = -0.3;
-		public static final double CONVEYER_REDUCTION = 0.0 / 0.0; 
+		public static final double CONVEYOR_REDUCTION = 0.0 / 0.0; 
 
 		/** System Control Values **/
 		public static final double KP = 0.0;

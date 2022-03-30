@@ -10,7 +10,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/ClimbSubsystem": "Subsystem",
-      "/LiveWindow/ConveyerSubsystem": "Subsystem",
+      "/LiveWindow/ConveyorSubsystem": "Subsystem",
       "/LiveWindow/DrivetrainSubsystem": "Subsystem",
       "/LiveWindow/IntakeSubsystem": "Subsystem",
       "/LiveWindow/ShooterSubsystem": "Subsystem",
@@ -34,7 +34,7 @@
       "/LiveWindow/Ungrouped/Talon FX [8]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [9]": "Motor Controller",
       "/Shuffleboard/ClimbSubsystem/ClimbSubsystem": "Subsystem",
-      "/Shuffleboard/ConveyerSubsystem/ConveyerSubsystem": "Subsystem",
+      "/Shuffleboard/ConveyorSubsystem/ConveyorSubsystem": "Subsystem",
       "/Shuffleboard/DrivetrainSubsystem/DrivetrainSubsystem": "Subsystem",
       "/Shuffleboard/IntakeSubsystem/IntakeSubsystem": "Subsystem",
       "/Shuffleboard/ShooterSubsystem/ShooterSubsystem": "Subsystem",

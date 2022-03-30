@@ -8,27 +8,27 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.team832.robot.commands.AcceptBallAutoCmd;
 import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.ShootBallVisionCmd;
-import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
 public class TwoCargoAutoCmd extends SequentialCommandGroup{
-    public TwoCargoAutoCmd(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
-        addRequirements(drivetrain, intake, conveyer, shooter);
+    public TwoCargoAutoCmd(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyorSubsystem conveyor, ShooterSubsystem shooter) {
+        addRequirements(drivetrain, intake, conveyor, shooter);
         addCommands(
             // moves dt backward to shoot
             // new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),
             // new WaitUntilCommand(() -> drivetrain.getLeftMeters() <= -1),
             // new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
 
-            //spins shooter and conveyer to contain ball
-            // new ShootBallCommand(conveyer, shooter),
+            //spins shooter and conveyor to contain ball
+            // new ShootBallCommand(conveyor, shooter),
 
             // starts intaking and drives forwards at the same time
             new ParallelRaceGroup(
                 // intake ball
-                new AcceptBallAutoCmd(intake, shooter, conveyer),
+                new AcceptBallAutoCmd(intake, shooter, conveyor),
                 // go backwards
                 new SequentialCommandGroup(
                     new InstantCommand(() -> drivetrain.setWheelPower(-.2, -.2)),
@@ -39,16 +39,16 @@ public class TwoCargoAutoCmd extends SequentialCommandGroup{
                 )
             ),
 
-            new ShootBallVisionCmd(conveyer, shooter),
-            new ShootBallVisionCmd(conveyer, shooter)
+            new ShootBallVisionCmd(conveyor, shooter),
+            new ShootBallVisionCmd(conveyor, shooter)
 
              // moves dt backward to shoot
             //  new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),
             //  new WaitUntilCommand(() -> drivetrain.getLeftMeters() <= -1),
             //  new InstantCommand(() -> drivetrain.setWheelPower(0.0, 0.0)),
  
-             //spins shooter and conveyer to contain ball
-            //  new ShootBallCommand(conveyer, shooter),
+             //spins shooter and conveyor to contain ball
+            //  new ShootBallCommand(conveyor, shooter),
 
             // go forwards to clear tarmac
             // new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),

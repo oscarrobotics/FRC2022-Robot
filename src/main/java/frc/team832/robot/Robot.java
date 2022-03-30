@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.robot.subsystems.ClimbSubsystem;
-import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
   private final Compressor compressor = m_robotContainer.compressor;
   private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrain;
   private final IntakeSubsystem intake = m_robotContainer.intake;
-  private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
+  private final ConveyorSubsystem conveyor = m_robotContainer.conveyor;
   private final ShooterSubsystem shooter = m_robotContainer.shooter;
   private final ClimbSubsystem climb = m_robotContainer.climb;
 
@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     intake.periodic();
-    conveyer.periodic();
+    conveyor.periodic();
     shooter.periodic();
 
     if (m_robotContainer.userButton.get()) {

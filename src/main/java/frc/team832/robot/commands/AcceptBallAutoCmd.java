@@ -1,24 +1,24 @@
 package frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team832.robot.Constants.ConveyerConstants;
+import frc.team832.robot.Constants.ConveyorConstants;
 import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.Constants.ShooterConstants;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
-import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.ConveyorSubsystem;
 
 public class AcceptBallAutoCmd extends CommandBase{
   
     private final IntakeSubsystem intake;
     private final ShooterSubsystem shooter;
-    private final ConveyerSubsystem conveyer;
+    private final ConveyorSubsystem conveyor;
 
-    public AcceptBallAutoCmd(IntakeSubsystem intake, ShooterSubsystem shooter, ConveyerSubsystem conveyer) {
+    public AcceptBallAutoCmd(IntakeSubsystem intake, ShooterSubsystem shooter, ConveyorSubsystem conveyor) {
         this.intake = intake;
         this.shooter = shooter;
-        this.conveyer = conveyer;
-        addRequirements(intake, conveyer);
+        this.conveyor = conveyor;
+        addRequirements(intake, conveyor);
     }
     
     @Override
@@ -29,7 +29,7 @@ public class AcceptBallAutoCmd extends CommandBase{
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball
         // shooter.setBottomPower(ShooterConstants.SHOOTER_QUEUING_POWER);
-        // conveyer.setPower(ConveyerConstants.QUEUING_POWER);
+        // conveyor.setPower(ConveyorConstants.QUEUING_POWER);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class AcceptBallAutoCmd extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         //stops spinning
-        intake.idleIntake();
-        shooter.idleShooter();
-        conveyer.idleConveyer();
+        intake.idle();
+        shooter.idle();
+        conveyor.idle();
     }
 }

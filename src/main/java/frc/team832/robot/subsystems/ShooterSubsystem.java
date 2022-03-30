@@ -86,7 +86,7 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearFlywheel.setTargetVelocityRpm(rearTarget);
     }
 
-    public void idleShooter() {
+    public void idle() {
         m_frontFlywheel.setTargetVelocityRpm(0);
         m_rearFlywheel.setTargetVelocityRpm(0);
     }

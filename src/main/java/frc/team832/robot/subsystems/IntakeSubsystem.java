@@ -94,8 +94,8 @@ public class IntakeSubsystem extends SubsystemBase{
         intakePistons.set(false);
     }
 
-    public void idleIntake() {
-        retractIntake();
+    public void idle() {
         intakeMotor.set(0);
+        retractIntake();
     }
 }

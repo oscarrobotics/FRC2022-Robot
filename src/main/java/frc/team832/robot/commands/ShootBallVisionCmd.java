@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
 public class ShootBallVisionCmd extends SequentialCommandGroup {
-    private final ConveyerSubsystem conveyor;
+    private final ConveyorSubsystem conveyor;
     private final ShooterSubsystem shooter;
-    public ShootBallVisionCmd(ConveyerSubsystem conveyer, ShooterSubsystem shooter) {
-        addRequirements(conveyer, shooter);
-        this.conveyor = conveyer;
+    public ShootBallVisionCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter) {
+        addRequirements(conveyor, shooter);
+        this.conveyor = conveyor;
         this.shooter = shooter;
         addCommands(
             // shooter spins flywheels to rpms based on distance
@@ -22,14 +22,14 @@ public class ShootBallVisionCmd extends SequentialCommandGroup {
             new WaitCommand(0),
             new WaitUntilCommand(() -> shooter.atTarget()),
             
-            // feeds 1 ball - starts conveyer, waits until current spike from shooting ball, then stops conveyer
-            new FeedBallCommand(conveyer, shooter)
+            // feeds 1 ball - starts conveyor, waits until current spike from shooting ball, then stops conveyor
+            new FeedBallCommand(conveyor, shooter)
         );
     }
 
     @Override
     public void end(boolean interrupted) {
-        conveyor.idleConveyer();
-        shooter.idleShooter();
+        conveyor.idle();
+        shooter.idle();
     }
 }

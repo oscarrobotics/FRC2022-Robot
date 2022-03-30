@@ -58,7 +58,7 @@ public class RobotContainer {
   /** Subsystems **/
   public final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(gloworm);
   public final IntakeSubsystem intake = new IntakeSubsystem();
-  public final ConveyerSubsystem conveyer = new ConveyerSubsystem();
+  public final ConveyorSubsystem conveyor = new ConveyorSubsystem();
   public final ShooterSubsystem shooter = new ShooterSubsystem(gloworm);
   public final ClimbSubsystem climb = new ClimbSubsystem();
    
@@ -87,10 +87,10 @@ public class RobotContainer {
     // var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
     // autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
     autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
-    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyer, shooter));
-    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyer, shooter));
+    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyor, shooter));
+    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
     autoSelector.addAutonomous("2 Cargo Path Test", twoBallPath, twoBallTestCmd);
-    var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyer, shooter);
+    var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter);
     autoSelector.addAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
@@ -113,21 +113,21 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configTestingCommands();
+    configTestingCommands();
     // configSimTestingCommands();
-    configOperatorCommands();
+    // configOperatorCommands();
   }
 
   public void configOperatorCommands() {
     m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
     
-    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyer)).whenReleased(new QueueBallCommand(conveyer, shooter));
-    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyer));
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
-    stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER, true));
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
+    stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyor));
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
+    stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER, true));
 
-    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_TARMAC, () -> ShooterConstants.REAR_RPM_TARMAC, false));
-    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyer, shooter, () -> ShooterConstants.FRONT_RPM_HIGH_FENDER, () -> ShooterConstants.REAR_RPM_HIGH_FENDER, false));
+    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_TARMAC, () -> ShooterConstants.REAR_RPM_TARMAC, false));
+    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_HIGH_FENDER, () -> ShooterConstants.REAR_RPM_HIGH_FENDER, false));
 
 
     stratComInterface.sc1().whileHeld(new RunEndCommand(() -> {
@@ -184,7 +184,7 @@ public class RobotContainer {
           shooter.setRPM(botRpm, topRpm);
         },
         () -> {
-          shooter.idleShooter();
+          shooter.idle();
         }, 
         shooter
       )
@@ -202,7 +202,7 @@ public class RobotContainer {
     // );
 
     // shooting with vision
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyer, shooter));
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
       
     // stratComInterface.scSideTop().whileHeld(ne);
       
@@ -211,46 +211,46 @@ public class RobotContainer {
         () -> {
           intake.extendIntake();
           intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyer.setPower(ConveyerConstants.FEEDING_POWER);
+          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
           shooter.setRPM(0, -2500);
         }, 
         () -> {
-          intake.idleIntake();
-          conveyer.idleConveyer();
+          intake.idle();
+          conveyor.idle();
         }, 
         intake
       )
     );
 
-    // feed shooter (spin conveyer forward)
+    // feed shooter (spin conveyor forward)
     stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
         () -> {
           // intake.extendIntake();
           // intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyer.setPower(ConveyerConstants.FEEDING_POWER);
+          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
         }, 
         () -> {
           // intake.idleIntake();
-          conveyer.idleConveyer();
+          conveyor.idle();
         }, 
-        conveyer
+        conveyor
       )
     );
     
-    // reverse conveyer (to feed from shooter)
+    // reverse conveyor (to feed from shooter)
     stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
         () -> {
           // intake.extendIntake();
           // intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyer.setPower(-ConveyerConstants.FEEDING_POWER);
+          conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
           shooter.setRPM(-1000, -1000);
         }, 
         () -> {
           // intake.idleIntake();
-          conveyer.idleConveyer();
-          shooter.idleShooter();
+          conveyor.idle();
+          shooter.idle();
         }, 
-        conveyer
+        conveyor
       )
     );
   }

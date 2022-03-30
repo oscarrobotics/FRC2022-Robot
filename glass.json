@@ -3,7 +3,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/ClimbSubsystem/ClimbSubsystem": "Subsystem",
-      "/Shuffleboard/ConveyerSubsystem/ConveyerSubsystem": "Subsystem",
+      "/Shuffleboard/ConveyorSubsystem/ConveyorSubsystem": "Subsystem",
       "/Shuffleboard/DrivetrainSubsystem/DrivetrainSubsystem": "Subsystem",
       "/Shuffleboard/IntakeSubsystem/IntakeSubsystem": "Subsystem",
       "/Shuffleboard/ShooterSubsystem/ShooterSubsystem": "Subsystem",
