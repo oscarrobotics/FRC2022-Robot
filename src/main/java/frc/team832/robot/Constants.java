@@ -240,7 +240,8 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final int EXTEND_TARGET = 0;
+		public static final int TO_NEXT_BAR_TARGET = 0;
+		public static final int FREE_HOOK_TARGET = 0;
 		public static final int RETRACT_TARGET = 0;
 		public static final int MAX_EXTEND_POS = 0;
 		public static final int MIN_EXTEND_POS = 0;

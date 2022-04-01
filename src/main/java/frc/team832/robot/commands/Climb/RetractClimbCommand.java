@@ -4,16 +4,19 @@ import frc.team832.robot.subsystems.ClimbSubsystem;
 
 public class RetractClimbCommand extends CommandBase{
     private final ClimbSubsystem climb;
-    
-    public RetractClimbCommand(ClimbSubsystem climb) {
+    private final double target;
+
+    public RetractClimbCommand(ClimbSubsystem climb, double target) {
         this.climb = climb;
+        this.target = target;
+
         addRequirements(climb);
     }
    
     //climb system brings arm down to latch onto the next bar
     @Override
     public void initialize() {
-        climb.retractClimb();
+        climb.retractClimb(target);
     }
 
     @Override

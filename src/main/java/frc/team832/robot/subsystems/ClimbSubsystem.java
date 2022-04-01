@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
+import frc.team832.lib.power.monitoring.StallDetector;
 import frc.team832.robot.Constants.ClimbConstants;
 
 import static frc.team832.robot.Constants.ClimbConstants.*;
@@ -30,6 +31,9 @@ public class ClimbSubsystem extends SubsystemBase{
     //visualizes values in the Network Table
     private final NetworkTableEntry dash_climbActualPosRight, dash_climbActualPosLeft;// dash_climbTargetPos, dash_climbFFEffortRight, dash_climbPIDEffortRight, dash_climbFFEffortLeft, dash_climbPIDEffortLeft;
     
+    private final StallDetector m_rightStallDetector = new StallDetector(climbMotorRight::getOutputCurrent);
+    private final StallDetector m_leftStallDetector = new StallDetector(climbMotorLeft::getOutputCurrent);
+
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
         DashboardManager.addTab(this);
@@ -43,6 +47,9 @@ public class ClimbSubsystem extends SubsystemBase{
 
         // climbMotorLeft.setInverted(true);
         // climbMotorRight.setInverted(true);
+
+        // m_rightStallDetector.setStallCurrent(7);
+        // m_leftStallDetector.setStallCurrent(7);
 
         rezeroClimb();
 
@@ -112,14 +119,14 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     /**all methods pertaining to Climb cmnds**/
-    public void extendClimb() {
-        climbMotorLeft.setTargetPosition(EXTEND_TARGET);;
-        climbMotorRight.setTargetPosition(EXTEND_TARGET);;
+    public void extendClimb(double extendTarget) {
+        climbMotorLeft.setTargetPosition(extendTarget);;
+        climbMotorRight.setTargetPosition(extendTarget);;
     }
 
-    public void retractClimb() {
-        climbMotorLeft.setTargetPosition(RETRACT_TARGET);
-        climbMotorRight.setTargetPosition(RETRACT_TARGET);
+    public void retractClimb(double retractTarget) {
+        climbMotorLeft.setTargetPosition(retractTarget);
+        climbMotorRight.setTargetPosition(retractTarget);
     }
 
     public void pivotClimb() {
@@ -132,7 +139,7 @@ public class ClimbSubsystem extends SubsystemBase{
         rightClimbPiston.set(false);
     }
 
-    public void stopClimb() {
+    public void idle() {
         climbMotorLeft.set(0);
         climbMotorRight.set(0);
     }
@@ -141,4 +148,17 @@ public class ClimbSubsystem extends SubsystemBase{
         climbMotorLeft.rezeroSensor();
         climbMotorRight.rezeroSensor();
     }
+
+    public boolean isRightStalling() {
+        return m_rightStallDetector.getStallStatus().isStalled;
+    }
+
+    public boolean isLeftStalling() {
+        return m_leftStallDetector.getStallStatus().isStalled;
+    }
+
+    public boolean isStalling() {
+        return isLeftStalling() && isRightStalling();
+    }
 }
+

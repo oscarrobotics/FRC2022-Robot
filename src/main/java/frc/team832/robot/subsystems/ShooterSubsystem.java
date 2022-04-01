@@ -52,7 +52,7 @@ public class ShooterSubsystem extends SubsystemBase{
         m_frontFlywheel.setClosedLoop(false);
         m_rearFlywheel.setClosedLoop(false);
 
-        // stallDetector.setStallCurrent(7);
+        // m_frontStallDetector.setStallCurrent(7);
 
         dash_frontFlywheelTargetRPM = DashboardManager.addTabItem(this, "Front Flywheel Target RPM", 0.0);
         dash_frontFlywheelActualRPM = DashboardManager.addTabItem(this, "Front Flywheel Actual RPM", 0.0);;
