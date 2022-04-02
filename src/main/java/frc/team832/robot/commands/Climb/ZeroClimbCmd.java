@@ -25,7 +25,7 @@ public class ZeroClimbCmd extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         climb.idle();
-        climb.rezeroClimb();
+        climb.zeroClimb();
     }
 
 }

@@ -1,5 +1,6 @@
 package frc.team832.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -41,6 +42,8 @@ public class Robot extends TimedRobot {
     if (RobotBase.isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -112,6 +115,7 @@ public class Robot extends TimedRobot {
 
     drivetrain.setNeutralMode(NeutralMode.kBrake);
 
+    climb.zeroClimb();
   }
 
   /** This function is called periodically during operator control. */

@@ -1,11 +1,11 @@
 package frc.team832.robot.subsystems;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
@@ -18,48 +18,54 @@ import static frc.team832.robot.Constants.PneumaticsValues.*;
 
 public class ClimbSubsystem extends SubsystemBase{
     /**physical devices */
-    private final CANTalonFX climbMotorLeft = new CANTalonFX(CLIMB_LEFT_TALON_ID);
-    private final CANTalonFX climbMotorRight = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
+    private final CANTalonFX leftMotor = new CANTalonFX(CLIMB_LEFT_TALON_ID);
+    private final CANTalonFX rightMotor = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
     private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
     private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
 
     /*assigns PID constants + Feed Forward to the climb*/
-    private PIDController climbPID = new PIDController(ClimbConstants.KP, 0, ClimbConstants.KD);
-    private final ElevatorFeedforward feedforward = ClimbConstants.FEEDFORWARD;
-    public double climbTargetPos, climbActualPos, climbPIDEffort, climbFFEffort;
+    private ProfiledPIDController leftPID = new ProfiledPIDController(ClimbConstants.LEFT_KP, 0, ClimbConstants.LEFT_KD, new TrapezoidProfile.Constraints(ClimbConstants.MAX_LEFT_ENCODER_VELOCITY, ClimbConstants.MAX_LEFT_ENCODER_VELOCITY));
+    private ProfiledPIDController rightPID = new ProfiledPIDController(ClimbConstants.RIGHT_KP, 0, ClimbConstants.RIGHT_KD, new TrapezoidProfile.Constraints(ClimbConstants.MAX_RIGHT_ENCODER_VELOCITY, ClimbConstants.MAX_RIGHT_ENCODER_VELOCITY));
+    private final ElevatorFeedforward leftFF = ClimbConstants.LEFT_FEEDFORWARD;
+    private final ElevatorFeedforward rightFF = ClimbConstants.RIGHT_FEEDFORWARD;
+    public double leftTargetPos, rightTargetPos, leftActualPos, rightActualPos, rightPIDEffort, rightFFEffort, leftPIDEffort, leftFFEffort;
 
     //visualizes values in the Network Table
-    private final NetworkTableEntry dash_climbActualPosRight, dash_climbActualPosLeft;// dash_climbTargetPos, dash_climbFFEffortRight, dash_climbPIDEffortRight, dash_climbFFEffortLeft, dash_climbPIDEffortLeft;
+    private final NetworkTableEntry dash_rightActualPos, dash_leftActualPos, dash_leftTargetPos, dash_rightTargetPos, dash_leftKP, dash_leftKD, dash_rightKP, dash_rightKD, dash_leftFFEffort, dash_leftPIDEffort, dash_rightFFEffort, dash_rightPIDEffort;
     
-    private final StallDetector m_rightStallDetector = new StallDetector(climbMotorRight::getOutputCurrent);
-    private final StallDetector m_leftStallDetector = new StallDetector(climbMotorLeft::getOutputCurrent);
+    private final StallDetector m_rightStallDetector = new StallDetector(rightMotor::getOutputCurrent);
+    private final StallDetector m_leftStallDetector = new StallDetector(leftMotor::getOutputCurrent);
 
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
         DashboardManager.addTab(this);
-        SmartDashboard.putNumber("Set Climb Target", 0.0);
     
-        climbMotorLeft.limitInputCurrent(CURRENT_LIMIT);
-        climbMotorRight.limitInputCurrent(CURRENT_LIMIT);
+        leftMotor.limitInputCurrent(CURRENT_LIMIT);
+        rightMotor.limitInputCurrent(CURRENT_LIMIT);
 
-        climbMotorLeft.setNeutralMode(NeutralMode.kBrake);
-        climbMotorRight.setNeutralMode(NeutralMode.kBrake);
+        leftMotor.setNeutralMode(NeutralMode.kBrake);
+        rightMotor.setNeutralMode(NeutralMode.kBrake);
 
         // climbMotorLeft.setInverted(true);
-        // climbMotorRight.setInverted(true);
+        rightMotor.setInverted(true);
 
         // m_rightStallDetector.setStallCurrent(7);
         // m_leftStallDetector.setStallCurrent(7);
 
-        rezeroClimb();
+        zeroClimb();
 
-        // dash_climbTargetPos = DashboardManager.addTabItem(this, "Climb Target Pos", 0.0);
-        dash_climbActualPosRight = DashboardManager.addTabItem(this, "Climb Actual Pos Right", 0.0);
-        dash_climbActualPosLeft = DashboardManager.addTabItem(this, "Climb Actual Pos Left", 0.0);
-        // dash_climbPIDEffortRight = DashboardManager.addTabItem(this, "Climb PID Effort", 0.0);
-        // dash_climbFFEffortRight = DashboardManager.addTabItem(this,  "Climb FF Effort", 0.0);
-        // dash_climbPIDEffortLeft = DashboardManager.addTabItem(this, "Climb PID Effort", 0.0);
-        // dash_climbFFEffortLeft = DashboardManager.addTabItem(this,  "Climb FF Effort", 0.0);
+        dash_leftActualPos = DashboardManager.addTabItem(this, "Left Actual Pos", 0.0);
+        dash_rightActualPos = DashboardManager.addTabItem(this, "Right Actual Pos", 0.0);
+        dash_leftTargetPos = DashboardManager.addTabItem(this, "Left Target Pos", 0.0);
+        dash_rightTargetPos = DashboardManager.addTabItem(this, "Right Target Pos", 0.0);
+        dash_leftPIDEffort = DashboardManager.addTabItem(this, "Left PID Effort", 0.0);
+        dash_rightPIDEffort = DashboardManager.addTabItem(this, "Right PID Effort", 0.0);
+        dash_leftFFEffort = DashboardManager.addTabItem(this,  "Left FF Effort", 0.0);
+        dash_rightFFEffort = DashboardManager.addTabItem(this,  "Right FF Effort", 0.0);
+        dash_leftKP = DashboardManager.addTabItem(this, "Left KP", 0.0);
+        dash_leftKD = DashboardManager.addTabItem(this, "Left KD", 0.0);
+        dash_rightKP = DashboardManager.addTabItem(this, "Right KP", 0.0);
+        dash_rightKD = DashboardManager.addTabItem(this, "Right KD", 0.0);
     }
 
     @Override
@@ -69,18 +75,20 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void updateControlLoops() {
-        // runClimbPID();
+        setPID();
+        runClimbPID();
         // setTargetPosition();
     }
 
     private void updateDashboardData() {
-        dash_climbActualPosRight.setDouble(climbMotorRight.getSensorPosition());
-        dash_climbActualPosLeft.setDouble(climbMotorLeft.getSensorPosition());
-        // dash_climbTargetPos.setDouble(climbTargetPos);
-        // dash_climbPIDEffortRight.setDouble(climbPIDEffort);
-        // dash_climbFFEffortRight.setDouble(climbFFEffort);
-
-        climbTargetPos = SmartDashboard.getNumber("Set Climb Target", 0.0);
+        dash_rightActualPos.setDouble(rightMotor.getSensorPosition());
+        dash_leftActualPos.setDouble(leftMotor.getSensorPosition());
+        dash_leftTargetPos.setDouble(leftTargetPos);
+        dash_rightTargetPos.setDouble(rightTargetPos);
+        dash_leftPIDEffort.setDouble(leftPIDEffort);
+        dash_rightPIDEffort.setDouble(rightPIDEffort);
+        dash_leftFFEffort.setDouble(leftFFEffort);
+        dash_rightFFEffort.setDouble(rightFFEffort);
     }
 
     /*  FFE = motor's velocity / 12 volts
@@ -88,45 +96,62 @@ public class ClimbSubsystem extends SubsystemBase{
           cmnd Adds the FFE and PID effort together for accurate motor effort 
     */
     public void runClimbPID() {
-        // ADD PID FOR LEFT SIDE
-        climbFFEffort = feedforward.calculate(climbMotorRight.getSensorVelocity()) / 12.0;
-        climbPIDEffort = climbPID.calculate(climbMotorRight.getSensorPosition(), climbTargetPos);
-        climbMotorRight.set(climbPIDEffort + climbFFEffort);
+        leftFFEffort = leftFF.calculate(leftMotor.getSensorVelocity()) / 12.0;
+        leftPIDEffort = leftPID.calculate(leftMotor.getSensorPosition(), leftTargetPos);
+        leftMotor.set(leftFFEffort + leftPIDEffort);
+        
+        rightFFEffort = rightFF.calculate(rightMotor.getSensorVelocity()) / 12.0;
+        rightPIDEffort = rightPID.calculate(rightMotor.getSensorPosition(), rightTargetPos);
+        rightMotor.set(rightFFEffort + rightPIDEffort);
     }
     
+    public void setPID() {
+        leftPID.setP(dash_leftKP.getDouble(0.0));
+        leftPID.setD(dash_leftKD.getDouble(0.0));
+
+        rightPID.setP(dash_rightKP.getDouble(0.0));
+        rightPID.setD(dash_rightKD.getDouble(0.0));
+    }
+
     public void setPower(double leftPow, double rightPow) { 
-        climbMotorLeft.set(leftPow);  
-        climbMotorRight.set(rightPow);
+        leftMotor.set(leftPow);  
+        rightMotor.set(rightPow);
     }
 
     public void setLeftPow(double leftPow) { 
-        climbMotorLeft.set(leftPow);  
+        leftMotor.set(leftPow);  
     }
 
     public void setRightPow(double rightPow) { 
-        climbMotorRight.set(rightPow);  
+        rightMotor.set(rightPow);  
     }
 
-    public void setTargetPosition() {
-        if (climbTargetPos > ClimbConstants.MAX_EXTEND_POS) {
-            climbTargetPos = ClimbConstants.MAX_EXTEND_POS;
-        } else if (climbTargetPos < ClimbConstants.MIN_EXTEND_POS) {
-            climbTargetPos = ClimbConstants.MIN_EXTEND_POS;
-        }
+    public void setTargetPosition(double leftPos, double rightPos) {
+        // if (climbTargetPos > ClimbConstants.MAX_EXTEND_POS) {
+        //     climbTargetPos = ClimbConstants.MAX_EXTEND_POS;
+        // } else if (climbTargetPos < ClimbConstants.MIN_EXTEND_POS) {
+        //     climbTargetPos = ClimbConstants.MIN_EXTEND_POS;
+        // }
 
-        climbMotorLeft.setTargetPosition(climbTargetPos);
-        climbMotorRight.setTargetPosition(climbTargetPos);
+        // leftMotor.setTargetPosition(climbTargetPos);
+        // rightMotor.setTargetPosition(climbTargetPos);
+
+        leftTargetPos = leftPos;
+        rightTargetPos = rightPos;
+        
+        leftMotor.setTargetPosition(leftTargetPos);
+        rightMotor.setTargetPosition(rightTargetPos);
     }
 
     /**all methods pertaining to Climb cmnds**/
     public void extendClimb(double extendTarget) {
-        climbMotorLeft.setTargetPosition(extendTarget);;
-        climbMotorRight.setTargetPosition(extendTarget);;
+        leftMotor.setTargetPosition(extendTarget);;
+        rightMotor.setTargetPosition(extendTarget);;
     }
 
     public void retractClimb(double retractTarget) {
-        climbMotorLeft.setTargetPosition(retractTarget);
-        climbMotorRight.setTargetPosition(retractTarget);
+        leftMotor.setTargetPosition(retractTarget);
+        rightMotor.setTargetPosition(retractTarget);
     }
 
     public void pivotClimb() {
@@ -140,13 +165,13 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void idle() {
-        climbMotorLeft.set(0);
-        climbMotorRight.set(0);
+        leftMotor.set(0);
+        rightMotor.set(0);
     }
 
-    public void rezeroClimb() {
-        climbMotorLeft.rezeroSensor();
-        climbMotorRight.rezeroSensor();
+    public void zeroClimb() {
+        leftMotor.rezeroSensor();
+        rightMotor.rezeroSensor();
     }
 
     public boolean isRightStalling() {
@@ -159,6 +184,22 @@ public class ClimbSubsystem extends SubsystemBase{
 
     public boolean isStalling() {
         return isLeftStalling() && isRightStalling();
+    }
+
+    public double getRightVelocity() {
+        return rightMotor.getSensorVelocity();
+    }
+
+    public double getLeftVelocity() {
+        return leftMotor.getSensorVelocity();
+    }
+
+    public double getRightPosition() {
+        return rightMotor.getSensorPosition();
+    }
+
+    public double getLeftPosition() {
+        return leftMotor.getSensorPosition();
     }
 }
 

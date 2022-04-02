@@ -18,7 +18,7 @@ public class AutoToNextBarCmd extends SequentialCommandGroup{
             
             new ExtendClimbCommand(climb, ClimbConstants.FREE_HOOK_TARGET), 
             new PivotClimbCommand(climb),
-            new ExtendClimbCommand(climb, ClimbConstants.TO_NEXT_BAR_TARGET),
+            // new ExtendClimbCommand(climb, ClimbConstants.TO_NEXT_BAR_TARGET),
             new StraightenClimbCommand(climb),
             new RetractClimbCommand(climb, ClimbConstants.RETRACT_TARGET)
         );
