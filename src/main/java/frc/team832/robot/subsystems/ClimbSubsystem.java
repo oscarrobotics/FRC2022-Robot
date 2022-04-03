@@ -11,7 +11,6 @@ import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.lib.power.monitoring.StallDetector;
-import frc.team832.robot.Constants.ClimbConstants;
 
 import static frc.team832.robot.Constants.ClimbConstants.*;
 import static frc.team832.robot.Constants.PneumaticsValues.*;
@@ -20,14 +19,15 @@ public class ClimbSubsystem extends SubsystemBase{
     /**physical devices */
     private final CANTalonFX leftMotor = new CANTalonFX(CLIMB_LEFT_TALON_ID);
     private final CANTalonFX rightMotor = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
-    private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
-    private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
+    // private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
+    // private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
+    private final Solenoid climbPiston = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
 
     /*assigns PID constants + Feed Forward to the climb*/
-    private ProfiledPIDController leftPID = new ProfiledPIDController(ClimbConstants.LEFT_KP, 0, ClimbConstants.LEFT_KD, new TrapezoidProfile.Constraints(ClimbConstants.MAX_LEFT_ENCODER_VELOCITY, ClimbConstants.MAX_LEFT_ENCODER_VELOCITY));
-    private ProfiledPIDController rightPID = new ProfiledPIDController(ClimbConstants.RIGHT_KP, 0, ClimbConstants.RIGHT_KD, new TrapezoidProfile.Constraints(ClimbConstants.MAX_RIGHT_ENCODER_VELOCITY, ClimbConstants.MAX_RIGHT_ENCODER_VELOCITY));
-    private final ElevatorFeedforward leftFF = ClimbConstants.LEFT_FEEDFORWARD;
-    private final ElevatorFeedforward rightFF = ClimbConstants.RIGHT_FEEDFORWARD;
+    private ProfiledPIDController leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, MAX_LEFT_ENCODER_VELOCITY));
+    private ProfiledPIDController rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, MAX_RIGHT_ENCODER_VELOCITY));
+    private final ElevatorFeedforward leftFF = LEFT_FEEDFORWARD;
+    private final ElevatorFeedforward rightFF = RIGHT_FEEDFORWARD;
     public double leftTargetPos, rightTargetPos, leftActualPos, rightActualPos, rightPIDEffort, rightFFEffort, leftPIDEffort, leftFFEffort;
 
     //visualizes values in the Network Table
@@ -46,8 +46,8 @@ public class ClimbSubsystem extends SubsystemBase{
         leftMotor.setNeutralMode(NeutralMode.kBrake);
         rightMotor.setNeutralMode(NeutralMode.kBrake);
 
-        // climbMotorLeft.setInverted(true);
-        rightMotor.setInverted(true);
+        leftMotor.setInverted(true);
+        //rightMotor.setInverted(true);
 
         // m_rightStallDetector.setStallCurrent(7);
         // m_leftStallDetector.setStallCurrent(7);
@@ -70,7 +70,7 @@ public class ClimbSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        updateControlLoops();
+        // updateControlLoops();
         updateDashboardData();
     }
 
@@ -118,6 +118,32 @@ public class ClimbSubsystem extends SubsystemBase{
         rightMotor.set(rightPow);
     }
 
+    public void setPower(double pow) {   
+        if (pow <= 0) {
+            leftMotor.set(pow);
+            rightMotor.set(pow);
+            System.out.println("pow <= 0");
+        } else {
+            System.out.println("pow > 0");
+
+            if (leftMotor.getSensorPosition() <= LEFT_MAX_EXTEND_POS) {
+                leftMotor.set(pow); 
+                System.out.println("left < max"); 
+            } else {
+                System.out.println("left @ max"); 
+                leftMotor.set(0);
+            }
+            
+            if (rightMotor.getSensorPosition() <= RIGHT_MAX_EXTEND_POS) {
+                rightMotor.set(pow);
+                System.out.println("right < max"); 
+            } else {
+                System.out.println("right @ max"); 
+                rightMotor.set(0);
+            }       
+        }
+    }
+
     public void setLeftPow(double leftPow) { 
         leftMotor.set(leftPow);  
     }
@@ -155,13 +181,15 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void pivotClimb() {
-        leftClimbPiston.set(true);
-        rightClimbPiston.set(true);
+        // leftClimbPiston.set(true);
+        // rightClimbPiston.set(true);
+        climbPiston.set(true);
     }
 
     public void straightenClimb() {
-        leftClimbPiston.set(false);
-        rightClimbPiston.set(false);
+        // leftClimbPiston.set(false);
+        // rightClimbPiston.set(false);
+        climbPiston.set(false);
     }
 
     public void idle() {

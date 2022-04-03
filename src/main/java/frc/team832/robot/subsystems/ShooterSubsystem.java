@@ -10,6 +10,7 @@ import frc.team832.robot.Constants.ShooterConstants;
 import frc.team832.robot.Constants.VisionConstants;
 
 import static frc.team832.robot.Constants.ShooterConstants.*;
+import static frc.team832.robot.Constants.PneumaticsValues.*;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
@@ -18,6 +19,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,6 +31,8 @@ public class ShooterSubsystem extends SubsystemBase{
 
     private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, BOTTOM_FEEDFORWARD, BOTTOM_KP, MOI_KGM2);
     private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, TOP_FEEDFORWARD, TOP_KP, MOI_KGM2);
+
+    private final Solenoid m_hoodSolenoid = new Solenoid(PneumaticsModuleType.REVPH, HOOD_SOLENOID_ID);
 
     private final StallDetector m_frontStallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 
@@ -44,7 +49,6 @@ public class ShooterSubsystem extends SubsystemBase{
 
         m_frontMotor.setNeutralMode(NeutralMode.kCoast);
         m_frontMotor.limitInputCurrent(CURRENT_LIMIT);
-        m_frontMotor.setInverted(true);
 
         m_rearMotor.setNeutralMode(NeutralMode.kCoast);
         m_rearMotor.limitInputCurrent(CURRENT_LIMIT);
@@ -147,5 +151,13 @@ public class ShooterSubsystem extends SubsystemBase{
     public double getRearVisionRPM() {
         var rearRpm = TOP_SHOOTER_RPM_MAP.get(distanceToTargetMeters);
         return rearRpm;
+    }
+
+    public void extendHood() {
+        m_hoodSolenoid.set(true);
+    }
+
+    public void retractHood() {
+        m_hoodSolenoid.set(false);
     }
 }

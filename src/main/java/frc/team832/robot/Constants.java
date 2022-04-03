@@ -141,10 +141,10 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 25;
 
 		/** Mechanical Characteristics **/
-		// public static final double INTAKE_POWER = 0.7;
-		// public static final double OUTTAKE_POWER = -0.4;
-		public static final double INTAKE_POWER = 0.2;
-		public static final double OUTTAKE_POWER = -0.2;
+		public static final double INTAKE_POWER = 0.7;
+		public static final double OUTTAKE_POWER = -0.4;
+		// public static final double INTAKE_POWER = 0.2;
+		// public static final double OUTTAKE_POWER = -0.2;
 		public static final double INTAKE_REDUCTION = 0.0 / 0.0;
 
 		/** System Control Values **/
@@ -258,7 +258,8 @@ public final class Constants {
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
 		public static final double FREE_HOOK_TARGET = 0;
 		public static final double RETRACT_TARGET = 0;
-		public static final double MAX_EXTEND_POS = 0;
+		public static final double LEFT_MAX_EXTEND_POS = 86.08; // to mid bar
+		public static final double RIGHT_MAX_EXTEND_POS = 92.50; // to mid bar
 		public static final double MIN_EXTEND_POS = 0;
 		public static final double GEARBOX_REDUCTION = 10.61;
 
@@ -280,12 +281,14 @@ public final class Constants {
 	public static class PneumaticsValues {
 		/** Solenoid IDs */
 		public static final int INTAKE_SOLENOID_ID = 0;
-		public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
-		public static final int LEFT_CLIMB_SOLENOID_ID = 3;
+		// public static final int RIGHT_CLIMB_SOLENOID_ID = 1;
+		// public static final int LEFT_CLIMB_SOLENOID_ID = 3;
+		public static final int CLIMB_SOLENOID_ID = 1;
+		public static final int HOOD_SOLENOID_ID = 2;
 	}
 
 	public static class VisionConstants {
-		public static final double CAMERA_HEIGHT_METERS = .720344; // 28.36 in
+		public static final double CAMERA_HEIGHT_METERS = .771398; // 30.37 in
 		public static final double CAMERA_PITCH_RADIANS = OscarMath.degreesToRadians(45); // 45 degrees
 		public static final double TARGET_HEIGHT_METERS = 2.58; // to bottom of target
 	}
