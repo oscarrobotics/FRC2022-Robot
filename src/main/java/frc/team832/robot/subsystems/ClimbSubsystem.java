@@ -24,11 +24,13 @@ public class ClimbSubsystem extends SubsystemBase{
     private final Solenoid climbPiston = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
 
     /*assigns PID constants + Feed Forward to the climb*/
-    private ProfiledPIDController leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, MAX_LEFT_ENCODER_VELOCITY));
-    private ProfiledPIDController rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, MAX_RIGHT_ENCODER_VELOCITY));
+    private ProfiledPIDController leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, 250));
+    private ProfiledPIDController rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, 250));
     private final ElevatorFeedforward leftFF = LEFT_FEEDFORWARD;
     private final ElevatorFeedforward rightFF = RIGHT_FEEDFORWARD;
     public double leftTargetPos, rightTargetPos, leftActualPos, rightActualPos, rightPIDEffort, rightFFEffort, leftPIDEffort, leftFFEffort;
+    private boolean isPID = false;
+
 
     //visualizes values in the Network Table
     private final NetworkTableEntry dash_rightActualPos, dash_leftActualPos, dash_leftTargetPos, dash_rightTargetPos, dash_leftKP, dash_leftKD, dash_rightKP, dash_rightKD, dash_leftFFEffort, dash_leftPIDEffort, dash_rightFFEffort, dash_rightPIDEffort;
@@ -70,13 +72,17 @@ public class ClimbSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // updateControlLoops();
+        updateControlLoops();
         updateDashboardData();
     }
 
     public void updateControlLoops() {
-        setPID();
-        runClimbPID();
+        if (!isPID) {
+            return;
+        } else {
+            setPID();
+            runClimbPID();
+        }
         // setTargetPosition();
     }
 
@@ -106,11 +112,18 @@ public class ClimbSubsystem extends SubsystemBase{
     }
     
     public void setPID() {
-        leftPID.setP(dash_leftKP.getDouble(0.0));
-        leftPID.setD(dash_leftKD.getDouble(0.0));
+        // leftPID.setP(dash_leftKP.getDouble(0.0));
+        // leftPID.setD(dash_leftKD.getDouble(0.0));
 
-        rightPID.setP(dash_rightKP.getDouble(0.0));
-        rightPID.setD(dash_rightKD.getDouble(0.0));
+        // rightPID.setP(dash_rightKP.getDouble(0.0));
+        // rightPID.setD(dash_rightKD.getDouble(0.0));
+
+        leftPID.setP(.1);
+        leftPID.setD(0);
+
+        rightPID.setP(.1);
+        rightPID.setD(0);
+
     }
 
     public void setPower(double leftPow, double rightPow) { 
@@ -228,6 +241,10 @@ public class ClimbSubsystem extends SubsystemBase{
 
     public double getLeftPosition() {
         return leftMotor.getSensorPosition();
+    }
+
+    public void setIsPID(boolean isPid) {
+        isPID = isPid;
     }
 }
 

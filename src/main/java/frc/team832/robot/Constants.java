@@ -87,7 +87,7 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 55;
 
 		/** Mechanical Characteristics **/
-		public static final Gearbox GEARBOX = new Gearbox(11.0 / 60.0, 18.0 / 30.0);
+		public static final Gearbox GEARBOX = Gearbox.fromStages(11.0 / 60.0, 18.0 / 30.0);
 		public static final Motor MOTOR = Motor.kFalcon500;
 		public static final double WHEEL_DIAMETER_INCHES = 6.25;
 		public static final double WHEELBASE_INCHES = 26.0;
@@ -190,7 +190,7 @@ public final class Constants {
 		/** Mechanical Characteristics **/ // Note: both flywheels are mechanically identical.
 		private static final double COLSON_4x2IN_MOI_KG_M2 = 0.929 * LB_IN2_TO_KG_M2;
 		public static final double SHOOTER_REDUCTION = 1;
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(new Gearbox(SHOOTER_REDUCTION),
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(Gearbox.fromTotalReduction(SHOOTER_REDUCTION),
 				Motor.kFalcon500, 1, 3.9, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0,
@@ -256,7 +256,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double LEFT_TO_NEXT_BAR_TARGET = 86.00;
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
-		public static final double FREE_HOOK_TARGET = 0;
+		public static final double LEFT_FREE_HOOK_TARGET = 30;
+		public static final double RIGHT_FREE_HOOK_TARGET = 30;
 		public static final double RETRACT_TARGET = 0;
 		public static final double LEFT_MAX_EXTEND_POS = 86.08; // to mid bar
 		public static final double RIGHT_MAX_EXTEND_POS = 92.50; // to mid bar

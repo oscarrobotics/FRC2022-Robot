@@ -44,6 +44,9 @@ public class Robot extends TimedRobot {
     }
 
     CameraServer.startAutomaticCapture();
+
+    climb.setIsPID(false);
+    climb.zeroClimb();
   }
 
   /**
@@ -115,6 +118,7 @@ public class Robot extends TimedRobot {
 
     drivetrain.setNeutralMode(NeutralMode.kBrake);
 
+    climb.setIsPID(false);
     climb.zeroClimb();
   }
 

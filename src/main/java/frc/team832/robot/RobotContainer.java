@@ -192,118 +192,127 @@ public class RobotContainer {
     // track target command
     // m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
   
-    // stratComInterface.sc4().whenPressed(() -> climb.setTargetPosition(0, 0), climb);
+    stratComInterface.sc3().whenPressed(
+      () -> {
+        climb.setIsPID(true); 
+        climb.setTargetPosition(ClimbConstants.LEFT_MAX_EXTEND_POS, ClimbConstants.RIGHT_MAX_EXTEND_POS);
+      }, climb);
+    stratComInterface.sc6().whenPressed(() -> climb.setTargetPosition(0, 0), climb);
 
-    // stratComInterface.sc1().whileHeld(new RunEndCommand(
-    //   () -> climb.setPower(.5), 
-    //   () -> climb.setPower(0, 0),
-    //   climb)
-    // );
-    // stratComInterface.sc4().whileHeld(new RunEndCommand(
-    //   () -> climb.setPower(-.5), 
-    //   () -> climb.setPower(0, 0),
-    //   climb)
-    // );
+    stratComInterface.sc2().whenPressed(new ExtendClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET));
 
-    // stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
-    //   () -> {
-    //     double rightPow = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 1);
-    //     double leftPow = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 1);
-    //     SmartDashboard.putNumber("Right Climb Velocity", climb.getRightVelocity());
-    //     SmartDashboard.putNumber("Left Climb Velocity", climb.getLeftVelocity());
-    //     SmartDashboard.putNumber("Right Climb Position", climb.getRightPosition());
-    //     SmartDashboard.putNumber("Left Climb Position", climb.getLeftPosition());
-    //     climb.setPower(leftPow, rightPow);
-    //   },
-    //   () -> {
-    //     climb.idle();
-    //   }, 
-    //   climb
-    // ));
-    // stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
-    //   () -> {
-    //     double rightPow = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 1);
-    //     double leftPow = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 1);
-    //     climb.setPower(-leftPow, -rightPow);
-    //   },
-    //   () -> {
-    //     climb.idle();
-    //   }, 
-    //   climb
-    // ));
-
-    // map sliders to each flywheel and turn on shooter with single toggle
-    stratComInterface.singleToggle().whileHeld(new RunEndCommand(
-        () -> {
-          double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
-          double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
-          SmartDashboard.putNumber("Rear Flywheel Target RPM", topRpm);
-          SmartDashboard.putNumber("Front Flywheel Target RPM", botRpm);
-          shooter.setRPM(botRpm, topRpm);
-
-          if (stratComInterface.doubleToggleUp().get()) {
-            shooter.extendHood();
-          } else {
-            shooter.retractHood();
-          }
-        },
-        () -> {
-          shooter.idle();
-        }, 
-        shooter
-      )
+    stratComInterface.sc1().whileHeld(new RunEndCommand(
+      () -> climb.setPower(.5), 
+      () -> climb.setPower(0, 0),
+      climb)
+    );
+    stratComInterface.sc4().whileHeld(new RunEndCommand(
+      () -> climb.setPower(-.5), 
+      () -> climb.setPower(0, 0),
+      climb)
     );
 
-    // shooting with vision
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
+    stratComInterface.arcadeBlackLeft().whenPressed(() -> climb.zeroClimb());
+
+    stratComInterface.doubleToggleUp().whileHeld(new RunEndCommand(
+      () -> {
+        double rightPow = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 1);
+        double leftPow = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 1);
+        SmartDashboard.putNumber("Right Climb Velocity", climb.getRightVelocity());
+        SmartDashboard.putNumber("Left Climb Velocity", climb.getLeftVelocity());
+        SmartDashboard.putNumber("Right Climb Position", climb.getRightPosition());
+        SmartDashboard.putNumber("Left Climb Position", climb.getLeftPosition());
+        climb.setPower(leftPow, rightPow);
+      },
+      () -> {
+        climb.idle();
+      }, 
+      climb
+    ));
+    stratComInterface.doubleToggleDown().whileHeld(new RunEndCommand(
+      () -> {
+        double rightPow = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 1);
+        double leftPow = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 1);
+        climb.setPower(-leftPow, -rightPow);
+      },
+      () -> {
+        climb.idle();
+      }, 
+      climb
+    ));
+
+    // // map sliders to each flywheel and turn on shooter with single toggle
+    // stratComInterface.singleToggle().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       double topRpm = OscarMath.map(stratComInterface.getLeftSlider(), -1, 1, 0, 6380);
+    //       double botRpm = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 6380);
+    //       SmartDashboard.putNumber("Rear Flywheel Target RPM", topRpm);
+    //       SmartDashboard.putNumber("Front Flywheel Target RPM", botRpm);
+    //       shooter.setRPM(botRpm, topRpm);
+
+    //       if (stratComInterface.doubleToggleUp().get()) {
+    //         shooter.extendHood();
+    //       } else {
+    //         shooter.retractHood();
+    //       }
+    //     },
+    //     () -> {
+    //       shooter.idle();
+    //     }, 
+    //     shooter
+    //   )
+    // );
+
+    // // shooting with vision
+    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
           
-    // intake
-    stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
-        () -> {
-          intake.extendIntake();
-          intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
-          shooter.setRPM(0, -2500);
-        }, 
-        () -> {
-          intake.idle();
-          conveyor.idle();
-        }, 
-        intake
-      )
-    );
+    // // intake
+    // stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       intake.extendIntake();
+    //       intake.setPower(IntakeConstants.INTAKE_POWER);
+    //       conveyor.setPower(ConveyorConstants.FEEDING_POWER);
+    //       shooter.setRPM(0, -2500);
+    //     }, 
+    //     () -> {
+    //       intake.idle();
+    //       conveyor.idle();
+    //     }, 
+    //     intake
+    //   )
+    // );
 
-    // feed shooter (spin conveyor forward)
-    stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
-        () -> {
-          // intake.extendIntake();
-          // intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
-        }, 
-        () -> {
-          // intake.idleIntake();
-          conveyor.idle();
-        }, 
-        conveyor
-      )
-    );
+    // // feed shooter (spin conveyor forward)
+    // stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       // intake.extendIntake();
+    //       // intake.setPower(IntakeConstants.INTAKE_POWER);
+    //       conveyor.setPower(ConveyorConstants.FEEDING_POWER);
+    //     }, 
+    //     () -> {
+    //       // intake.idleIntake();
+    //       conveyor.idle();
+    //     }, 
+    //     conveyor
+    //   )
+    // );
     
-    // // reverse conveyor (to feed from shooter)
-    stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
-        () -> {
-          // intake.extendIntake();
-          // intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
-          shooter.setRPM(-1000, -1000);
-        }, 
-        () -> {
-          // intake.idleIntake();
-          conveyor.idle();
-          shooter.idle();
-        }, 
-        conveyor
-      )
-    );
+    // // // reverse conveyor (to feed from shooter)
+    // stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
+    //     () -> {
+    //       // intake.extendIntake();
+    //       // intake.setPower(IntakeConstants.INTAKE_POWER);
+    //       conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
+    //       shooter.setRPM(-1000, -1000);
+    //     }, 
+    //     () -> {
+    //       // intake.idleIntake();
+    //       conveyor.idle();
+    //       shooter.idle();
+    //     }, 
+    //     conveyor
+    //   )
+    // );
   }
 
   /**

@@ -1,27 +1,28 @@
 package frc.team832.robot.commands.Climb;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team832.robot.subsystems.ClimbSubsystem;
-import frc.team832.robot.Constants.ClimbConstants;
+import static frc.team832.robot.Constants.ClimbConstants.*;
 
 public class ExtendClimbCommand extends CommandBase{
     private final ClimbSubsystem climb;
-    private final double pow;
+    private final double target;
     
-    public ExtendClimbCommand(ClimbSubsystem climb, double pow) {
+    public ExtendClimbCommand(ClimbSubsystem climb, double target) {
         this.climb = climb;
-        this.pow = pow;
+        this.target = target;
         addRequirements(climb);
     }
 
    //Climb system extends arm outwards
     @Override
     public void initialize() {
-        climb.setPower(pow, pow);
+        climb.setIsPID(true);
+        climb.setTargetPosition(LEFT_FREE_HOOK_TARGET, RIGHT_FREE_HOOK_TARGET);
     }
 
     @Override
     public boolean isFinished() {
-        return climb.getLeftPosition() >= ClimbConstants.LEFT_MAX_EXTEND_POS;
+        return false;
     }
 
     @Override
