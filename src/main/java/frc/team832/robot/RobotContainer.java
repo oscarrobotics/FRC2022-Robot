@@ -22,26 +22,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.team832.AutonomousSelector;
 import frc.team832.AutonomousSelector.AutonomousMode;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
-// import frc.team832.lib.util.OscarMath;
 import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.util.OscarMath;
+
 import frc.team832.robot.Constants.*;
-import frc.team832.robot.commands.AcceptBallCommand;
-import frc.team832.robot.commands.QueueBallCommand;
-import frc.team832.robot.commands.RejectBallCommand;
-import frc.team832.robot.commands.ShootBallCmd;
-import frc.team832.robot.commands.ShootBallVisionCmd;
-// import frc.team832.robot.commands.*;
-// import frc.team832.robot.commands.Climb.*;
+import frc.team832.robot.commands.*;
 import frc.team832.robot.commands.AutonomousCommands.*;
-import frc.team832.robot.commands.Climb.AutoToNextBarCmd;
-import frc.team832.robot.commands.Climb.ExtendClimbCommand;
-import frc.team832.robot.commands.Climb.PivotClimbCommand;
-import frc.team832.robot.commands.Climb.RetractClimbCommand;
-import frc.team832.robot.commands.Climb.StraightenClimbCommand;
+import frc.team832.robot.commands.Climb.*;
 import frc.team832.robot.subsystems.*;
 
 /**
@@ -104,7 +95,7 @@ public class RobotContainer {
           2
         );
       },
-      drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
+    drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
     // var tankDriveCommand = new RunEndCommand(() -> {
     //     drivetrain.teleopTankDrive(
@@ -136,10 +127,13 @@ public class RobotContainer {
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyor));
     stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter));
-    stratComInterface.scSideBot().whenPressed(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_LOW_FENDER, () -> ShooterConstants.REAR_RPM_LOW_FENDER, true));
 
-    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_TARMAC, () -> ShooterConstants.REAR_RPM_TARMAC, false));
-    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(conveyor, shooter, () -> ShooterConstants.FRONT_RPM_HIGH_FENDER, () -> ShooterConstants.REAR_RPM_HIGH_FENDER, false));
+    stratComInterface.scSideBot().whenPressed(new ShootBallCmd(
+      conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true));
+    stratComInterface.scSideTop().whileHeld(new ShootBallCmd(
+      conveyor, shooter, ShooterConstants.FRONT_RPM_TARMAC, ShooterConstants.REAR_RPM_TARMAC));
+    stratComInterface.scSideMid().whileHeld(new ShootBallCmd(
+      conveyor, shooter, ShooterConstants.FRONT_RPM_HIGH_FENDER, ShooterConstants.REAR_RPM_HIGH_FENDER));
 
 
     stratComInterface.sc1().whileHeld(new RunEndCommand(
@@ -282,37 +276,37 @@ public class RobotContainer {
     //   )
     // );
 
-    // // feed shooter (spin conveyor forward)
-    // stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
-    //     () -> {
-    //       // intake.extendIntake();
-    //       // intake.setPower(IntakeConstants.INTAKE_POWER);
-    //       conveyor.setPower(ConveyorConstants.FEEDING_POWER);
-    //     }, 
-    //     () -> {
-    //       // intake.idleIntake();
-    //       conveyor.idle();
-    //     }, 
-    //     conveyor
-    //   )
-    // );
+    // feed shooter (spin conveyor forward)
+    stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
+        () -> {
+          // intake.extendIntake();
+          // intake.setPower(IntakeConstants.INTAKE_POWER);
+          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
+        }, 
+        () -> {
+          // intake.idle();
+          conveyor.idle();
+        }, 
+        conveyor
+      )
+    );
     
-    // // // reverse conveyor (to feed from shooter)
-    // stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
-    //     () -> {
-    //       // intake.extendIntake();
-    //       // intake.setPower(IntakeConstants.INTAKE_POWER);
-    //       conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
-    //       shooter.setRPM(-1000, -1000);
-    //     }, 
-    //     () -> {
-    //       // intake.idleIntake();
-    //       conveyor.idle();
-    //       shooter.idle();
-    //     }, 
-    //     conveyor
-    //   )
-    // );
+    // // reverse conveyor (to feed from shooter)
+    stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
+        () -> {
+          // intake.extendIntake();
+          // intake.setPower(IntakeConstants.INTAKE_POWER);
+          conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
+          shooter.setRPM(-1000, -1000);
+        }, 
+        () -> {
+          // intake.idle();
+          conveyor.idle();
+          shooter.idle();
+        }, 
+        conveyor
+      )
+    );
   }
 
   /**

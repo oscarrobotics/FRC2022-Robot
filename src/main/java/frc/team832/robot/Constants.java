@@ -190,8 +190,10 @@ public final class Constants {
 		/** Mechanical Characteristics **/ // Note: both flywheels are mechanically identical.
 		private static final double COLSON_4x2IN_MOI_KG_M2 = 0.929 * LB_IN2_TO_KG_M2;
 		public static final double SHOOTER_REDUCTION = 1;
-		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(Gearbox.fromTotalReduction(SHOOTER_REDUCTION),
-				Motor.kFalcon500, 1, 3.9, 1);
+		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(
+			Gearbox.fromTotalReduction(SHOOTER_REDUCTION),
+			Motor.kFalcon500, 
+			1, 3.9, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
 		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0,
 				1 / Motor.kFalcon500.KvRPMPerVolt);
