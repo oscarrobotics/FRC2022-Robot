@@ -119,6 +119,8 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public void setPower(double pow) {   
+        // TODO: remove printlns! these cause loop overruns
+
         if (pow <= 0) {
             leftMotor.set(pow);
             rightMotor.set(pow);
@@ -128,17 +130,17 @@ public class ClimbSubsystem extends SubsystemBase{
 
             if (leftMotor.getSensorPosition() <= LEFT_MAX_EXTEND_POS) {
                 leftMotor.set(pow); 
-                System.out.println("left < max"); 
+                System.out.println("left < max");
             } else {
-                System.out.println("left @ max"); 
+                System.out.println("left @ max");
                 leftMotor.set(0);
             }
             
             if (rightMotor.getSensorPosition() <= RIGHT_MAX_EXTEND_POS) {
                 rightMotor.set(pow);
-                System.out.println("right < max"); 
+                System.out.println("right < max");
             } else {
-                System.out.println("right @ max"); 
+                System.out.println("right @ max");
                 rightMotor.set(0);
             }       
         }

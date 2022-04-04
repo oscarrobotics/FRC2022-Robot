@@ -5,14 +5,24 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.team832.robot.Constants.ShooterConstants;
 import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
 public class ShootBallCmd extends SequentialCommandGroup {
     private final ConveyorSubsystem conveyor;
     private final ShooterSubsystem shooter;
+
+    /**
+     * Assumes high goal
+     */
+    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, double frontRpm, double backRpm) {
+        this(conveyor, shooter, ()-> { return frontRpm; }, ()-> { return backRpm; }, false);
+    }
+
+    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, double frontRpm, double backRpm, boolean low) {
+        this(conveyor, shooter, ()-> { return frontRpm; }, ()-> { return backRpm; }, low);
+    }
+
     public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM, boolean low) {
         addRequirements(conveyor, shooter);
         this.conveyor = conveyor;
