@@ -48,8 +48,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  // private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
-  private final Gyro m_imu;
+  private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
+  // private final Gyro m_imu;
 
   private final OscarDrivetrain m_drivetrain;
 
@@ -115,39 +115,39 @@ public class DrivetrainSubsystem extends SubsystemBase {
       MASS_KG, MOI_KGM2
     );
 
-    m_imu = new Gyro() {
-      @Override
-      public void close() throws Exception {
-        // TODO Auto-generated method stub
+    /**
+    // m_imu = new Gyro() {
+    //   @Override
+    //   public void close() throws Exception {
+    //     // TODO Auto-generated method stub
         
-      }
+    //   }
 
-      @Override
-      public void calibrate() {
-        // TODO Auto-generated method stub
+    //   @Override
+    //   public void calibrate() {
+    //     // TODO Auto-generated method stub
         
-      }
+    //   }
 
-      @Override
-      public void reset() {
-        // TODO Auto-generated method stub
+    //   @Override
+    //   public void reset() {
+    //     // TODO Auto-generated method stub
         
-      }
+    //   }
 
-      @Override
-      public double getAngle() {
-        // TODO Auto-generated method stub
-        return 0;
-      }
+    //   @Override
+    //   public double getAngle() {
+    //     // TODO Auto-generated method stub
+    //     return 0;
+    //   }
 
-      @Override
-      public double getRate() {
-        // TODO Auto-generated method stub
-        return 0;
-      }
-      
-    };
-
+    //   @Override
+    //   public double getRate() {
+    //     // TODO Auto-generated method stub
+    //     return 0;
+    //   }
+    // };
+    **/
 
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
@@ -315,5 +315,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }, 
     () -> {}, 
     this);
+  }
+
+  public double getPitch() {
+    return m_imu.getPitch();
   }
 }
