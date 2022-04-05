@@ -109,7 +109,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
 
     var drivetrainCharacteristics = new OscarDTCharacteristics(
-      POWER_TRAIN, WHEELBASE_INCHES, 
+      POWER_TRAIN, TRACKWIDTH_METERS, 
       LEFT_FEEDFORWARD, RIGHT_FEEDFORWARD, 
       LEFT_KP, RIGHT_KP, 
       MASS_KG, MOI_KGM2
@@ -180,6 +180,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void teleopTankDrive(double leftSpeed, double rightSpeed, double inputScalingPow) {
     m_drivetrain.getDiffDrive().tankDrive(leftSpeed, rightSpeed, inputScalingPow);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    m_drivetrain.simulationPeriodic();
   }
 
   @Override

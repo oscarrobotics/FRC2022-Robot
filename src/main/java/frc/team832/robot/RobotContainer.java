@@ -2,6 +2,8 @@ package frc.team832.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.PathPlanner;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonVersion;
@@ -60,7 +62,6 @@ public class RobotContainer {
   private final CommandXboxController m_xboxCtrl = new CommandXboxController(0);
   private final StratComInterface stratComInterface = new StratComInterface(1);
   public final Trigger userButton = new Trigger(RobotController::getUserButton);
-  private final GenericHID keyboard = new GenericHID(2);
 
   /** Autonomous Selector **/
   public final AutonomousSelector autoSelector = new AutonomousSelector();
@@ -69,24 +70,22 @@ public class RobotContainer {
   public RobotContainer() {
     PhotonCamera.setVersionCheckEnabled(false);
     LiveWindow.disableAllTelemetry();
-    PortForwarder.add(5800, "gloworm.local", 5800);
-    PortForwarder.add(5800, "gloworm.local", 1181);
-    PortForwarder.add(5800, "gloworm.local", 1182);
 
-    var zeroHeadingRot = Rotation2d.fromDegrees(0);
+    // var zeroHeadingRot = Rotation2d.fromDegrees(0);
 
     // var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
-    var trajPoses = List.of(new Pose2d(0, 0, zeroHeadingRot), new Pose2d(0.75, 0, zeroHeadingRot), new Pose2d(3, 0, zeroHeadingRot));
-    var twoBallPath = TrajectoryGenerator.generateTrajectory(trajPoses, DrivetrainConstants.CALM_TRAJCONFIG);
-    var twoBallTestCmd = drivetrain.getTrajectoryCommand(twoBallPath);
-    // var tarmacTestCmd = drivetrain.getTrajectoryCommand(tarmacTestPath);
-    // autoSelector.addDefaultAutonomous("PathTest", FieldConstants.RightOuterTarmacCorner, tarmacTestCmd);
-    autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
-    autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyor, shooter));
-    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-    autoSelector.addAutonomous("2 Cargo Path Test", twoBallPath, twoBallTestCmd);
-    var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter);
-    autoSelector.addAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
+    // var trajPoses = List.of(new Pose2d(0, 0, zeroHeadingRot), new Pose2d(0.75, 0, zeroHeadingRot), new Pose2d(3, 0, zeroHeadingRot));
+    // var twoBallPath = TrajectoryGenerator.generateTrajectory(trajPoses, DrivetrainConstants.CALM_TRAJCONFIG);
+    // var twoBallTestCmd = drivetrain.getTrajectoryCommand(twoBallPath);
+    var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
+    var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
+    autoSelector.addDefaultAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
+    // autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
+    // autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyor, shooter));
+    // autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    // autoSelector.addAutonomous("2 Cargo Path Test", twoBallPath, twoBallTestCmd);
+    // var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+    // autoSelector.addDefaultAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
 
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
@@ -351,8 +350,8 @@ public class RobotContainer {
     var selectedAuto = autoSelector.getSelectedAutonomous();
     System.out.println("USR BTN | Resetting Robot Pose to " + selectedAuto.startPose.toString());
     drivetrain.resetPose(selectedAuto.startPose);
-    if (selectedAuto.path != null) {
-      drivetrain.setCurrentField2dTrajectory(selectedAuto.path);
-    }
+    // if (selectedAuto.path != null) {
+      // drivetrain.setCurrentField2dTrajectory(selectedAuto.path);
+    // }
   }
 }
