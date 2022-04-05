@@ -20,11 +20,4 @@ public class PivotClimbCommand extends CommandBase{
     public boolean isFinished() {
         return true;
     }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
-
-    
 }

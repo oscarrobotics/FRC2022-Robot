@@ -260,7 +260,8 @@ public final class Constants {
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
 		public static final double LEFT_FREE_HOOK_TARGET = 30;
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;
-		public static final double RETRACT_TARGET = 0;
+		public static final double RETRACT_TARGET = .75;
+		public static final double WAIT_POINT_TARGET = 22;
 		public static final double LEFT_MAX_EXTEND_POS = 86.08; // to mid bar
 		public static final double RIGHT_MAX_EXTEND_POS = 92.50; // to mid bar
 		public static final double MIN_EXTEND_POS = 0;
@@ -271,7 +272,7 @@ public final class Constants {
 		public static final double LEFT_KD = 0.0;
 		public static final double RIGHT_KP = 0.0;
 		public static final double RIGHT_KD = 0.0;
-		public static final double LEFT_KS = 0.05625;
+		public static final double LEFT_KS = 0.5625;
 		public static final double RIGHT_KS = 0.539;
 		public static final double KV = 1 / Motor.kFalcon500.KvRPMPerVolt / 10.61; // 10.61 = gearbox ratio
 		public static final double KG = 0.0;

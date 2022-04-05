@@ -136,29 +136,29 @@ public class RobotContainer {
       conveyor, shooter, ShooterConstants.FRONT_RPM_HIGH_FENDER, ShooterConstants.REAR_RPM_HIGH_FENDER));
 
 
-    stratComInterface.sc1().whileHeld(new RunEndCommand(
-      () -> {
-        // climb.setLeftPow(1);
-        // climb.setRightPow(1);
-        climb.setPower(1);
-      }, 
-      () -> {
-        // climb.setLeftPow(0);
-        // climb.setRightPow(0);
-        climb.setPower(0);
-      }, climb));
+    // stratComInterface.sc1().whileHeld(new RunEndCommand(
+    //   () -> {
+    //     // climb.setLeftPow(1);
+    //     // climb.setRightPow(1);
+    //     climb.setPower(1);
+    //   }, 
+    //   () -> {
+    //     // climb.setLeftPow(0);
+    //     // climb.setRightPow(0);
+    //     climb.setPower(0);
+    //   }, climb));
 
-      stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
-        // climb.setLeftPow(-.70);
-        // climb.setRightPow(-.70);
-        climb.setPower(-.70);
-      }, 
-      () -> {
-        // climb.setLeftPow(0);
-        // climb.setRightPow(0);
-        climb.setPower(0);
-      }, climb)
-    );
+    //   stratComInterface.sc4().whileHeld(new RunEndCommand(() -> {
+    //     // climb.setLeftPow(-.70);
+    //     // climb.setRightPow(-.70);
+    //     climb.setPower(-.70);
+    //   }, 
+    //   () -> {
+    //     // climb.setLeftPow(0);
+    //     // climb.setRightPow(0);
+    //     climb.setPower(0);
+    //   }, climb)
+    // );
 
       stratComInterface.sc2().whenPressed(new PivotClimbCommand(climb));
       stratComInterface.sc5().whenReleased(new StraightenClimbCommand(climb));
@@ -183,44 +183,53 @@ public class RobotContainer {
   }
 
   public void configTestingCommands() {
-    configShootTestCmds();
     configClimbTestCmds();
+    // configShootTestCmds();
   }
 
   public void configClimbTestCmds() {
-    // set is pid (true = yes pid)
-    climb.setIsPID(stratComInterface.singleToggle().get());
-
     // zero climb for testing
     stratComInterface.arcadeBlackLeft().whenPressed(() -> climb.zeroClimb());
 
-    // climb via power to soft limit
-    stratComInterface.sc3().whenPressed(
-      () -> {
-        climb.setIsPID(true); 
-        climb.setTargetPosition(ClimbConstants.LEFT_MAX_EXTEND_POS, ClimbConstants.RIGHT_MAX_EXTEND_POS);
-      }, climb);
+    // // climb via power to soft limit
+    // stratComInterface.sc3().whenPressed(
+    //   () -> {
+    //     climb.setIsPID(true); 
+    //     climb.setTargetPosition(ClimbConstants.LEFT_MAX_EXTEND_POS, ClimbConstants.RIGHT_MAX_EXTEND_POS);
+    //   }, climb);
     
-    // climb via pid to 0
-    stratComInterface.sc6().whenPressed(
-      () -> { 
-        climb.setIsPID(true);
-        climb.setTargetPosition(0, 0);
-      }, climb);
+    // // climb via pid to 0
+    // stratComInterface.sc6().whenPressed(
+    //   () -> { 
+    //     climb.setIsPID(true);
+    //     climb.setTargetPosition(0, 0);
+    //   }, climb);
 
-    // climb via pid (EXTEND TARGET CMD) to next bar target -> TO FIX - ONLY CHECKS ONE SIDE
-    stratComInterface.sc2().whenPressed(new ExtendClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET));
+    // test auto climb cmd
+    stratComInterface.arcadeBlackRight().whenPressed(new AutoToNextBarCmd(climb));
+
+    // climb via pid (EXTEND TARGET CMD) to next bar target
+    var extendCmd = new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd");
+    
+    stratComInterface.sc2().whenPressed(extendCmd);
+    // stratComInterface.arcadeWhiteLeft().whenPressed(nextBarCmd);
+
+    // climb via pid (EXTEND TARGET CMD) to free hook target
+    stratComInterface.sc3().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_FREE_HOOK_TARGET, ClimbConstants.RIGHT_FREE_HOOK_TARGET));
+
+    // climb via pid (EXTEND TARGET CMD) to min (enc pos = 10)
+    stratComInterface.sc6().whenPressed(new PositionClimbCommand(climb, ClimbConstants.RETRACT_TARGET, ClimbConstants.RETRACT_TARGET));
 
     // climb up via power - will stop at limit
     stratComInterface.sc1().whileHeld(new RunEndCommand(
-      () -> climb.setPower(.5), 
-      () -> climb.setPower(0, 0),
+      () -> climb.setPower(.5, .5), 
+      climb::idle,
       climb)
     );
     // climb down via power - no bottom soft limit
     stratComInterface.sc4().whileHeld(new RunEndCommand(
-      () -> climb.setPower(-.5), 
-      () -> climb.setPower(0, 0),
+      () -> climb.setPower(-.5, -.5), 
+      climb::idle,
       climb)
     );
 
@@ -239,7 +248,7 @@ public class RobotContainer {
         climb.idle();
       }, 
       climb
-    ));
+    ).withName("SliderClimbExtendCmd"));
     stratComInterface.doubleToggleDown().whileHeld(new RunEndCommand(
       () -> {
         double rightPow = OscarMath.map(stratComInterface.getRightSlider(), -1, 1, 0, 1);

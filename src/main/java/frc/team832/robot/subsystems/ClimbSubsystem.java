@@ -6,55 +6,73 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.lib.power.monitoring.StallDetector;
+import frc.team832.lib.util.OscarMath;
 
 import static frc.team832.robot.Constants.ClimbConstants.*;
 import static frc.team832.robot.Constants.PneumaticsValues.*;
 
 public class ClimbSubsystem extends SubsystemBase{
     /**physical devices */
-    private final CANTalonFX leftMotor = new CANTalonFX(CLIMB_LEFT_TALON_ID);
-    private final CANTalonFX rightMotor = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
+    private final CANTalonFX m_leftMotor = new CANTalonFX(CLIMB_LEFT_TALON_ID);
+    private final CANTalonFX m_rightMotor = new CANTalonFX(CLIMB_RIGHT_TALON_ID);
     // private final Solenoid leftClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, LEFT_CLIMB_SOLENOID_ID);
     // private final Solenoid rightClimbPiston = new Solenoid(PneumaticsModuleType.REVPH, RIGHT_CLIMB_SOLENOID_ID);
     private final Solenoid climbPiston = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
 
     /*assigns PID constants + Feed Forward to the climb*/
-    private ProfiledPIDController leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, 250));
-    private ProfiledPIDController rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, 250));
+    private ProfiledPIDController m_leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, 250));
+    private ProfiledPIDController m_rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, 250));
     private final ElevatorFeedforward leftFF = LEFT_FEEDFORWARD;
     private final ElevatorFeedforward rightFF = RIGHT_FEEDFORWARD;
-    public double leftTargetPos, rightTargetPos, leftActualPos, rightActualPos, rightPIDEffort, rightFFEffort, leftPIDEffort, leftFFEffort;
-    private boolean isPID = false;
+    public double m_leftTargetPos, m_rightTargetPos, leftActualPos, rightActualPos, m_rightPIDEffort, m_rightFFEffort, m_leftPIDEffort, m_leftFFEffort;
+
+    public double m_leftRawEffort, m_rightRawEffort;
+
+    private boolean m_usePid = false;
 
 
     //visualizes values in the Network Table
-    private final NetworkTableEntry dash_rightActualPos, dash_leftActualPos, dash_leftTargetPos, dash_rightTargetPos, dash_leftKP, dash_leftKD, dash_rightKP, dash_rightKD, dash_leftFFEffort, dash_leftPIDEffort, dash_rightFFEffort, dash_rightPIDEffort;
+    private final NetworkTableEntry dash_rightActualPos, dash_leftActualPos, dash_leftTargetPos, dash_rightTargetPos, dash_leftFFEffort, dash_leftPIDEffort, dash_rightFFEffort, dash_rightPIDEffort;
+    private final NetworkTableEntry dash_leftRawEffort, dash_rightRawEffort;
+    private final NetworkTableEntry dash_usePid;
     
-    private final StallDetector m_rightStallDetector = new StallDetector(rightMotor::getOutputCurrent);
-    private final StallDetector m_leftStallDetector = new StallDetector(leftMotor::getOutputCurrent);
+    private final StallDetector m_rightStallDetector = new StallDetector(m_rightMotor::getOutputCurrent);
+    private final StallDetector m_leftStallDetector = new StallDetector(m_leftMotor::getOutputCurrent);
 
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
         DashboardManager.addTab(this);
     
-        leftMotor.limitInputCurrent(CURRENT_LIMIT);
-        rightMotor.limitInputCurrent(CURRENT_LIMIT);
+        m_leftMotor.limitInputCurrent(CURRENT_LIMIT);
+        m_rightMotor.limitInputCurrent(CURRENT_LIMIT);
 
-        leftMotor.setNeutralMode(NeutralMode.kBrake);
-        rightMotor.setNeutralMode(NeutralMode.kBrake);
+        m_leftMotor.setNeutralMode(NeutralMode.kBrake);
+        m_rightMotor.setNeutralMode(NeutralMode.kBrake);
 
-        leftMotor.setInverted(true);
+        m_leftMotor.setInverted(true);
         //rightMotor.setInverted(true);
 
         // m_rightStallDetector.setStallCurrent(7);
         // m_leftStallDetector.setStallCurrent(7);
 
         zeroClimb();
+
+        
+        m_leftPID.setP(.2);
+        m_leftPID.setD(0);
+
+        m_rightPID.setP(.2);
+        m_rightPID.setD(0);
+
+        m_leftPID.setTolerance(.75);
+        m_rightPID.setTolerance(.75);
 
         dash_leftActualPos = DashboardManager.addTabItem(this, "Left Actual Pos", 0.0);
         dash_rightActualPos = DashboardManager.addTabItem(this, "Right Actual Pos", 0.0);
@@ -64,37 +82,54 @@ public class ClimbSubsystem extends SubsystemBase{
         dash_rightPIDEffort = DashboardManager.addTabItem(this, "Right PID Effort", 0.0);
         dash_leftFFEffort = DashboardManager.addTabItem(this,  "Left FF Effort", 0.0);
         dash_rightFFEffort = DashboardManager.addTabItem(this,  "Right FF Effort", 0.0);
-        dash_leftKP = DashboardManager.addTabItem(this, "Left KP", 0.0);
-        dash_leftKD = DashboardManager.addTabItem(this, "Left KD", 0.0);
-        dash_rightKP = DashboardManager.addTabItem(this, "Right KP", 0.0);
-        dash_rightKD = DashboardManager.addTabItem(this, "Right KD", 0.0);
+        dash_leftRawEffort = DashboardManager.addTabNumberBar(this, "leftRawEffort", -12, 12);
+        dash_rightRawEffort = DashboardManager.addTabNumberBar(this, "rightRawEffort", -12, 12);
+
+        dash_usePid = DashboardManager.addTabBooleanBox(this, "UsePID");
+
+        setDefaultCommand(new StartEndCommand(this::idle, () -> {}, this).withName("default idle cmd"));
     }
 
     @Override
     public void periodic() {
         updateControlLoops();
         updateDashboardData();
+        setMotorOutputs();
+    }
+
+    private void setMotorOutputs() {
+        if (m_usePid) {
+            m_leftRawEffort = m_leftPIDEffort + m_leftFFEffort;
+            m_rightRawEffort = m_rightPIDEffort + m_rightFFEffort;
+        }
+
+        m_leftMotor.set(m_leftRawEffort);
+        m_rightMotor.set(m_rightRawEffort);
     }
 
     public void updateControlLoops() {
-        if (!isPID) {
-            return;
-        } else {
-            setPID();
-            runClimbPID();
-        }
-        // setTargetPosition();
+        dash_usePid.setBoolean(m_usePid);
+        runClimbPID();
+    }
+
+    public void reset() {
+        idle();
+        zeroClimb();
+        m_leftTargetPos = 0;
+        m_rightRawEffort = 0;
     }
 
     private void updateDashboardData() {
-        dash_rightActualPos.setDouble(rightMotor.getSensorPosition());
-        dash_leftActualPos.setDouble(leftMotor.getSensorPosition());
-        dash_leftTargetPos.setDouble(leftTargetPos);
-        dash_rightTargetPos.setDouble(rightTargetPos);
-        dash_leftPIDEffort.setDouble(leftPIDEffort);
-        dash_rightPIDEffort.setDouble(rightPIDEffort);
-        dash_leftFFEffort.setDouble(leftFFEffort);
-        dash_rightFFEffort.setDouble(rightFFEffort);
+        dash_rightActualPos.setDouble(m_rightMotor.getSensorPosition());
+        dash_leftActualPos.setDouble(m_leftMotor.getSensorPosition());
+        dash_leftTargetPos.setDouble(m_leftTargetPos);
+        dash_rightTargetPos.setDouble(m_rightTargetPos);
+        dash_leftPIDEffort.setDouble(m_leftPIDEffort);
+        dash_rightPIDEffort.setDouble(m_rightPIDEffort);
+        dash_leftFFEffort.setDouble(m_leftFFEffort);
+        dash_rightFFEffort.setDouble(m_rightFFEffort);
+        dash_leftRawEffort.setDouble(m_leftRawEffort);
+        dash_rightRawEffort.setDouble(m_rightRawEffort);
     }
 
     /*  FFE = motor's velocity / 12 volts
@@ -102,119 +137,76 @@ public class ClimbSubsystem extends SubsystemBase{
           cmnd Adds the FFE and PID effort together for accurate motor effort 
     */
     public void runClimbPID() {
-        leftFFEffort = leftFF.calculate(leftMotor.getSensorVelocity()) / 12.0;
-        leftPIDEffort = leftPID.calculate(leftMotor.getSensorPosition(), leftTargetPos);
-        leftMotor.set(leftFFEffort + leftPIDEffort);
-        
-        rightFFEffort = rightFF.calculate(rightMotor.getSensorVelocity()) / 12.0;
-        rightPIDEffort = rightPID.calculate(rightMotor.getSensorPosition(), rightTargetPos);
-        rightMotor.set(rightFFEffort + rightPIDEffort);
-    }
-    
-    public void setPID() {
-        // leftPID.setP(dash_leftKP.getDouble(0.0));
-        // leftPID.setD(dash_leftKD.getDouble(0.0));
-
-        // rightPID.setP(dash_rightKP.getDouble(0.0));
-        // rightPID.setD(dash_rightKD.getDouble(0.0));
-
-        leftPID.setP(.1);
-        leftPID.setD(0);
-
-        rightPID.setP(.1);
-        rightPID.setD(0);
-
-    }
-
-    public void setPower(double leftPow, double rightPow) { 
-        leftMotor.set(leftPow);  
-        rightMotor.set(rightPow);
-    }
-
-    public void setPower(double pow) {   
-        // TODO: remove printlns! these cause loop overruns
-
-        if (pow <= 0) {
-            leftMotor.set(pow);
-            rightMotor.set(pow);
-            System.out.println("pow <= 0");
+        if (m_leftPID.atGoal()) {
+            m_leftPIDEffort = 0;
+            m_leftFFEffort = 0;
         } else {
-            System.out.println("pow > 0");
+            m_leftPIDEffort = m_leftPID.calculate(m_leftMotor.getSensorPosition(), m_leftTargetPos);
+            m_leftFFEffort = leftFF.calculate(m_leftPID.getGoal().velocity) / 12.0;
+        }
 
-            if (leftMotor.getSensorPosition() <= LEFT_MAX_EXTEND_POS) {
-                leftMotor.set(pow); 
-                System.out.println("left < max");
-            } else {
-                System.out.println("left @ max");
-                leftMotor.set(0);
-            }
-            
-            if (rightMotor.getSensorPosition() <= RIGHT_MAX_EXTEND_POS) {
-                rightMotor.set(pow);
-                System.out.println("right < max");
-            } else {
-                System.out.println("right @ max");
-                rightMotor.set(0);
-            }       
+        if (m_rightPID.atGoal()) {
+            m_rightPIDEffort = 0;
+            m_rightFFEffort = 0;
+        } else {
+            m_rightPIDEffort = m_rightPID.calculate(m_rightMotor.getSensorPosition(), m_rightTargetPos);
+            m_rightFFEffort = rightFF.calculate(m_rightPID.getGoal().velocity) / 12.0;
         }
     }
 
-    public void setLeftPow(double leftPow) { 
-        leftMotor.set(leftPow);  
+    public boolean atTarget() {
+        m_leftPID.setGoal(m_leftTargetPos);
+        m_rightPID.setGoal(m_rightTargetPos);
+        return m_leftPID.atGoal() && m_rightPID.atGoal();
     }
 
-    public void setRightPow(double rightPow) { 
-        rightMotor.set(rightPow);  
+    public void setPower(double leftPow, double rightPow) {
+        m_usePid = false;
+
+        boolean leftUnderMax = m_leftMotor.getSensorPosition() <= LEFT_MAX_EXTEND_POS;
+
+        if (leftPow <= 0 || leftUnderMax) {
+            m_leftRawEffort = leftPow;
+        }
+
+        boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_MAX_EXTEND_POS;
+
+        if (rightPow <= 0 || rightUnderMax) {
+            m_rightRawEffort = rightPow;
+        } 
     }
 
     public void setTargetPosition(double leftPos, double rightPos) {
-        // if (climbTargetPos > ClimbConstants.MAX_EXTEND_POS) {
-        //     climbTargetPos = ClimbConstants.MAX_EXTEND_POS;
-        // } else if (climbTargetPos < ClimbConstants.MIN_EXTEND_POS) {
-        //     climbTargetPos = ClimbConstants.MIN_EXTEND_POS;
-        // }
+        m_usePid = true;
 
-        // leftMotor.setTargetPosition(climbTargetPos);
-        // rightMotor.setTargetPosition(climbTargetPos);
+        leftPos = OscarMath.clip(leftPos, 0, LEFT_MAX_EXTEND_POS);
+        rightPos = OscarMath.clip(rightPos, 0, RIGHT_MAX_EXTEND_POS);
 
-        leftTargetPos = leftPos;
-        rightTargetPos = rightPos;
-        
-        leftMotor.setTargetPosition(leftTargetPos);
-        rightMotor.setTargetPosition(rightTargetPos);
-    }
+        m_leftTargetPos = leftPos;
+        m_leftPID.setGoal(m_leftTargetPos);
 
-    /**all methods pertaining to Climb cmnds**/
-    public void extendClimb(double extendTarget) {
-        leftMotor.setTargetPosition(extendTarget);;
-        rightMotor.setTargetPosition(extendTarget);;
-    }
-
-    public void retractClimb(double retractTarget) {
-        leftMotor.setTargetPosition(retractTarget);
-        rightMotor.setTargetPosition(retractTarget);
+        m_rightTargetPos = rightPos;
+        m_rightPID.setGoal(m_rightTargetPos);
     }
 
     public void pivotClimb() {
-        // leftClimbPiston.set(true);
-        // rightClimbPiston.set(true);
         climbPiston.set(true);
     }
 
     public void straightenClimb() {
-        // leftClimbPiston.set(false);
-        // rightClimbPiston.set(false);
         climbPiston.set(false);
     }
 
     public void idle() {
-        leftMotor.set(0);
-        rightMotor.set(0);
+        m_usePid = false;
+        m_leftRawEffort = 0;
+        m_rightRawEffort = 0;
+        straightenClimb();
     }
 
     public void zeroClimb() {
-        leftMotor.rezeroSensor();
-        rightMotor.rezeroSensor();
+        m_leftMotor.rezeroSensor();
+        m_rightMotor.rezeroSensor();
     }
 
     public boolean isRightStalling() {
@@ -230,23 +222,19 @@ public class ClimbSubsystem extends SubsystemBase{
     }
 
     public double getRightVelocity() {
-        return rightMotor.getSensorVelocity();
+        return m_rightMotor.getSensorVelocity();
     }
 
     public double getLeftVelocity() {
-        return leftMotor.getSensorVelocity();
+        return m_leftMotor.getSensorVelocity();
     }
 
     public double getRightPosition() {
-        return rightMotor.getSensorPosition();
+        return m_rightMotor.getSensorPosition();
     }
 
     public double getLeftPosition() {
-        return leftMotor.getSensorPosition();
-    }
-
-    public void setIsPID(boolean isPid) {
-        isPID = isPid;
+        return m_leftMotor.getSensorPosition();
     }
 }
 

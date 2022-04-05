@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -47,7 +48,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_leftSlaveMotor = new CANTalonFX(LEFT_SLAVE_TALON_ID);
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
-  private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
+  // private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
+  private final Gyro m_imu;
 
   private final OscarDrivetrain m_drivetrain;
 
@@ -112,6 +114,40 @@ public class DrivetrainSubsystem extends SubsystemBase {
       LEFT_KP, RIGHT_KP, 
       MASS_KG, MOI_KGM2
     );
+
+    m_imu = new Gyro() {
+      @Override
+      public void close() throws Exception {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void calibrate() {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public void reset() {
+        // TODO Auto-generated method stub
+        
+      }
+
+      @Override
+      public double getAngle() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+
+      @Override
+      public double getRate() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+      
+    };
+
 
     // initialize drivetrain object
     m_drivetrain = new OscarDrivetrain(
@@ -179,7 +215,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getYaw() {
-    return m_imu.getYaw();
+    return m_imu.getAngle();
   }
 
   public void idleDrivetrain() {
@@ -194,7 +230,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d newPose) {
     m_drivetrain.resetPose(newPose);
-    m_imu.setYaw(newPose.getRotation().getDegrees());
+    // m_imu.setYaw(newPose.getRotation().getDegrees());
   }
 
   public void resetPose() {

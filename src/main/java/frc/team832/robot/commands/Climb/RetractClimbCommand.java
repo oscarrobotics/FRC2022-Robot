@@ -16,7 +16,7 @@ public class RetractClimbCommand extends CommandBase{
     //climb system brings arm down to latch onto the next bar
     @Override
     public void initialize() {
-        climb.retractClimb(target);
+        // climb.retractClimb(target);
     }
 
     @Override

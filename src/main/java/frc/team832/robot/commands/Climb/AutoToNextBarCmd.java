@@ -3,7 +3,9 @@ package frc.team832.robot.commands.Climb;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team832.robot.Constants.ClimbConstants;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import static frc.team832.robot.Constants.ClimbConstants.*;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 
 public class AutoToNextBarCmd extends SequentialCommandGroup{
@@ -17,14 +19,24 @@ public class AutoToNextBarCmd extends SequentialCommandGroup{
             4. straighten dynamic arms
             5. retract arms all the way
             */
-
-            new InstantCommand(() -> climb.setIsPID(true)),
             
-            new ExtendClimbCommand(climb, ClimbConstants.LEFT_FREE_HOOK_TARGET), 
+            // free arms
+            new PositionClimbCommand(climb, LEFT_FREE_HOOK_TARGET, RIGHT_FREE_HOOK_TARGET), 
+            new WaitCommand(0),
+            // pivot arms
             new PivotClimbCommand(climb),
-            new ExtendClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET),
+            new WaitCommand(0),
+            // to next bar
+            new PositionClimbCommand(climb, LEFT_TO_NEXT_BAR_TARGET, RIGHT_TO_NEXT_BAR_TARGET),
+            new WaitCommand(0),
+            // straighten
             new StraightenClimbCommand(climb),
-            new RetractClimbCommand(climb, ClimbConstants.RETRACT_TARGET)
+            new WaitCommand(0.2),
+            // retract to wait point
+            new PositionClimbCommand(climb, WAIT_POINT_TARGET, WAIT_POINT_TARGET),
+            new WaitCommand(1),
+            // retract all the way
+            new PositionClimbCommand(climb, RETRACT_TARGET, RETRACT_TARGET)
         );
     }
 }

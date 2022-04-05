@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team832.lib.CANDevice;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyorSubsystem;
@@ -45,8 +46,9 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
-    climb.setIsPID(false);
-    climb.zeroClimb();
+    climb.reset();
+
+    CANDevice.printMissingDevices();
   }
 
   /**
@@ -118,8 +120,7 @@ public class Robot extends TimedRobot {
 
     drivetrain.setNeutralMode(NeutralMode.kBrake);
 
-    climb.setIsPID(false);
-    climb.zeroClimb();
+    climb.reset();
   }
 
   /** This function is called periodically during operator control. */

@@ -14,7 +14,7 @@ public class ZeroClimbCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        climb.retractClimb(ClimbConstants.MIN_EXTEND_POS);
+        // climb.retractClimb(ClimbConstants.MIN_EXTEND_POS);
     }
 
     @Override

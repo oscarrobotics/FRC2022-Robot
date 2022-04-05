@@ -46,6 +46,9 @@ public class ShooterSubsystem extends SubsystemBase{
     /** Creates a new ShooterSubsystem **/
     public ShooterSubsystem(PhotonCamera gloworm) {
         DashboardManager.addTab(this);
+        
+        m_frontMotor.wipeSettings();
+        m_rearMotor.wipeSettings();
 
         m_frontMotor.setNeutralMode(NeutralMode.kCoast);
         m_frontMotor.limitInputCurrent(CURRENT_LIMIT);
@@ -159,5 +162,13 @@ public class ShooterSubsystem extends SubsystemBase{
 
     public void retractHood() {
         m_hoodSolenoid.set(false);
+    }
+
+    public double getRearSurfaceSpeed() {
+        return m_rearMotor.getSensorVelocity() * 2.5 * 3.14;
+    }
+
+    public double getFrontSurfaceSpeed() {
+        return m_frontMotor.getSensorVelocity() * 4 * 3.14;
     }
 }
