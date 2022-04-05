@@ -266,5 +266,11 @@ public class ClimbSubsystem extends SubsystemBase{
     public double getLeftPosition() {
         return m_leftMotor.getSensorPosition();
     }
+
+    public void clearTarget() {
+        m_usePid = false;
+        m_leftTargetPos = 0;
+        m_rightTargetPos = 0;
+    }
 }
 

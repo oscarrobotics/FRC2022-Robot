@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team832.lib.CANDevice;
 import frc.team832.lib.motorcontrol.NeutralMode;
+import frc.team832.robot.commands.Climb.HomeClimbCmd;
 import frc.team832.robot.subsystems.ClimbSubsystem;
 import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -119,8 +120,8 @@ public class Robot extends TimedRobot {
     }
 
     drivetrain.setNeutralMode(NeutralMode.kBrake);
-
-    climb.reset();
+    
+    CommandScheduler.getInstance().schedule(false, new HomeClimbCmd(climb));
   }
 
   /** This function is called periodically during operator control. */

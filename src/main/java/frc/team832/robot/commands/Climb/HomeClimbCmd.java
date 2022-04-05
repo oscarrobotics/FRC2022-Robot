@@ -17,6 +17,7 @@ public class HomeClimbCmd extends CommandBase {
     public void initialize() {
         leftHomed = false;
         rightHomed = false;
+        climb.clearTarget();
     }
 
     @Override
@@ -39,5 +40,10 @@ public class HomeClimbCmd extends CommandBase {
     @Override
     public boolean isFinished() {
         return leftHomed && rightHomed;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        climb.idle();
     }
 }
