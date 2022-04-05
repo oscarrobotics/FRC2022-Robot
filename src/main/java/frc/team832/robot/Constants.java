@@ -92,28 +92,25 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 6.25;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
+		public static final double TRACKWIDTH_METERS = Units.inchesToMeters(25.975);
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2,
 				WHEEL_DIAMETER_INCHES, 1 / GEARBOX.totalReduction);
-		public static final double MASS_KG = Units.lbsToKilograms(118.9);
+		public static final double MASS_KG = Units.lbsToKilograms(121.9);
 		public static final double MOI_KGM2 = 5.120993184;
 		// WHEEL CIRCUMFERENCE IN METERES = .4985
 
 		/** System Control Values **/
-		private static final double KS_KA_ADJUSTMENT_OLD = 10.90909;
-		private static final double KS_KA_ADJUSTMENT_NEW = 9.09090909;
-		public static final double LEFT_KS = 0.6953;
-		public static final double LEFT_KV = (2.2981 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
-		public static final double LEFT_KA = (0.54892 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
-		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV,
-				LEFT_KA);
-		public static final double LEFT_KP = 3.4267;
+		public static final double LEFT_KS = 0.66639;
+		public static final double LEFT_KV = 2.5477;
+		public static final double LEFT_KA = 0.2459;
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
+		public static final double LEFT_KP = 3.1833;
 
-		public static final double RIGHT_KS = 0.69347;
-		public static final double RIGHT_KV = (2.3149 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
-		public static final double RIGHT_KA = (0.23937 / KS_KA_ADJUSTMENT_OLD) * KS_KA_ADJUSTMENT_NEW;
-		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV,
-				RIGHT_KA);
-		public static final double RIGHT_KP = 2.9336;
+		public static final double RIGHT_KS = 0.63619;
+		public static final double RIGHT_KV = 2.5305;
+		public static final double RIGHT_KA = 0.13119;
+		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
+		public static final double RIGHT_KP = 2.463;
 
 		public static final double ANGULAR_KS = 0.49291;
 		public static final double ANGULAR_KV = 0.13429;
