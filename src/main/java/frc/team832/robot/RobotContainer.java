@@ -85,23 +85,22 @@ public class RobotContainer {
           -m_xboxCtrl.getRightX(), 
           2
         );
-      },
-    drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
+    }, drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
 
-    // var tankDriveCommand = new RunEndCommand(() -> {
-    //     drivetrain.teleopTankDrive(
-    //       -m_xboxCtrl.getRightY(),
-    //       -m_xboxCtrl.getRightX(), 
-    //       2
-    //     );
-    //   },
-    //   drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
+    /** var tankDriveCommand = new RunEndCommand(() -> {
+          drivetrain.teleopTankDrive(
+            -m_xboxCtrl.getRightY(),
+            -m_xboxCtrl.getRightX(), 
+            2
+          );
+        }, drivetrain::stop, drivetrain).withName("TankDriveCommand");
+    **/
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
     // configOperatorCommands();
     configTestingCommands();
-    }
+  }
 
   public void configOperatorCommands() {
     /**
@@ -196,8 +195,11 @@ public class RobotContainer {
     //     climb.setTargetPosition(0, 0);
     //   }, climb);
 
-    // test auto climb cmd
+    // auto climb cmd
     stratComInterface.arcadeBlackRight().whenPressed(new AutoToNextBarCmd(climb, drivetrain));
+
+    // home climb cmd
+    stratComInterface.arcadeWhiteLeft().whenPressed(new HomeClimbCmd(climb));
 
     // climb via pid (EXTEND TARGET CMD) to next bar target
     var extendCmd = new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd");
@@ -208,7 +210,7 @@ public class RobotContainer {
     // climb via pid (EXTEND TARGET CMD) to free hook target
     stratComInterface.sc3().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_FREE_HOOK_TARGET, ClimbConstants.RIGHT_FREE_HOOK_TARGET));
 
-    // climb via pid (EXTEND TARGET CMD) to min (enc pos = 10)
+    // climb via pid (EXTEND TARGET CMD) to min
     stratComInterface.sc6().whenPressed(new PositionClimbCommand(climb, ClimbConstants.RETRACT_TARGET, ClimbConstants.RETRACT_TARGET));
 
     // climb up via power - will stop at limit

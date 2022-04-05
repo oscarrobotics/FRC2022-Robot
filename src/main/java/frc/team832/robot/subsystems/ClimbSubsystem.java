@@ -42,9 +42,11 @@ public class ClimbSubsystem extends SubsystemBase{
     private final NetworkTableEntry dash_rightActualPos, dash_leftActualPos, dash_leftTargetPos, dash_rightTargetPos, dash_leftFFEffort, dash_leftPIDEffort, dash_rightFFEffort, dash_rightPIDEffort;
     private final NetworkTableEntry dash_leftRawEffort, dash_rightRawEffort;
     private final NetworkTableEntry dash_usePid;
+    private final NetworkTableEntry dash_rightOutputCurrentDraw, dash_leftOutputCurrentDraw, dash_rightInputCurrentDraw, dash_leftInputCurrentDraw;
+    private final NetworkTableEntry dash_leftHomingStalled, dash_rightHomingStalled;
     
-    private final StallDetector m_rightStallDetector = new StallDetector(m_rightMotor::getOutputCurrent);
-    private final StallDetector m_leftStallDetector = new StallDetector(m_leftMotor::getOutputCurrent);
+    private final StallDetector m_rightHomingStallDetector = new StallDetector(m_rightMotor::getInputCurrent);
+    private final StallDetector m_leftHomingStallDetector = new StallDetector(m_leftMotor::getInputCurrent);
 
     /** Creates a new ClimbSubsytem **/
     public ClimbSubsystem() {
@@ -59,11 +61,12 @@ public class ClimbSubsystem extends SubsystemBase{
         m_leftMotor.setInverted(true);
         //rightMotor.setInverted(true);
 
-        // m_rightStallDetector.setStallCurrent(7);
-        // m_leftStallDetector.setStallCurrent(7);
+        m_leftHomingStallDetector.setStallCurrent(15);
+        m_rightHomingStallDetector.setStallCurrent(15);
+        m_leftHomingStallDetector.setMinStallMillis(500);
+        m_rightHomingStallDetector.setMinStallMillis(500);
 
         zeroClimb();
-
         
         m_leftPID.setP(.2);
         m_leftPID.setD(0);
@@ -84,6 +87,14 @@ public class ClimbSubsystem extends SubsystemBase{
         dash_rightFFEffort = DashboardManager.addTabItem(this,  "Right FF Effort", 0.0);
         dash_leftRawEffort = DashboardManager.addTabNumberBar(this, "leftRawEffort", -12, 12);
         dash_rightRawEffort = DashboardManager.addTabNumberBar(this, "rightRawEffort", -12, 12);
+
+        dash_leftOutputCurrentDraw = DashboardManager.addTabItem(this, "left output current draw", 0.0);
+        dash_rightOutputCurrentDraw = DashboardManager.addTabItem(this, "right output current draw", 0.0);
+        dash_leftInputCurrentDraw = DashboardManager.addTabItem(this, "left input current draw", 0.0);
+        dash_rightInputCurrentDraw = DashboardManager.addTabItem(this, "right input current draw", 0.0);
+
+        dash_leftHomingStalled = DashboardManager.addTabBooleanBox(this, "leftHomingStalled");
+        dash_rightHomingStalled = DashboardManager.addTabBooleanBox(this, "rightHomingStalled");
 
         dash_usePid = DashboardManager.addTabBooleanBox(this, "UsePID");
 
@@ -130,6 +141,14 @@ public class ClimbSubsystem extends SubsystemBase{
         dash_rightFFEffort.setDouble(m_rightFFEffort);
         dash_leftRawEffort.setDouble(m_leftRawEffort);
         dash_rightRawEffort.setDouble(m_rightRawEffort);
+        
+        dash_leftOutputCurrentDraw.setDouble(m_leftMotor.getOutputCurrent());
+        dash_rightOutputCurrentDraw.setDouble(m_rightMotor.getOutputCurrent());
+        dash_leftInputCurrentDraw.setDouble(m_leftMotor.getInputCurrent());
+        dash_rightInputCurrentDraw.setDouble(m_rightMotor.getInputCurrent());
+
+        dash_leftHomingStalled.setBoolean(m_leftHomingStallDetector.getStallStatus().isStalled);
+        dash_rightHomingStalled.setBoolean(m_rightHomingStallDetector.getStallStatus().isStalled);
     }
 
     /*  FFE = motor's velocity / 12 volts
@@ -209,12 +228,20 @@ public class ClimbSubsystem extends SubsystemBase{
         m_rightMotor.rezeroSensor();
     }
 
+    public void zeroLeft() {
+        m_leftMotor.rezeroSensor();
+    }
+
+    public void zeroRight() {
+        m_rightMotor.rezeroSensor();
+    }
+
     public boolean isRightStalling() {
-        return m_rightStallDetector.getStallStatus().isStalled;
+        return m_rightHomingStallDetector.getStallStatus().isStalled;
     }
 
     public boolean isLeftStalling() {
-        return m_leftStallDetector.getStallStatus().isStalled;
+        return m_leftHomingStallDetector.getStallStatus().isStalled;
     }
 
     public boolean isStalling() {
