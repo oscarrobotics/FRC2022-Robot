@@ -16,26 +16,20 @@ public class PositionClimbCommand extends CommandBase{
    //Climb system extends arm outwards
     @Override
     public void initialize() {
-        System.out.println("INIT BEGIN");
         climb.setTargetPosition(m_leftTarget, m_rightTarget);
-        System.out.println("INIT END");
     }
 
     @Override
     public boolean isFinished() {
         boolean done = climb.atTarget();
-        System.out.println("ISFINISHED CHECK: " + done);
-        // return false;
         return done;
     }
 
     @Override
     public void end(boolean interrupted) {
         if (!interrupted) {
-            System.out.println("CLIMB ENDED");
             climb.idle();
         } else {
-            System.out.println("CLIMB INTERRUPTED");
         }
     }
 }

@@ -63,8 +63,8 @@ public class ClimbSubsystem extends SubsystemBase{
 
         m_leftHomingStallDetector.setStallCurrent(15);
         m_rightHomingStallDetector.setStallCurrent(15);
-        m_leftHomingStallDetector.setMinStallMillis(500);
-        m_rightHomingStallDetector.setMinStallMillis(500);
+        m_leftHomingStallDetector.setMinStallMillis(250);
+        m_rightHomingStallDetector.setMinStallMillis(250);
 
         zeroClimb();
         
@@ -103,6 +103,9 @@ public class ClimbSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        m_leftHomingStallDetector.updateStallStatus();
+        m_rightHomingStallDetector.updateStallStatus();
+
         updateControlLoops();
         updateDashboardData();
         setMotorOutputs();
@@ -147,8 +150,8 @@ public class ClimbSubsystem extends SubsystemBase{
         dash_leftInputCurrentDraw.setDouble(m_leftMotor.getInputCurrent());
         dash_rightInputCurrentDraw.setDouble(m_rightMotor.getInputCurrent());
 
-        dash_leftHomingStalled.setBoolean(m_leftHomingStallDetector.getStallStatus().isStalled);
-        dash_rightHomingStalled.setBoolean(m_rightHomingStallDetector.getStallStatus().isStalled);
+        dash_leftHomingStalled.setBoolean(isLeftStalling());
+        dash_rightHomingStalled.setBoolean(isRightStalling());
     }
 
     /*  FFE = motor's velocity / 12 volts

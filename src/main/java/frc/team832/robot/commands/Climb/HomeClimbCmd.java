@@ -14,6 +14,12 @@ public class HomeClimbCmd extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        leftHomed = false;
+        rightHomed = false;
+    }
+
+    @Override
     public void execute() {
         if (climb.isLeftStalling()) {
             leftHomed = true;
