@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
     "RoboRIO": {
       "window": {
         "visible": true
@@ -44,10 +49,21 @@
     },
     "windows": {
       "/SmartDashboard/Oscar Drivetrain/Field": {
-        "RamseteCommandPath": {
+        "Current Path": {
           "arrows": false,
           "style": "Track"
         },
+        "RamseteCommandPath": {
+          "arrows": false,
+          "style": "Track",
+          "weight": 1.0
+        },
+        "RamseteCommandTraj": {
+          "arrows": false,
+          "style": "Track",
+          "weight": 1.5
+        },
+        "image": "C:\\Users\\Banks\\Documents\\Robotics\\832\\2022\\FRC2022-Robot\\field22.png",
         "window": {
           "visible": true
         }
@@ -56,9 +72,6 @@
   },
   "NetworkTables": {
     "Shuffleboard": {
-      "ClimbSubsystem": {
-        "open": true
-      },
       "OscarDrivetrain": {
         "Robot Pose": {
           "open": true
@@ -78,7 +91,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": -6,
+          "height": 707,
           "series": [
             {
               "color": [
@@ -110,12 +123,15 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
         {
-          "height": -6,
+          "height": 191,
           "series": [
             {
               "color": [
@@ -145,6 +161,16 @@
               "id": "NT:/Shuffleboard/ShooterSubsystem/Rear Flywheel/Target RPM"
             }
           ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "height": 338
         }
       ]
     }
