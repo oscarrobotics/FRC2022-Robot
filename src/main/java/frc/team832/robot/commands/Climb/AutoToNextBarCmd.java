@@ -4,12 +4,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 import static frc.team832.robot.Constants.ClimbConstants.*;
 import frc.team832.robot.subsystems.ClimbSubsystem;
+import frc.team832.robot.subsystems.DrivetrainSubsystem;
 
 public class AutoToNextBarCmd extends SequentialCommandGroup{
-    public AutoToNextBarCmd(ClimbSubsystem climb) {
+    public AutoToNextBarCmd(ClimbSubsystem climb, DrivetrainSubsystem drivetrain) {
         addRequirements(climb);
         addCommands(
             /*
@@ -27,8 +29,8 @@ public class AutoToNextBarCmd extends SequentialCommandGroup{
             new PivotClimbCommand(climb),
             new WaitCommand(0),
             // to next bar
-            new PositionClimbCommand(climb, LEFT_TO_NEXT_BAR_TARGET, RIGHT_TO_NEXT_BAR_TARGET),
-            new WaitCommand(0),
+            new PositionClimbCommand(climb, LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET, RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET),
+            new WaitUntilCommand(() -> drivetrain.getPitch() >= SAFE_TO_EXTEND),
             // straighten
             new StraightenClimbCommand(climb),
             new WaitCommand(0.2),

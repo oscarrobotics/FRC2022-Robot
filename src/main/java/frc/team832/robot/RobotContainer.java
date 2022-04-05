@@ -71,22 +71,14 @@ public class RobotContainer {
     PhotonCamera.setVersionCheckEnabled(false);
     LiveWindow.disableAllTelemetry();
 
-    // var zeroHeadingRot = Rotation2d.fromDegrees(0);
-
-    // var tarmacTestPath = PathHelper.generatePath(FieldConstants.RightOuterTarmacCorner, new Pose2d(1.5, 1.5, Rotation2d.fromDegrees(180 + 45)), DrivetrainConstants.CALM_TRAJCONFIG);
-    // var trajPoses = List.of(new Pose2d(0, 0, zeroHeadingRot), new Pose2d(0.75, 0, zeroHeadingRot), new Pose2d(3, 0, zeroHeadingRot));
-    // var twoBallPath = TrajectoryGenerator.generateTrajectory(trajPoses, DrivetrainConstants.CALM_TRAJCONFIG);
-    // var twoBallTestCmd = drivetrain.getTrajectoryCommand(twoBallPath);
-    var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
-    var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
-    autoSelector.addDefaultAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
-    // autoSelector.addAutonomous("0 Cargo Auto", new BasicAutoCmd(drivetrain));
-    // autoSelector.addAutonomous("1 Cargo Auto", new OneCargoHighAutoCmd(drivetrain, intake, conveyor, shooter));
-    // autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-    // autoSelector.addAutonomous("2 Cargo Path Test", twoBallPath, twoBallTestCmd);
-    // var threeCargoAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter);
-    // autoSelector.addDefaultAutonomous("3 Cargo Auto", threeCargoAutoCmd.initialPath.getInitialPose(), threeCargoAutoCmd);
-
+    // var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
+    // var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
+    // autoSelector.addAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
+    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    autoSelector.addAutonomous("5 Cargo Auto", new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+   
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           -m_xboxCtrl.getLeftY(),
@@ -205,7 +197,7 @@ public class RobotContainer {
     //   }, climb);
 
     // test auto climb cmd
-    stratComInterface.arcadeBlackRight().whenPressed(new AutoToNextBarCmd(climb));
+    stratComInterface.arcadeBlackRight().whenPressed(new AutoToNextBarCmd(climb, drivetrain));
 
     // climb via pid (EXTEND TARGET CMD) to next bar target
     var extendCmd = new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd");

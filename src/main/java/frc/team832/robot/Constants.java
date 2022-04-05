@@ -255,6 +255,9 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double LEFT_TO_NEXT_BAR_TARGET = 86.00;
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
+		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 86.00 - 5;
+		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 92.36 - 5;
+		public static final double SAFE_TO_EXTEND = 30;
 		public static final double LEFT_FREE_HOOK_TARGET = 30;
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;
 		public static final double RETRACT_TARGET = .75;

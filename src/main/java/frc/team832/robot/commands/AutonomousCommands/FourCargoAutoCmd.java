@@ -10,7 +10,7 @@ import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
-public class FiveCargoAutoCmd extends SequentialCommandGroup {
+public class FourCargoAutoCmd extends SequentialCommandGroup {
 	public final Trajectory initialPath;
 	public final Trajectory secondPath;
 
@@ -24,17 +24,16 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 	 * 	4) ParallelRace intake with second path
 	 * 	5) Shoot two
 	 */
-	public FiveCargoAutoCmd(
+	public FourCargoAutoCmd(
 		DrivetrainSubsystem drivetrain,
 		IntakeSubsystem intake,
 		ConveyorSubsystem conveyor,
 		ShooterSubsystem shooter
 	) {
-		initialPath = drivetrain.initializePaths("5 Ball Auto 01", 4, 6);
-		secondPath = drivetrain.initializePaths("5 Ball Auto 02", 4, 6);
+		initialPath = drivetrain.initializePaths("4 Ball Auto 01", 4, 6);
+		secondPath = drivetrain.initializePaths("4 Ball Auto 02", 4, 6);
 		addRequirements(drivetrain, intake, conveyor, shooter);
 		addCommands(
-			new ShootBallVisionCmd(conveyor, shooter),
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(initialPath)

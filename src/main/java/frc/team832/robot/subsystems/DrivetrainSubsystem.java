@@ -204,6 +204,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       targetingPID.setD(m_aimKd);
     }
 
+    SmartDashboard.putNumber("pitch", getPitch());
+
     updateVision();
   }
 
@@ -220,7 +222,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getYaw() {
-    return m_imu.getAngle();
+    return m_imu.getYaw();
   }
 
   public void idleDrivetrain() {
@@ -235,7 +237,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d newPose) {
     m_drivetrain.resetPose(newPose);
-    // m_imu.setYaw(newPose.getRotation().getDegrees());
+    m_imu.setYaw(newPose.getRotation().getDegrees());
   }
 
   public void resetPose() {
@@ -323,6 +325,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getPitch() {
-    return m_imu.getPitch();
+    return m_imu.getRoll();
   }
 }
