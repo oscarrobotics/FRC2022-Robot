@@ -63,7 +63,11 @@
           "style": "Track",
           "weight": 1.5
         },
-        "image": "C:\\Users\\Banks\\Documents\\Robotics\\832\\2022\\FRC2022-Robot\\field22.png",
+        "Robot": {
+          "length": 0.8889999985694885,
+          "width": 0.8889999985694885
+        },
+        "image": "C:\\Users\\Oscar\\Robotics\\Source\\FRC2022-Robot\\field22.png",
         "window": {
           "visible": true
         }
@@ -170,7 +174,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 338
+          "height": 176
         }
       ]
     }

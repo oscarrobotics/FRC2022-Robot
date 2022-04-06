@@ -3,7 +3,11 @@ package frc.team832.robot.commands.AutonomousCommands;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team832.robot.Constants.ShooterConstants;
 import frc.team832.robot.commands.AcceptBallCommand;
+import frc.team832.robot.commands.QueueBallCommand;
+import frc.team832.robot.commands.ShootBallCmd;
 import frc.team832.robot.commands.ShootBallVisionCmd;
 import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
@@ -13,6 +17,7 @@ import frc.team832.robot.subsystems.ShooterSubsystem;
 public class FiveCargoAutoCmd extends SequentialCommandGroup {
 	public final Trajectory initialPath;
 	public final Trajectory secondPath;
+	public final Trajectory thirdPath;
 
 	/**
 	 * Five cargo autonomous.
@@ -30,21 +35,28 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 		ConveyorSubsystem conveyor,
 		ShooterSubsystem shooter
 	) {
-		initialPath = drivetrain.initializePaths("5 Ball Auto 01", 4, 6);
-		secondPath = drivetrain.initializePaths("5 Ball Auto 02", 4, 6);
+		initialPath = drivetrain.loadPath("5 Ball Auto 01", 2, 2.5, true);
+		secondPath = drivetrain.loadPath("5 Ball Auto 02", 2, 2.5, true);
+		thirdPath = drivetrain.loadPath("5 Ball Auto 03", 2, 2.5);
 		addRequirements(drivetrain, intake, conveyor, shooter);
 		addCommands(
-			new ShootBallVisionCmd(conveyor, shooter),
+			// new ShootBallVisionCmd(conveyor, shooter),
+			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(initialPath)
 			),
-			new ShootBallVisionCmd(conveyor, shooter),
-			new ParallelRaceGroup(
-				new AcceptBallCommand(intake, shooter, conveyor),
-				drivetrain.getTrajectoryCommand(secondPath)
-			),
+			new QueueBallCommand(conveyor, shooter),
 			new ShootBallVisionCmd(conveyor, shooter)
+			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
+			// new ParallelRaceGroup(
+			// 	new AcceptBallCommand(intake, shooter, conveyor),
+			// 	drivetrain.getTrajectoryCommand(secondPath)
+			// ),
+			// new QueueBallCommand(conveyor, shooter),
+			// drivetrain.getTrajectoryCommand(thirdPath),
+			// // new ShootBallVisionCmd(conveyor, shooter)
+			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true)
 		);
 	}
 	

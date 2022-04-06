@@ -19,7 +19,7 @@ public class FeedBallCommand extends SequentialCommandGroup{
             // new WaitUntilCommand(() -> shooter.isStalling()),
             // new WaitUntilCommand(conveyor::isCargo),
             // new WaitUntilCommand(() -> !conveyor.isCargo()),
-            new WaitCommand(.3),
+            new WaitCommand(.5),
             // new WaitCommand(.5),
             new InstantCommand(() -> conveyor.setPower(0))
             // new WaitCommand(.5)

@@ -30,8 +30,8 @@ public class FourCargoAutoCmd extends SequentialCommandGroup {
 		ConveyorSubsystem conveyor,
 		ShooterSubsystem shooter
 	) {
-		initialPath = drivetrain.initializePaths("4 Ball Auto 01", 4, 6);
-		secondPath = drivetrain.initializePaths("4 Ball Auto 02", 4, 6);
+		initialPath = drivetrain.loadPath("4 Ball Auto 01", 4, 6);
+		secondPath = drivetrain.loadPath("4 Ball Auto 02", 4, 6);
 		addRequirements(drivetrain, intake, conveyor, shooter);
 		addCommands(
 			new ParallelRaceGroup(

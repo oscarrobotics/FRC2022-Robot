@@ -95,12 +95,13 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     CommandScheduler.getInstance().cancelAll();
 
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
+    m_robotContainer.setAutoPose();
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    drivetrain.setNeutralMode(NeutralMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */

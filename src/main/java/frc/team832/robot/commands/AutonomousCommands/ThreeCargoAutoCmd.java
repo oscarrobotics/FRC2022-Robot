@@ -14,7 +14,7 @@ public class ThreeCargoAutoCmd extends SequentialCommandGroup {
     public final Trajectory initialPath;
 
     public ThreeCargoAutoCmd(DrivetrainSubsystem drivetrain, IntakeSubsystem intake, ConveyorSubsystem conveyor, ShooterSubsystem shooter) {
-        initialPath = drivetrain.initializePaths("3 Ball Auto", 4, 4);
+        initialPath = drivetrain.loadPath("3 Ball Auto", 4, 4);
         addRequirements(drivetrain, intake, conveyor, shooter);
         addCommands(
             // shoot ball

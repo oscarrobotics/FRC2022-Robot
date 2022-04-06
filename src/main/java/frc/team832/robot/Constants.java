@@ -92,38 +92,41 @@ public final class Constants {
 		public static final double WHEEL_DIAMETER_INCHES = 6.25;
 		public static final double WHEELBASE_INCHES = 26.0;
 		public static final double WHEELBASE_METERS = Units.inchesToMeters(WHEELBASE_INCHES);
-		public static final double TRACKWIDTH_METERS = Units.inchesToMeters(25.975);
+		public static final double TRACKWIDTH_METERS = 0.7254;
 		public static final WheeledPowerTrain POWER_TRAIN = new WheeledPowerTrain(GEARBOX, MOTOR, 2,
-				WHEEL_DIAMETER_INCHES, 1 / GEARBOX.totalReduction);
+				WHEEL_DIAMETER_INCHES, GEARBOX.totalReduction);
 		public static final double MASS_KG = Units.lbsToKilograms(121.9);
 		public static final double MOI_KGM2 = 5.120993184;
 		// WHEEL CIRCUMFERENCE IN METERES = .4985
 
 		/** System Control Values **/
-		public static final double LEFT_KS = 0.66639;
-		public static final double LEFT_KV = 2.5477;
-		public static final double LEFT_KA = 0.2459;
-		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
-		public static final double LEFT_KP = 3.1833;
-
-		public static final double RIGHT_KS = 0.63619;
-		public static final double RIGHT_KV = 2.5305;
-		public static final double RIGHT_KA = 0.13119;
+		public static final double RIGHT_KS = 0.70953;
+		public static final double RIGHT_KV = 1.9657;
+		public static final double RIGHT_KA = 0.55988;
 		public static final SimpleMotorFeedforward RIGHT_FEEDFORWARD = new SimpleMotorFeedforward(RIGHT_KS, RIGHT_KV, RIGHT_KA);
-		public static final double RIGHT_KP = 2.463;
+		public static final double RIGHT_KP = 0.83404;
 
-		public static final double ANGULAR_KS = 0.49291;
-		public static final double ANGULAR_KV = 0.13429;
-		public static final double ANGULAR_KA = 0.0030209;
-		public static final double ANGULAR_KP = 0.064151;
+		public static final double LEFT_KS = 0.70902;
+		public static final double LEFT_KV = 1.946;
+		public static final double LEFT_KA = 0.29475;
+		public static final SimpleMotorFeedforward LEFT_FEEDFORWARD = new SimpleMotorFeedforward(LEFT_KS, LEFT_KV, LEFT_KA);
+		public static final double LEFT_KP = 0.24586;
+
+		public static final double ANGULAR_KS = 0.47629;
+		public static final double ANGULAR_KV = 1.8086;
+		public static final double ANGULAR_KA = 1.0154;
+		public static final double ANGULAR_KP = 1.4084;
 
 		// TEST PATH FOLLOWING TRAJECTORY
 		private static final Pose2d zero_zero_StartPose = new Pose2d();
-		private static final Pose2d threeMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
-		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(1.2, 1);
+		private static final Pose2d halfMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
+		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(2, 3);
 		public static final TrajectoryConfig AGGRESSIVE_TRAJCONFIG = new TrajectoryConfig(4, 6);
-		public static Trajectory test3MeterForwardTraj = PathHelper.generatePath(zero_zero_StartPose, threeMeterX_Pose,
-				CALM_TRAJCONFIG);
+		public static Trajectory testHalfMeterForwardTraj = PathHelper.generatePath(
+			zero_zero_StartPose,
+			halfMeterX_Pose,
+			CALM_TRAJCONFIG
+		);
 
 		// PATHS
 		// public static final Path THREE_BALL_AUTO_PATH =

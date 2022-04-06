@@ -1,34 +1,16 @@
 package frc.team832.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.PathPlanner;
-
 import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.PhotonVersion;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.net.PortForwarder;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.team832.AutonomousSelector;
-import frc.team832.AutonomousSelector.AutonomousMode;
 import frc.team832.lib.driverinput.controllers.StratComInterface;
-import frc.team832.lib.motion.PathHelper;
 import frc.team832.lib.util.OscarMath;
 
 import frc.team832.robot.Constants.*;
@@ -71,18 +53,25 @@ public class RobotContainer {
     PhotonCamera.setVersionCheckEnabled(false);
     LiveWindow.disableAllTelemetry();
 
+    var halfMeterTraj = Constants.DrivetrainConstants.testHalfMeterForwardTraj;
+
+    // autoSelector.addDefaultAutonomous("HalfMeterTest", halfMeterTraj, drivetrain.getTrajectoryCommand(halfMeterTraj));
+
     // var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
     // var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
     // autoSelector.addAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
-    autoSelector.addDefaultAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
     autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
     autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-    autoSelector.addAutonomous("5 Cargo Auto", new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+
+    var fiveBallAutoCmd = new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+
+    autoSelector.addDefaultAutonomous("5 Cargo Auto", fiveBallAutoCmd.initialPath, fiveBallAutoCmd);
    
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           -m_xboxCtrl.getLeftY(),
-          -m_xboxCtrl.getRightX(), 
+          m_xboxCtrl.getRightX(), 
           2
         );
     }, drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
@@ -169,7 +158,7 @@ public class RobotContainer {
 
     // m_xboxCtrl.a().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
 
-    // m_xboxCtrl.a().whileHeld(drivetrain.getTrajectoryCommand(drivetrain.initializePaths(DrivetrainConstants.THREE_BALL_AUTO_PATH)));
+    // m_xboxCtrl.a().whileHeld(drivetrain.getTrajectoryCommand(drivetrain.loadPath(DrivetrainConstants.THREE_BALL_AUTO_PATH)));
   }
 
   public void configTestingCommands() {

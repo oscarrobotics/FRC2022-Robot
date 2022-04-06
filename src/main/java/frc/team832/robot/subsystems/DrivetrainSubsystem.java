@@ -84,8 +84,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightMasterMotor.limitOutputCurrent(CURRENT_LIMIT);
     m_rightSlaveMotor.limitOutputCurrent(CURRENT_LIMIT);
 
-    // invert right side
-    m_rightMasterMotor.setInverted(true);
+    // invert left side
+    m_leftMasterMotor.setInverted(true);
 
     // set to brake mode
     m_leftMasterMotor.setNeutralMode(NeutralMode.kBrake);
@@ -105,8 +105,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // m_leftSlaveMotor.follow(m_leftMasterMotor);
     // m_rightSlaveMotor.follow(m_rightMasterMotor);
 
-    // ensure right slave follows master inversion
-    m_rightSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
+    // ensure left slave follows master inversion
+    m_leftSlaveMotor.getBaseController().setInverted(InvertType.FollowMaster);
 
     var drivetrainCharacteristics = new OscarDTCharacteristics(
       POWER_TRAIN, TRACKWIDTH_METERS, 
@@ -204,7 +204,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       targetingPID.setD(m_aimKd);
     }
 
-    SmartDashboard.putNumber("pitch", getPitch());
+    SmartDashboard.putNumber("gyro yaw", getPitch());
 
     updateVision();
   }
@@ -274,8 +274,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_drivetrain.addTrajectoryToField(path, "Current Path");
   }
 
-  public Trajectory initializePaths(String pathName, double maxVel, double maxAccel) {
-    Trajectory trajectory = PathPlanner.loadPath(pathName, maxVel, maxAccel);
+  public Trajectory loadPath(String pathName, double maxVel, double maxAccel) {
+    return loadPath(pathName, maxVel, maxAccel, false);
+  }
+
+  public Trajectory loadPath(String pathName, double maxVel, double maxAccel, boolean reversed) {
+    Trajectory trajectory = PathPlanner.loadPath(pathName, maxVel, maxAccel, reversed);
     return trajectory;
   }
 
