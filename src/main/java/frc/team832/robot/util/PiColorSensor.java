@@ -2,6 +2,7 @@ package frc.team832.robot.util;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class PiColorSensor {
@@ -13,6 +14,19 @@ public class PiColorSensor {
         }
 
         return INSTANCE;
+    }
+
+    public class REVColor {
+        public double r, g, b, a;
+
+        public REVColor(double[] rgba) {
+            if (rgba.length == 4) {
+                r = rgba[0];
+                g = rgba[1];
+                b = rgba[2];
+                a = rgba[3];
+            }
+        }
     }
 
     private final NetworkTableInstance m_ntInst = NetworkTableInstance.getDefault();
@@ -31,8 +45,37 @@ public class PiColorSensor {
         return m_proximityEntry.getDouble(-1);
     }
 
-    public Color getColor() {
+    public REVColor getColor() {
         var colorArr = m_colorEntry.getDoubleArray(new double[4]);
-        return new Color(colorArr[0], colorArr[1], colorArr[2]);
+        return new REVColor(colorArr);
+    }
+
+    public boolean isBallPresent() {
+        return dataFresh() && getProximity() >= 750;
+    }
+
+    public boolean isBallBlue() {
+        return dataFresh() && getColor().b >= 4000;
+    }
+
+    public boolean isBallRed() {
+        return !isBallBlue();
+    }
+
+    public boolean isAllianceRed() {
+        return false;
+        // return DriverStation.getAlliance() == DriverStation.Alliance.Red;
+    }
+
+    public boolean isAllianceBlue() {
+        return true;
+        // return DriverStation.getAlliance() == DriverStation.Alliance.Blue;
+    }
+
+    public boolean isCargoCorrectColor() {
+        return isBallPresent() && (
+            (isBallBlue() && isAllianceBlue()) ||
+            (isBallRed() && isAllianceRed())
+        );
     }
 }
