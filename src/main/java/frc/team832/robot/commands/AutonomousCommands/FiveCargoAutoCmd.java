@@ -42,9 +42,10 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 
 		addRequirements(drivetrain, intake, conveyor, shooter);
 
-		addCommands(			
-			// new ShootBallVisionCmd(conveyor, shooter, false);
-			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
+		addCommands(
+			drivetrain.getTargetingCommand(() -> 0).withTimeout(0.3),			
+			new ShootBallVisionCmd(conveyor, shooter, false),
+			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
 
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
@@ -52,10 +53,10 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 			),
 			new QueueBallCommand(conveyor, shooter),
 
-			new WaitCommand(.3),
+			new WaitCommand(2.3),
 
-			// drivetrain.getTargetingCommand(() -> 0),
-			// new ShootBallVisionCmd(conveyor, shooter, false)
+			drivetrain.getTargetingCommand(() -> 0).withTimeout(0.3),
+			new ShootBallVisionCmd(conveyor, shooter, false),
 			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
@@ -65,11 +66,11 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 
 			drivetrain.getTrajectoryCommand(thirdPath),
 			
-			new WaitCommand(.3),
+			new WaitCommand(2.3),
 			
-			// drivetrain.getTargetingCommand(() -> 0),
-			// new ShootBallVisionCmd(conveyor, shooter, false)
-			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true)
+			drivetrain.getTargetingCommand(() -> 0).withTimeout(0.3),
+			new ShootBallVisionCmd(conveyor, shooter, false)
+			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true)
 		);
 	}
 }

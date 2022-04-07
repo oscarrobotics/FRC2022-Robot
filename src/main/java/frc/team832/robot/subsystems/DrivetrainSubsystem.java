@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunEndCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team832.lib.drive.OscarDTCharacteristics;
 import frc.team832.lib.drive.OscarDrivetrain;
@@ -263,7 +266,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
     var setField2dPathCmd = new InstantCommand(() -> {
       m_drivetrain.addTrajectoryToField(path, "RamseteCommandPath");
     });
-    return setField2dPathCmd.andThen(m_drivetrain.generateRamseteCommand(path, this));
+
+    var trajCmd = m_drivetrain.generateRamseteCommand(path, this);
+
+    // var bullshit = new Ramsete
+
+    var trajAndStopCmd = new ParallelDeadlineGroup(
+      trajCmd, 
+      new StartEndCommand(() -> {}, this::stop)
+    );
+
+    return setField2dPathCmd.andThen(trajAndStopCmd);
   }
 
   public void stop() {

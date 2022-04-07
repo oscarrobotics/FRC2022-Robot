@@ -203,31 +203,31 @@ public final class Constants {
 				// 1 / Motor.kFalcon500.KvRPMPerVolt);
 
 		/** Speeds **/
-		public static final double FRONT_RPM_HIGH_FENDER = 2946;
-		public static final double REAR_RPM_HIGH_FENDER = 971.5;
+		public static final double FRONT_RPM_HIGH_FENDER = 2915;
+		public static final double REAR_RPM_HIGH_FENDER = 1845;
 
-		public static final double FRONT_RPM_LOW_FENDER = 673;
-		public static final double REAR_RPM_LOW_FENDER = 2093;
+		public static final double FRONT_RPM_LOW_FENDER = 800;
+		public static final double REAR_RPM_LOW_FENDER = 1350;
 
-		public static final double FRONT_RPM_HIGH_TARMAC = 1943.9;
-		public static final double REAR_RPM_HIGH_TARMAC = 2766.3;
+		public static final double FRONT_RPM_HIGH_TARMAC = 1970;
+		public static final double REAR_RPM_HIGH_TARMAC = 3165;
 
 		// high shot maps
 		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_HIGH_MAP = new InterpolatingTreeMap<>();
 		static {
-			FRONT_SHOOTER_RPM_HIGH_MAP.put(0.95, 1840.0);
-			FRONT_SHOOTER_RPM_HIGH_MAP.put(1.8, 2170.0);
-			FRONT_SHOOTER_RPM_HIGH_MAP.put(2.75, 2320.0);
-			FRONT_SHOOTER_RPM_HIGH_MAP.put(3.7, 2140.0);
-			FRONT_SHOOTER_RPM_HIGH_MAP.put(4.1, 2120.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(0.92, 2070.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(1.8, 1970.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(2.73, 2220.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(3.53, 1845.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(4.3, 1695.0);
 		}
 		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_HIGH_MAP = new InterpolatingTreeMap<>();
 		static {
-			REAR_SHOOTER_RPM_HIGH_MAP.put(0.95, 3090.0);
-			REAR_SHOOTER_RPM_HIGH_MAP.put(1.8, 3270.0);
-			REAR_SHOOTER_RPM_HIGH_MAP.put(2.75, 3620.0);
-			REAR_SHOOTER_RPM_HIGH_MAP.put(3.7, 4670.0);
-			REAR_SHOOTER_RPM_HIGH_MAP.put(4.1, 6150.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(0.92, 3065.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(1.8, 3165.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(2.73, 3365.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(3.53, 4645.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(4.3, 5980.0);
 		}
 
 		public static double HIGH_HOOD_UP_DISTANCE = 1.25;
@@ -239,15 +239,15 @@ public final class Constants {
 		// low shot maps
 		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_LOW_MAP = new InterpolatingTreeMap<>();
 		static {
-			FRONT_SHOOTER_RPM_LOW_MAP.put(1.15, 1070.0);
-			FRONT_SHOOTER_RPM_LOW_MAP.put(1.8, 1020.0);
-			FRONT_SHOOTER_RPM_LOW_MAP.put(2.75, 1020.0);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(0.83, 850.0);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(1.5, 850.0);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(2.1, 850.0);
 		}
 		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_LOW_MAP = new InterpolatingTreeMap<>();
 		static {
-			REAR_SHOOTER_RPM_LOW_MAP.put(1.15, 1870.0);
-			REAR_SHOOTER_RPM_LOW_MAP.put(1.8, 2740.0);
-			REAR_SHOOTER_RPM_LOW_MAP.put(2.75, 3490.0);
+			REAR_SHOOTER_RPM_LOW_MAP.put(0.83, 1870.0);
+			REAR_SHOOTER_RPM_LOW_MAP.put(1.5, 2440.0);
+			REAR_SHOOTER_RPM_LOW_MAP.put(2.1, 2940.0);
 		}
 
 		/** System Control Values **/ // Data from sysid
@@ -257,15 +257,15 @@ public final class Constants {
 		public static final SimpleMotorFeedforward FRONT_FEEDFORWARD = new
 		SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV / 60);
 		// public static final SimpleMotorFeedforward FRONT_FEEDFORWARD = FEEDFORWARD;
-		public static final double BOTTOM_KP = 0.11439;
+		public static final double FRONT_KP = 0.11439;
 
-		public static final double TOP_KS = 0.65;
-		public static final double TOP_KV = 0.11;
-		public static final double TOP_KA = 0.0069025;
+		public static final double TOP_KS = 0.20111;
+		public static final double TOP_KV = 0.11354;
+		public static final double TOP_KA = 0.0052708;
 		public static final SimpleMotorFeedforward REAR_FEEDFORWARD = new
 		SimpleMotorFeedforward(TOP_KS, TOP_KV / 60);
 		// public static final SimpleMotorFeedforward REAR_FEEDFORWARD = FRONT_FEEDFORWARD;
-		public static final double REAR_KP = 0.001;
+		public static final double REAR_KP = 0.017345 / 60;
 	}
 
 	public static final class ClimbConstants {

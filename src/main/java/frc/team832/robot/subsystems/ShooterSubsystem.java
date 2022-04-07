@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX m_frontMotor = new CANTalonFX(FRONT_MOTOR_CAN_ID);
     private final CANTalonFX m_rearMotor = new CANTalonFX(REAR_MOTOR_CAN_ID);
 
-    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FRONT_FEEDFORWARD, BOTTOM_KP, MOI_KGM2);
+    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FRONT_FEEDFORWARD, FRONT_KP, MOI_KGM2);
     private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, REAR_FEEDFORWARD, REAR_KP, MOI_KGM2);
 
     private final Solenoid m_hoodSolenoid = new Solenoid(PneumaticsModuleType.REVPH, HOOD_SOLENOID_ID);
