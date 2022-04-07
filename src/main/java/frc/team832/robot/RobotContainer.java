@@ -87,8 +87,8 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configOperatorCommands();
-    configTestingCommands();
+    configOperatorCommands();
+    // configTestingCommands();
   }
 
   public void configOperatorCommands() {

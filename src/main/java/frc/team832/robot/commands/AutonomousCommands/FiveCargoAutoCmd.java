@@ -56,7 +56,7 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 
 			// drivetrain.getTargetingCommand(() -> 0),
 			// new ShootBallVisionCmd(conveyor, shooter, false)
-			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
+			// new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(secondPath)

@@ -1,6 +1,7 @@
 package frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.Constants.ConveyorConstants;
 import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.Constants.ShooterConstants;
@@ -25,6 +26,7 @@ public class AcceptBallAutoCmd extends CommandBase{
     public void initialize() {
         //extends intake outwards
         intake.extendIntake();
+        new WaitCommand(.2);
         //spins intake to accept the ball into the machine
         intake.setPower(IntakeConstants.INTAKE_POWER);
         //spins internal conveyors to contain the ball

@@ -39,11 +39,6 @@ public class AcceptBallCommand extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        //stops spinning
-        if (!interrupted) {
-            new WaitCommand(.2);
-        }
-
         intake.idle();
         shooter.idle();
         conveyor.idle();
