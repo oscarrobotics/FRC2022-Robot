@@ -39,8 +39,8 @@ public class TwoCargoAutoCmd extends SequentialCommandGroup{
                 )
             ),
 
-            new ShootBallVisionCmd(conveyor, shooter),
-            new ShootBallVisionCmd(conveyor, shooter)
+            new ShootBallVisionCmd(conveyor, shooter, false),
+            new ShootBallVisionCmd(conveyor, shooter, false)
 
              // moves dt backward to shoot
             //  new InstantCommand(() -> drivetrain.setWheelPower(.5, .5)),

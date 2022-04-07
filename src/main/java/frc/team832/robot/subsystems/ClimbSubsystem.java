@@ -219,11 +219,18 @@ public class ClimbSubsystem extends SubsystemBase{
         climbPiston.set(false);
     }
 
-    public void idle() {
+    public void idle(boolean wasClimbing) {
         m_usePid = false;
         m_leftRawEffort = 0;
         m_rightRawEffort = 0;
-        straightenClimb();
+
+        // if (!wasClimbing) {
+            // straightenClimb();
+        // }
+    }
+
+    public void idle() {
+        idle(false);
     }
 
     public void zeroClimb() {

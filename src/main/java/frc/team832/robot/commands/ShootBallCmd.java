@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
 
@@ -19,20 +20,20 @@ public class ShootBallCmd extends SequentialCommandGroup {
         this(conveyor, shooter, ()-> { return frontRpm; }, ()-> { return backRpm; }, false);
     }
 
-    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, double frontRpm, double backRpm, boolean low) {
-        this(conveyor, shooter, ()-> { return frontRpm; }, ()-> { return backRpm; }, low);
+    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, double frontRpm, double backRpm, boolean isLow) {
+        this(conveyor, shooter, ()-> { return frontRpm; }, ()-> { return backRpm; }, isLow);
     }
 
-    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM, boolean low) {
+    public ShootBallCmd(ConveyorSubsystem conveyor, ShooterSubsystem shooter, DoubleSupplier frontRPM, DoubleSupplier rearRPM, boolean isLow) {
         addRequirements(conveyor, shooter);
         this.conveyor = conveyor;
         this.shooter = shooter;
         double waitTime;
 
-        if (low) {
+        if (isLow) {
             waitTime = 0;
         } else {
-            waitTime = .75;
+            waitTime = .5;
         }
 
         addCommands(
@@ -40,7 +41,7 @@ public class ShootBallCmd extends SequentialCommandGroup {
             new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
 
             // checks to see if flywheels at target before feeding
-            // new WaitUntilCommand(() -> shooter.atTarget(50)),
+            new WaitUntilCommand(() -> shooter.atTarget(50)),
             new WaitCommand(waitTime),
             
             // feeds 1 ball - starts conveyor, waits until current spike from shooting ball, then stops conveyor

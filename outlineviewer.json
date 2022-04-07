@@ -1,0 +1,12 @@
+{
+  "Connections": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "832"
+  },
+  "connections": true,
+  "flags": true,
+  "timestamp": true
+}

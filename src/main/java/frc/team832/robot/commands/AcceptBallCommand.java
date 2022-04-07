@@ -1,6 +1,7 @@
 package frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.Constants.ConveyorConstants;
 import frc.team832.robot.Constants.IntakeConstants;
 import frc.team832.robot.Constants.ShooterConstants;
@@ -34,12 +35,15 @@ public class AcceptBallCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return conveyor.topIsCargo() && conveyor.bottomIsCargo();
     }
 
     @Override
     public void end(boolean interrupted) {
         //stops spinning
+        if (!interrupted) {
+            new WaitCommand(.2);
+        }
         intake.idle();
         shooter.idle();
         conveyor.idle();

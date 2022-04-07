@@ -38,12 +38,12 @@ public class FourCargoAutoCmd extends SequentialCommandGroup {
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(initialPath)
 			),
-			new ShootBallVisionCmd(conveyor, shooter),
+			new ShootBallVisionCmd(conveyor, shooter, false),
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(secondPath)
 			),
-			new ShootBallVisionCmd(conveyor, shooter)
+			new ShootBallVisionCmd(conveyor, shooter, false)
 		);
 	}
 	

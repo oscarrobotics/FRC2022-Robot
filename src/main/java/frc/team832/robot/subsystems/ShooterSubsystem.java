@@ -29,15 +29,16 @@ public class ShooterSubsystem extends SubsystemBase{
     private final CANTalonFX m_frontMotor = new CANTalonFX(FRONT_MOTOR_CAN_ID);
     private final CANTalonFX m_rearMotor = new CANTalonFX(REAR_MOTOR_CAN_ID);
 
-    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, BOTTOM_FEEDFORWARD, BOTTOM_KP, MOI_KGM2);
-    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, TOP_FEEDFORWARD, TOP_KP, MOI_KGM2);
+    private final OscarFlywheel m_frontFlywheel = new OscarFlywheel("ShooterSubsystem/Front Flywheel", m_frontMotor, POWER_TRAIN, FRONT_FEEDFORWARD, BOTTOM_KP, MOI_KGM2);
+    private final OscarFlywheel m_rearFlywheel = new OscarFlywheel("ShooterSubsystem/Rear Flywheel", m_rearMotor, POWER_TRAIN, REAR_FEEDFORWARD, REAR_KP, MOI_KGM2);
 
     private final Solenoid m_hoodSolenoid = new Solenoid(PneumaticsModuleType.REVPH, HOOD_SOLENOID_ID);
 
     private final StallDetector m_frontStallDetector = new StallDetector(m_frontMotor::getOutputCurrent);
 
     private double m_frontFlywheelTargetRPM, m_frontFlywheelActualRPM, m_rearFlywheelTargetRPM, m_rearFlywheelActualRPM;
-    private final NetworkTableEntry dash_frontFlywheelTargetRPM, dash_frontFlywheelActualRPM, dash_rearFlywheelTargetRPM, dash_rearFlywheelActualRPM;
+    private final NetworkTableEntry dash_frontFlywheelTargetRPM, dash_frontFlywheelActualRPM, dash_rearFlywheelTargetRPM, dash_rearFlywheelActualRPM, dash_isHoodExtend;
+    private final NetworkTableEntry dash_frontAtTarget, dash_rearAtTarget;
     
     private final PhotonCamera gloworm;
     private PhotonTrackedTarget target = new PhotonTrackedTarget();
@@ -57,14 +58,18 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearMotor.limitInputCurrent(CURRENT_LIMIT);
 
         m_frontFlywheel.setClosedLoop(false);
-        m_rearFlywheel.setClosedLoop(false);
+        m_rearFlywheel.setClosedLoop(true);
 
         // m_frontStallDetector.setStallCurrent(7);
 
         dash_frontFlywheelTargetRPM = DashboardManager.addTabItem(this, "Front Flywheel Target RPM", 0.0);
-        dash_frontFlywheelActualRPM = DashboardManager.addTabItem(this, "Front Flywheel Actual RPM", 0.0);;
-        dash_rearFlywheelTargetRPM = DashboardManager.addTabItem(this, "Rear Flywheel Target RPM", 0.0);;
-        dash_rearFlywheelActualRPM = DashboardManager.addTabItem(this, "Rear Flywheel Actual RPM", 0.0);;
+        dash_frontFlywheelActualRPM = DashboardManager.addTabItem(this, "Front Flywheel Actual RPM", 0.0);
+        dash_rearFlywheelTargetRPM = DashboardManager.addTabItem(this, "Rear Flywheel Target RPM", 0.0);
+        dash_rearFlywheelActualRPM = DashboardManager.addTabItem(this, "Rear Flywheel Actual RPM", 0.0);
+        dash_isHoodExtend = DashboardManager.addTabBooleanBox(this, "Hood is Extended");
+
+        dash_frontAtTarget = DashboardManager.addTabBooleanBox(this, "FrontAtTarget");
+        dash_rearAtTarget = DashboardManager.addTabBooleanBox(this, "RearAtTarget");
 
         this.gloworm = gloworm;
     }
@@ -74,9 +79,8 @@ public class ShooterSubsystem extends SubsystemBase{
         m_frontFlywheel.periodic();
         m_rearFlywheel.periodic();
 
-        updateDashboardData();
-        updateVision();
         updateVisionDistance();
+        updateDashboardData();
     }
 
     public void updateDashboardData() {
@@ -84,6 +88,10 @@ public class ShooterSubsystem extends SubsystemBase{
         dash_frontFlywheelActualRPM.setDouble(m_frontMotor.getSensorVelocity());
         dash_rearFlywheelTargetRPM.setDouble(m_rearFlywheelTargetRPM);
         dash_rearFlywheelActualRPM.setDouble(m_rearMotor.getSensorVelocity());
+        dash_isHoodExtend.setBoolean(m_hoodSolenoid.get());
+        dash_frontAtTarget.setBoolean(frontAtTarget(50));
+        dash_rearAtTarget.setBoolean(rearAtTarget(50));
+
     }
 
     public void setRPM(double frontTarget, double rearTarget) {
@@ -94,74 +102,79 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public void idle() {
-        m_frontFlywheel.setTargetVelocityRpm(0);
-        m_rearFlywheel.setTargetVelocityRpm(0);
+        setRPM(0, 0);
     }
 
-    public void setRPMForDistanceHigh(double feet) {
-        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(feet);
-        var rearRpm = TOP_SHOOTER_RPM_MAP.get(feet);
-        setRPM(frontRpm, rearRpm);
+    public boolean frontAtTarget(double tolerance) {
+        return m_frontFlywheel.atTarget(tolerance);
+    }
+
+    public boolean rearAtTarget(double tolerance) {
+        return m_rearFlywheel.atTarget(tolerance);
     }
 
     public boolean atTarget() {
         return atTarget(50);
     }
 
-    public boolean atTarget(double error) {
-        return m_frontFlywheel.atTarget(error) && m_rearFlywheel.atTarget(error);
+    public boolean atTarget(double tolerance) {
+        return frontAtTarget(tolerance) && rearAtTarget(tolerance);
     }
 
     public boolean isStalling() {
         return m_frontStallDetector.getStallStatus().isStalled;
     }
 
-    public void setPower(double ignored) {
-        // stub method to make this compile for now.
-    }
-
-    public void updateVision() {
+    public void updateVisionDistance() {
         PhotonPipelineResult latestResult = gloworm.getLatestResult();
     
         if (latestResult.hasTargets()) {
             target = latestResult.getBestTarget();
-        }
-    }
 
-    public void updateVisionDistance() {
-        distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
-            VisionConstants.CAMERA_HEIGHT_METERS, 
-            VisionConstants.TARGET_HEIGHT_METERS, 
-            VisionConstants.CAMERA_PITCH_RADIANS, 
-            Units.degreesToRadians(target.getPitch())
-          );
+            distanceToTargetMeters = PhotonUtils.calculateDistanceToTargetMeters(
+                VisionConstants.CAMERA_HEIGHT_METERS, 
+                VisionConstants.TARGET_HEIGHT_METERS, 
+                VisionConstants.CAMERA_PITCH_RADIANS, 
+                Units.degreesToRadians(target.getPitch())
+            );
+        }
+        
         SmartDashboard.putNumber("distance to target", distanceToTargetMeters);
     }
 
-    public void setVisionRpms() {
+    public void setVisionRpms(boolean isLow) {
+        double frontRpm, rearRpm;
+
         updateVisionDistance();
-        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(Units.metersToInches(distanceToTargetMeters));
-        var rearRpm = TOP_SHOOTER_RPM_MAP.get(Units.metersToInches(distanceToTargetMeters));
+
+        boolean extendHood = isLow ? true : shouldHoodExtendHigh(distanceToTargetMeters);
+        setHood(extendHood);
+
+        if(isLow) {
+            frontRpm = FRONT_SHOOTER_RPM_LOW_MAP.get(distanceToTargetMeters);
+            rearRpm = REAR_SHOOTER_RPM_LOW_MAP.get(distanceToTargetMeters);
+        } else {
+            frontRpm = FRONT_SHOOTER_RPM_HIGH_MAP.get(distanceToTargetMeters);
+            rearRpm = REAR_SHOOTER_RPM_HIGH_MAP.get(distanceToTargetMeters);
+        }
+
+        SmartDashboard.putBoolean("hood from vision", extendHood);
         SmartDashboard.putNumber("front rpm via vision", frontRpm);
         SmartDashboard.putNumber("rear rpm via vision", rearRpm);
         setRPM(frontRpm, rearRpm);
     }
 
     public double getFrontVisionRPM() {
-        var frontRpm = BOTTOM_SHOOTER_RPM_MAP.get(distanceToTargetMeters);
+        var frontRpm = FRONT_SHOOTER_RPM_HIGH_MAP.get(distanceToTargetMeters);
         return frontRpm;
     }
     public double getRearVisionRPM() {
-        var rearRpm = TOP_SHOOTER_RPM_MAP.get(distanceToTargetMeters);
+        var rearRpm = REAR_SHOOTER_RPM_HIGH_MAP.get(distanceToTargetMeters);
         return rearRpm;
     }
 
-    public void extendHood() {
-        m_hoodSolenoid.set(true);
-    }
-
-    public void retractHood() {
-        m_hoodSolenoid.set(false);
+    public void setHood(boolean high) {
+        m_hoodSolenoid.set(high);
     }
 
     public double getRearSurfaceSpeed() {

@@ -1,5 +1,5 @@
 {
-  "counts per rotation": 2048.0,
+  "counts per rotation": 1.0,
   "encoder type": "Built-in",
   "encoding": false,
   "gearing denominator": 1.0,
@@ -33,5 +33,5 @@
   "secondary motors inverted": [
     false
   ],
-  "velocity measurement period": 100
+  "velocity measurement period": 1
 }

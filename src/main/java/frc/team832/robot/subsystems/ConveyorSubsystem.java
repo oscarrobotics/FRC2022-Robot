@@ -16,7 +16,7 @@ import frc.team832.robot.Constants.ConveyorConstants;
 public class ConveyorSubsystem extends SubsystemBase{
     /**physical devices */
     private final CANTalonFX conveyorMotor = new CANTalonFX(ConveyorConstants.CONVEYOR_MOTOR_TALON_ID);
-    private final DigitalInput ballSensor = new DigitalInput(0);
+    private final DigitalInput topCargoSensor = new DigitalInput(0);
 
     //assigns P value of PID + feed forward to conveyor
     private PIDController conveyorPID = new PIDController(ConveyorConstants.KP, 0, 0);
@@ -25,6 +25,7 @@ public class ConveyorSubsystem extends SubsystemBase{
     public double conveyorTargetRPM, conveyorActualRPM, conveyorPIDEffort, conveyorFFEffort;
 
     private final NetworkTableEntry dash_conveyorTargetRPM, dash_conveyorActualRPM, dash_conveyorMotorRPM, dash_conveyorFFEffort, dash_conveyorPIDEffort;
+    private final NetworkTableEntry dash_bottomSensorR, dash_bottomSensorG, dash_bottomSensorB, dash_bottomSensorProximity;
 
     /** Creates a new ConveyorSubsytem **/
     public ConveyorSubsystem() {
@@ -40,6 +41,10 @@ public class ConveyorSubsystem extends SubsystemBase{
         dash_conveyorMotorRPM = DashboardManager.addTabItem(this, "Conveyor Motor RPM", 0.0);
         dash_conveyorPIDEffort = DashboardManager.addTabItem(this, "Conveyor PID Effort", 0.0);
         dash_conveyorFFEffort = DashboardManager.addTabItem(this,  "Conveyor FF Effort", 0.0);
+        dash_bottomSensorR = DashboardManager.addTabItem(this, "Bottom Cargo Sensor R", 0.0);
+        dash_bottomSensorG = DashboardManager.addTabItem(this, "Bottom Cargo Sensor G", 0.0);
+        dash_bottomSensorB = DashboardManager.addTabItem(this, "Bottom Cargo Sensor B", 0.0);
+        dash_bottomSensorProximity = DashboardManager.addTabItem(this, "Bottom Cargo Sensor Proximity", 0.0);
     }
 
     @Override
@@ -58,8 +63,13 @@ public class ConveyorSubsystem extends SubsystemBase{
         dash_conveyorPIDEffort.setDouble(conveyorPIDEffort);
         dash_conveyorFFEffort.setDouble(conveyorFFEffort);
 
+        // dash_bottomSensorR.setDouble();
+        // dash_bottomSensorG.setDouble();
+        // dash_bottomSensorB.setDouble();
+        // dash_bottomSensorProximity.setDouble();
+
         conveyorTargetRPM = SmartDashboard.getNumber("Set Conveyor RPM", 0.0);
-        SmartDashboard.putBoolean("TopCargoSensor", isCargo());
+        SmartDashboard.putBoolean("TopCargoSensor", topIsCargo());
     }
     
     private void runConveyorPID() {
@@ -90,7 +100,11 @@ public class ConveyorSubsystem extends SubsystemBase{
         conveyorMotor.set(0);
     }
 
-    public boolean isCargo() {
-        return ballSensor.get();
+    public boolean topIsCargo() {
+        return topCargoSensor.get();
+    }
+
+    public boolean bottomIsCargo() {
+        return false;
     }
 }

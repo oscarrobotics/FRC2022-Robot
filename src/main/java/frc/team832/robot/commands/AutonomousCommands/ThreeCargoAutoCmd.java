@@ -18,7 +18,7 @@ public class ThreeCargoAutoCmd extends SequentialCommandGroup {
         addRequirements(drivetrain, intake, conveyor, shooter);
         addCommands(
             // shoot ball
-            new ShootBallVisionCmd(conveyor, shooter),
+            new ShootBallVisionCmd(conveyor, shooter, false),
             // follow path to intake 2 cargo
             new ParallelRaceGroup(
                 // start intake - ends when path command ends 
@@ -28,7 +28,7 @@ public class ThreeCargoAutoCmd extends SequentialCommandGroup {
             ),
 
             // shoot ball
-            new ShootBallVisionCmd(conveyor, shooter)
+            new ShootBallVisionCmd(conveyor, shooter, false)
             // follow path to back out of tarmac - might not be needed
         );
     }

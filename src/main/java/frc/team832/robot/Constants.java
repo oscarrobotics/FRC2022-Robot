@@ -195,56 +195,77 @@ public final class Constants {
 			Motor.kFalcon500, 
 			1, 3.9, 1);
 		public static final double MOI_KGM2 = COLSON_4x2IN_MOI_KG_M2 * 2;
-		public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0,
-				1 / Motor.kFalcon500.KvRPMPerVolt);
+
+		// public static final double FRONT_KS = 0.3;
+		// public static final double FRONT_KV = 1 / Motor.kFalcon500.KvRPMPerVolt;
+
+		// public static final SimpleMotorFeedforward FEEDFORWARD = new SimpleMotorFeedforward(0.3,
+				// 1 / Motor.kFalcon500.KvRPMPerVolt);
 
 		/** Speeds **/
-		// public static final double FRONT_RPM_FENDER = 3165;
-		// public static final double REAR_RPM_FENDER = 648;
-
 		public static final double FRONT_RPM_HIGH_FENDER = 2946;
 		public static final double REAR_RPM_HIGH_FENDER = 971.5;
 
 		public static final double FRONT_RPM_LOW_FENDER = 673;
 		public static final double REAR_RPM_LOW_FENDER = 2093;
 
-		public static final double FRONT_RPM_TARMAC = 1943.9;
-		public static final double REAR_RPM_TARMAC = 2766.3;
+		public static final double FRONT_RPM_HIGH_TARMAC = 1943.9;
+		public static final double REAR_RPM_HIGH_TARMAC = 2766.3;
 
-		public static final InterpolatingTreeMap<Double, Double> BOTTOM_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		// high shot maps
+		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_HIGH_MAP = new InterpolatingTreeMap<>();
 		static {
-			BOTTOM_SHOOTER_RPM_MAP.put(0.0, FRONT_RPM_HIGH_FENDER);
-			BOTTOM_SHOOTER_RPM_MAP.put(24.75, 2118.36);
-			BOTTOM_SHOOTER_RPM_MAP.put(40.75, 2043.59);
-			BOTTOM_SHOOTER_RPM_MAP.put(53.5, 1570.08);
-			BOTTOM_SHOOTER_RPM_MAP.put(76.0, 1520.23);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(0.95, 1840.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(1.8, 2170.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(2.75, 2320.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(3.7, 2140.0);
+			FRONT_SHOOTER_RPM_HIGH_MAP.put(4.1, 2120.0);
+		}
+		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_HIGH_MAP = new InterpolatingTreeMap<>();
+		static {
+			REAR_SHOOTER_RPM_HIGH_MAP.put(0.95, 3090.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(1.8, 3270.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(2.75, 3620.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(3.7, 4670.0);
+			REAR_SHOOTER_RPM_HIGH_MAP.put(4.1, 6150.0);
 		}
 
-		public static final InterpolatingTreeMap<Double, Double> TOP_SHOOTER_RPM_MAP = new InterpolatingTreeMap<>();
+		public static double HIGH_HOOD_UP_DISTANCE = 1.25;
+
+		public static boolean shouldHoodExtendHigh(double visionDistance) {
+			return visionDistance >= HIGH_HOOD_UP_DISTANCE;
+		}
+
+		// low shot maps
+		public static final InterpolatingTreeMap<Double, Double> FRONT_SHOOTER_RPM_LOW_MAP = new InterpolatingTreeMap<>();
 		static {
-			TOP_SHOOTER_RPM_MAP.put(0.0, REAR_RPM_HIGH_FENDER);
-			TOP_SHOOTER_RPM_MAP.put(24.75, 1794.38);
-			TOP_SHOOTER_RPM_MAP.put(40.75, 2018.67);
-			TOP_SHOOTER_RPM_MAP.put(53.5, 2556.95);
-			TOP_SHOOTER_RPM_MAP.put(76.0, 3315.59);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(1.15, 1070.0);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(1.8, 1020.0);
+			FRONT_SHOOTER_RPM_LOW_MAP.put(2.75, 1020.0);
+		}
+		public static final InterpolatingTreeMap<Double, Double> REAR_SHOOTER_RPM_LOW_MAP = new InterpolatingTreeMap<>();
+		static {
+			REAR_SHOOTER_RPM_LOW_MAP.put(1.15, 1870.0);
+			REAR_SHOOTER_RPM_LOW_MAP.put(1.8, 2740.0);
+			REAR_SHOOTER_RPM_LOW_MAP.put(2.75, 3490.0);
 		}
 
 		/** System Control Values **/ // Data from sysid
-		public static final double BOTTOM_KS = 0.52828;
+		public static final double BOTTOM_KS = 0.2;
 		public static final double BOTTOM_KV = 0.10848;
 		public static final double BOTTOM_KA = 0.0067908;
-		// public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = new
-		// SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV / 60.0);
-		public static final SimpleMotorFeedforward BOTTOM_FEEDFORWARD = FEEDFORWARD;
+		public static final SimpleMotorFeedforward FRONT_FEEDFORWARD = new
+		SimpleMotorFeedforward(BOTTOM_KS, BOTTOM_KV / 60);
+		// public static final SimpleMotorFeedforward FRONT_FEEDFORWARD = FEEDFORWARD;
 		public static final double BOTTOM_KP = 0.11439;
 
-		public static final double TOP_KS = 0.6101;
-		public static final double TOP_KV = 0.10885;
+		public static final double TOP_KS = 0.65;
+		public static final double TOP_KV = 0.11;
 		public static final double TOP_KA = 0.0069025;
-		// public static final SimpleMotorFeedforward TOP_FEEDFORWARD = new
-		// SimpleMotorFeedforward(TOP_KS, TOP_KV / 60.0);
-		public static final SimpleMotorFeedforward TOP_FEEDFORWARD = BOTTOM_FEEDFORWARD;
-		public static final double TOP_KP = 0.11589;
+		public static final SimpleMotorFeedforward REAR_FEEDFORWARD = new
+		SimpleMotorFeedforward(TOP_KS, TOP_KV / 60);
+		// public static final SimpleMotorFeedforward REAR_FEEDFORWARD = FRONT_FEEDFORWARD;
+		public static final double REAR_KP = 0.001;
 	}
 
 	public static final class ClimbConstants {
@@ -258,8 +279,8 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double LEFT_TO_NEXT_BAR_TARGET = 86.00;
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
-		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 86.00 - 5;
-		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 92.36 - 5;
+		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 86.00 - 10;
+		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 92.36 - 10;
 		public static final double SAFE_TO_EXTEND = 30;
 		public static final double LEFT_FREE_HOOK_TARGET = 30;
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;

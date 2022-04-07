@@ -56,7 +56,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PhotonCamera gloworm;
   private PhotonTrackedTarget target = new PhotonTrackedTarget();
   
-  private double m_aimKp = 0.4;
+  private double m_aimKp = 0.275;
   private double m_aimKd = 0;
   private PIDController targetingPID = new PIDController(m_aimKp, 0, m_aimKd);
 
@@ -320,7 +320,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       teleopArcadeDrive(
         xPow.getAsDouble()*.6,
         // 0,
-        cmdVisEff,
+        -cmdVisEff,
         1
       );
     }, 
