@@ -22,7 +22,6 @@ public class QueueBallCommand extends SequentialCommandGroup {
 
             new InstantCommand(() -> conveyor.idle())
 
-
             //spins shooter and conveyor in opposite directions to hold the ball in place
             // new InstantCommand(() -> shooter.setPower(ShooterConstants.SHOOTER_QUEUING_POWER)),
             // new InstantCommand(() -> conveyor.setPower(ConveyorConstants.QUEUING_POWER)),

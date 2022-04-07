@@ -22,12 +22,10 @@ public class ShootBallVisionCmd extends SequentialCommandGroup {
             new ParallelRaceGroup(
                 new RunCommand(() -> shooter.setVisionRpms(isLow), shooter),
                 new SequentialCommandGroup(
-
                     // shooter spins flywheels to rpms based on distance
                     new WaitCommand(.2),
 
                     // checks to see if flywheels at target before feeding
-
                     new WaitUntilCommand(() -> shooter.atTarget()),
                     
                     // feeds 1 ball - starts conveyor, waits until current spike from shooting ball, then stops conveyor

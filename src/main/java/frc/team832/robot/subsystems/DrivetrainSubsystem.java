@@ -329,6 +329,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getPitch() {
-    return m_imu.getRoll();
+    return m_imu.getPitch();
   }
 }

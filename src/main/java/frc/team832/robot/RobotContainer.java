@@ -92,12 +92,6 @@ public class RobotContainer {
   }
 
   public void configOperatorCommands() {
-    /**
-     * climb same
-     * sc3 = aut climb
-\     * distance low = wihte left
-     */
-
     m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
     
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
@@ -254,20 +248,7 @@ public class RobotContainer {
     stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, false));
           
     // regular intake
-    stratComInterface.arcadeBlackRight().whileHeld(new RunEndCommand(
-        () -> {
-          intake.extendIntake();
-          intake.setPower(IntakeConstants.INTAKE_POWER);
-          conveyor.setPower(ConveyorConstants.FEEDING_POWER);
-          shooter.setRPM(0, -2500);
-        }, 
-        () -> {
-          intake.idle();
-          conveyor.idle();
-        }, 
-        intake
-      )
-    );
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
 
     // feed shooter (spin conveyor forward)
     stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
@@ -275,7 +256,6 @@ public class RobotContainer {
           conveyor.setPower(ConveyorConstants.FEEDING_POWER);
         }, 
         () -> {
-          // intake.idle();
           conveyor.idle();
         }, 
         conveyor
@@ -286,7 +266,7 @@ public class RobotContainer {
     stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
         () -> {
           conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
-          shooter.setRPM(-1000, -1000);
+          shooter.setRPM(-2000, -2000);
         }, 
         () -> {
           // intake.idle();

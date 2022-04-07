@@ -1,6 +1,7 @@
 package frc.team832.robot.commands.AutonomousCommands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -38,15 +39,22 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 		initialPath = drivetrain.loadPath("5 Ball Auto 01", 2, 2.5, true);
 		secondPath = drivetrain.loadPath("5 Ball Auto 02", 2, 2.5, true);
 		thirdPath = drivetrain.loadPath("5 Ball Auto 03", 2, 2.5);
+
 		addRequirements(drivetrain, intake, conveyor, shooter);
-		addCommands(
-			// new ShootBallVisionCmd(conveyor, shooter),
+
+		addCommands(			
+			// new ShootBallVisionCmd(conveyor, shooter, false);
 			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
+
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
 				drivetrain.getTrajectoryCommand(initialPath)
 			),
 			new QueueBallCommand(conveyor, shooter),
+
+			new WaitCommand(.3),
+
+			// drivetrain.getTargetingCommand(() -> 0),
 			// new ShootBallVisionCmd(conveyor, shooter, false)
 			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true),
 			new ParallelRaceGroup(
@@ -54,10 +62,14 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 				drivetrain.getTrajectoryCommand(secondPath)
 			),
 			new QueueBallCommand(conveyor, shooter),
+
 			drivetrain.getTrajectoryCommand(thirdPath),
-			// // new ShootBallVisionCmd(conveyor, shooter)
+			
+			new WaitCommand(.3),
+			
+			// drivetrain.getTargetingCommand(() -> 0),
+			// new ShootBallVisionCmd(conveyor, shooter, false)
 			new ShootBallCmd(conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true)
 		);
 	}
-	
 }
