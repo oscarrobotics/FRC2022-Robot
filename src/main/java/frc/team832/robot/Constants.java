@@ -277,8 +277,8 @@ public final class Constants {
 		public static final int CURRENT_LIMIT = 45;
 
 		/** Mechanical Characteristics **/
-		public static final double LEFT_TO_NEXT_BAR_TARGET = 86.00;
-		public static final double RIGHT_TO_NEXT_BAR_TARGET = 92.36;
+		public static final double LEFT_TO_NEXT_BAR_TARGET = 89.9;
+		public static final double RIGHT_TO_NEXT_BAR_TARGET = 94.5;
 		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 86.00 - 10;
 		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 92.36 - 10;
 		public static final double SAFE_TO_EXTEND = 30;
@@ -286,8 +286,8 @@ public final class Constants {
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;
 		public static final double RETRACT_TARGET = .75;
 		public static final double WAIT_POINT_TARGET = 22;
-		public static final double LEFT_MAX_EXTEND_POS = 86.08; // to mid bar
-		public static final double RIGHT_MAX_EXTEND_POS = 92.50; // to mid bar
+		public static final double LEFT_MAX_EXTEND_POS = 89.9 - 5; // to mid bar
+		public static final double RIGHT_MAX_EXTEND_POS = 94.5 - 5; // to mid bar
 		public static final double MIN_EXTEND_POS = 0;
 		public static final double GEARBOX_REDUCTION = 10.61;
 

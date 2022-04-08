@@ -41,7 +41,7 @@ public class ShootBallCmd extends SequentialCommandGroup {
             new InstantCommand(() -> shooter.setRPM(frontRPM.getAsDouble(), rearRPM.getAsDouble()), shooter),
 
             // checks to see if flywheels at target before feeding
-            new WaitUntilCommand(() -> shooter.atTarget(50)),
+            new WaitUntilCommand(() -> shooter.atTarget(100)),
             new WaitCommand(waitTime),
             
             // feeds 1 ball - starts conveyor, waits until current spike from shooting ball, then stops conveyor

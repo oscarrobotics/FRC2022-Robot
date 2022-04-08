@@ -58,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearMotor.limitInputCurrent(CURRENT_LIMIT);
 
         m_frontFlywheel.setClosedLoop(false);
-        m_rearFlywheel.setClosedLoop(true);
+        m_rearFlywheel.setClosedLoop(false);
 
         // m_frontStallDetector.setStallCurrent(7);
 
@@ -114,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public boolean atTarget() {
-        return atTarget(50);
+        return atTarget(100);
     }
 
     public boolean atTarget(double tolerance) {

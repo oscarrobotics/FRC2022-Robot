@@ -50,7 +50,8 @@ public class RobotContainer {
   /** Autonomous Selector **/
   public final AutonomousSelector autoSelector = new AutonomousSelector();
 
-  private final SlewRateLimiter driveFilter = new SlewRateLimiter(.8);
+  private final SlewRateLimiter driveLimiter = new SlewRateLimiter(6);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(3);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,19 +65,20 @@ public class RobotContainer {
     // var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
     // var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
     // autoSelector.addAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
-    autoSelector.addAutonomous("2 Cargo Auto", new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-    autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-    autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    var twoBallAutoCmd = new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+    autoSelector.addAutonomous("2 Cargo Auto", twoBallAutoCmd.initialPath, twoBallAutoCmd);
+    // autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    // autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
 
     var fiveBallAutoCmd = new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter);
-
     autoSelector.addDefaultAutonomous("5 Cargo Auto", fiveBallAutoCmd.initialPath, fiveBallAutoCmd);
    
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           // -m_xboxCtrl.getLeftY(),
-          driveFilter.calculate(-m_xboxCtrl.getLeftY()),
-          m_xboxCtrl.getRightX(), 
+          driveLimiter.calculate(-m_xboxCtrl.getLeftY()),
+          // m_xboxCtrl.getRightX(),
+          turnLimiter.calculate(m_xboxCtrl.getRightX()*.65),  
           2
         );
     }, drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
@@ -95,6 +97,7 @@ public class RobotContainer {
     configOperatorCommands();
     // configTestingCommands();
   }
+  
 
   public void configOperatorCommands() {
     m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
@@ -144,8 +147,8 @@ public class RobotContainer {
   }
 
   public void configTestingCommands() {
-    // configClimbTestCmds();
-    configShootTestCmds();
+    configClimbTestCmds();
+    // configShootTestCmds();
   }
 
   public void configClimbTestCmds() {

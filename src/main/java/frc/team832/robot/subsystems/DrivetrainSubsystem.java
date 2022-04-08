@@ -4,6 +4,7 @@
 
 package frc.team832.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -59,7 +60,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PhotonCamera gloworm;
   private PhotonTrackedTarget target = new PhotonTrackedTarget();
   
-  private double m_aimKp = 0.275;
+  private double m_aimKp = 0.35;
   private double m_aimKd = 0;
   private PIDController targetingPID = new PIDController(m_aimKp, 0, m_aimKd);
 
@@ -269,8 +270,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     var trajCmd = m_drivetrain.generateRamseteCommand(path, this);
 
-    // var bullshit = new Ramsete
-
     var trajAndStopCmd = new ParallelDeadlineGroup(
       trajCmd, 
       new StartEndCommand(() -> {}, this::stop)
@@ -302,17 +301,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (latestResult.hasTargets()) {
 			target = latestResult.getBestTarget();
       SmartDashboard.putNumber("target yaw", target.getYaw());
+      SmartDashboard.putNumber("adjusted target yaw", target.getYaw() + 5);
       SmartDashboard.putNumber("vision pid effort", getTargetingRotationSpeed());
 		}
   }
 
   public double getTargetingRotationSpeed() {
+    // double targetYaw = target.getYaw() + 5;
     double errorSign = Math.signum(target.getYaw());
     double errorPercentage = Math.abs(target.getYaw() / 27.0);
     errorPercentage *= errorSign;
     SmartDashboard.putNumber("AimError", errorPercentage);
     double ksEffort = (DrivetrainConstants.ANGULAR_KS / 12.0) * -errorSign;
     double effort = targetingPID.calculate(errorPercentage, 0);
+
+    effort = MathUtil.clamp(effort, -0.3, 0.3);
 
     var dist = PhotonUtils.calculateDistanceToTargetMeters(
       VisionConstants.CAMERA_HEIGHT_METERS, 

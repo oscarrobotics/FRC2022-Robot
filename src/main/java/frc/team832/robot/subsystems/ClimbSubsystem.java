@@ -6,6 +6,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -185,17 +186,35 @@ public class ClimbSubsystem extends SubsystemBase{
     public void setPower(double leftPow, double rightPow) {
         m_usePid = false;
 
-        boolean leftUnderMax = m_leftMotor.getSensorPosition() <= LEFT_MAX_EXTEND_POS;
+        boolean leftUnderMax = m_leftMotor.getSensorPosition() <= LEFT_FREE_HOOK_TARGET;
+        boolean leftNearMax = Math.abs(LEFT_MAX_EXTEND_POS - m_leftMotor.getSensorPosition()) >= 10;
 
-        if (leftPow <= 0 || leftUnderMax) {
+        if (leftPow <= 0 || leftUnderMax /*&& !leftNearMax)*/) {
             m_leftRawEffort = leftPow;
         }
+        // } else if (leftNearMax) {
+            // m_rightRawEffort = rightPow * 0.25;
+        // } else if (!leftUnderMax) {
+            // m_leftRawEffort = 0;
+        // }
 
-        boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_MAX_EXTEND_POS;
+        boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_FREE_HOOK_TARGET;
+        boolean rightNearMax = Math.abs(RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
 
-        if (rightPow <= 0 || rightUnderMax) {
+        if (rightPow <= 0 || rightUnderMax /* && !rightNearMax)*/) {
             m_rightRawEffort = rightPow;
-        } 
+        }
+        // } else if (rightNearMax) {
+            // m_rightRawEffort = rightPow * 0.25;
+        // } else if (!rightUnderMax) {
+            // m_rightRawEffort = 0;
+        // }
+
+        SmartDashboard.putBoolean("is left under max", leftUnderMax);
+        SmartDashboard.putBoolean("is right under max", rightUnderMax);
+        SmartDashboard.putBoolean("is left near max", leftNearMax);
+        SmartDashboard.putBoolean("is right near max", rightNearMax);
+
     }
 
     public void setTargetPosition(double leftPos, double rightPos) {
