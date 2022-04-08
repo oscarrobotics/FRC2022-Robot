@@ -3,10 +3,12 @@ package frc.team832.robot.commands.AutonomousCommands;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.Constants.ShooterConstants;
+import frc.team832.robot.commands.AcceptBallTimedCmd;
 import frc.team832.robot.commands.AcceptBallCommand;
 import frc.team832.robot.commands.QueueBallCommand;
 import frc.team832.robot.commands.ShootBallCmd;
@@ -67,15 +69,22 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 			new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "ParallelRaceGroup (Intake+Path) 2")),			
 			new ParallelRaceGroup(
 				new AcceptBallCommand(intake, shooter, conveyor),
-				drivetrain.getTrajectoryCommand(secondPath)
+				new SequentialCommandGroup(
+					drivetrain.getTrajectoryCommand(secondPath),
+					new WaitCommand(1.25)
+				)
 			),
-			new WaitCommand(1),
-			new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "QueueBallCmd 2")),			
-			new QueueBallCommand(conveyor, shooter),
 
-			new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "Path 3")),			
-			drivetrain.getTrajectoryCommand(thirdPath),
-			
+			new ParallelCommandGroup(
+				new SequentialCommandGroup(
+					new AcceptBallTimedCmd(intake, shooter, conveyor, 1),
+					new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "QueueBallCmd 2")),			
+					new QueueBallCommand(conveyor, shooter)
+				),
+				new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "Path 3")),			
+				drivetrain.getTrajectoryCommand(thirdPath)
+			),
+
 			drivetrain.getTargetingCommand(() -> 0).withTimeout(0.3),
 			new InstantCommand(() -> SmartDashboard.putString("Current Cmd: ", "ShootBallVisionCmd 4")),			
 			new ShootBallVisionCmd(conveyor, shooter, false),

@@ -286,8 +286,8 @@ public final class Constants {
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;
 		public static final double RETRACT_TARGET = .75;
 		public static final double WAIT_POINT_TARGET = 22;
-		public static final double LEFT_MAX_EXTEND_POS = 89.9 - 5; // to mid bar
-		public static final double RIGHT_MAX_EXTEND_POS = 94.5 - 5; // to mid bar
+		public static final double LEFT_MAX_EXTEND_POS = 89.9 - 2; // to mid bar
+		public static final double RIGHT_MAX_EXTEND_POS = 94.5 - 2; // to mid bar
 		public static final double MIN_EXTEND_POS = 0;
 		public static final double GEARBOX_REDUCTION = 10.61;
 

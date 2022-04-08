@@ -186,9 +186,9 @@ public class ClimbSubsystem extends SubsystemBase{
     public void setPower(double leftPow, double rightPow) {
         m_usePid = false;
 
-        boolean leftAtMax = m_leftMotor.getSensorPosition() >= LEFT_FREE_HOOK_TARGET;
+        boolean leftAtMax = m_leftMotor.getSensorPosition() >= LEFT_MAX_EXTEND_POS;
         boolean leftNearMax = (LEFT_MAX_EXTEND_POS - m_leftMotor.getSensorPosition()) <= 10;
-
+        SmartDashboard.putNumber("left dist max", LEFT_MAX_EXTEND_POS - m_leftMotor.getSensorPosition());
         if (leftPow <= 0) {
             m_leftRawEffort = leftPow;
         } else if (leftAtMax) {
@@ -199,9 +199,9 @@ public class ClimbSubsystem extends SubsystemBase{
             m_leftRawEffort = leftPow;
         }
 
-        boolean rightAtMax = m_rightMotor.getSensorPosition() >= RIGHT_FREE_HOOK_TARGET;
+        boolean rightAtMax = m_rightMotor.getSensorPosition() >= RIGHT_MAX_EXTEND_POS;
         boolean rightNearMax = (RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) <= 10;
-
+        SmartDashboard.putNumber("right dist max", RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition());
         if (rightPow <= 0) {
             m_rightRawEffort = rightPow;
         } else if (rightAtMax) {
@@ -214,28 +214,30 @@ public class ClimbSubsystem extends SubsystemBase{
 
         
 
-
-
-        // if (leftPow <= 0 || leftUnderMax /*&& !leftNearMax)*/) {
-        //     m_leftRawEffort = leftPow;
-        // }
-        // // } else if (leftNearMax) {
-        //     // m_rightRawEffort = rightPow * 0.25;
-        // // } else if (!leftUnderMax) {
-        //     // m_leftRawEffort = 0;
-        // // }
-
         // boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_FREE_HOOK_TARGET;
-        // boolean rightNearMax = (RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
+        // boolean rightNearMax = Math.abs(RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
 
-        // if (rightPow <= 0 || rightUnderMax /* && !rightNearMax)*/) {
-        //     m_rightRawEffort = rightPow;
-        // }
-        // // } else if (rightNearMax) {
-        //     // m_rightRawEffort = rightPow * 0.25;
-        // // } else if (!rightUnderMax) {
-        //     // m_rightRawEffort = 0;
+
+        // // if (leftPow <= 0 || leftUnderMax /*&& !leftNearMax)*/) {
+        // //     m_leftRawEffort = leftPow;
         // // }
+        // // // } else if (leftNearMax) {
+        // //     // m_rightRawEffort = rightPow * 0.25;
+        // // // } else if (!leftUnderMax) {
+        // //     // m_leftRawEffort = 0;
+        // // // }
+
+        // // boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_FREE_HOOK_TARGET;
+        // // boolean rightNearMax = (RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
+
+        // // if (rightPow <= 0 || rightUnderMax /* && !rightNearMax)*/) {
+        // //     m_rightRawEffort = rightPow;
+        // // }
+        // // // } else if (rightNearMax) {
+        // //     // m_rightRawEffort = rightPow * 0.25;
+        // // // } else if (!rightUnderMax) {
+        // //     // m_rightRawEffort = 0;
+        // // // }
 
         SmartDashboard.putBoolean("is left at max", leftAtMax);
         SmartDashboard.putBoolean("is right at max", rightAtMax);
