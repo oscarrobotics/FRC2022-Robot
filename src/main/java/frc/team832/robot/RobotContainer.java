@@ -1,6 +1,8 @@
 package frc.team832.robot;
 
 import org.photonvision.PhotonCamera;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotController;
@@ -48,6 +50,8 @@ public class RobotContainer {
   /** Autonomous Selector **/
   public final AutonomousSelector autoSelector = new AutonomousSelector();
 
+  private final SlewRateLimiter driveFilter = new SlewRateLimiter(.8);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     PhotonCamera.setVersionCheckEnabled(false);
@@ -70,7 +74,8 @@ public class RobotContainer {
    
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
-          -m_xboxCtrl.getLeftY(),
+          // -m_xboxCtrl.getLeftY(),
+          driveFilter.calculate(-m_xboxCtrl.getLeftY()),
           m_xboxCtrl.getRightX(), 
           2
         );
