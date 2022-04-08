@@ -186,32 +186,59 @@ public class ClimbSubsystem extends SubsystemBase{
     public void setPower(double leftPow, double rightPow) {
         m_usePid = false;
 
-        boolean leftUnderMax = m_leftMotor.getSensorPosition() <= LEFT_FREE_HOOK_TARGET;
-        boolean leftNearMax = Math.abs(LEFT_MAX_EXTEND_POS - m_leftMotor.getSensorPosition()) >= 10;
+        boolean leftAtMax = m_leftMotor.getSensorPosition() >= LEFT_FREE_HOOK_TARGET;
+        boolean leftNearMax = (LEFT_MAX_EXTEND_POS - m_leftMotor.getSensorPosition()) <= 10;
 
-        if (leftPow <= 0 || leftUnderMax /*&& !leftNearMax)*/) {
+        if (leftPow <= 0) {
+            m_leftRawEffort = leftPow;
+        } else if (leftAtMax) {
+            m_leftRawEffort = 0;
+        } else if (leftNearMax) {
+            m_leftRawEffort = leftPow * 0.25;
+        } else {
             m_leftRawEffort = leftPow;
         }
-        // } else if (leftNearMax) {
-            // m_rightRawEffort = rightPow * 0.25;
-        // } else if (!leftUnderMax) {
-            // m_leftRawEffort = 0;
-        // }
 
-        boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_FREE_HOOK_TARGET;
-        boolean rightNearMax = Math.abs(RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
+        boolean rightAtMax = m_rightMotor.getSensorPosition() >= RIGHT_FREE_HOOK_TARGET;
+        boolean rightNearMax = (RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) <= 10;
 
-        if (rightPow <= 0 || rightUnderMax /* && !rightNearMax)*/) {
+        if (rightPow <= 0) {
+            m_rightRawEffort = rightPow;
+        } else if (rightAtMax) {
+            m_rightRawEffort = 0;
+        } else if (rightNearMax) {
+            m_rightRawEffort = rightPow * 0.25;
+        } else {
             m_rightRawEffort = rightPow;
         }
-        // } else if (rightNearMax) {
-            // m_rightRawEffort = rightPow * 0.25;
-        // } else if (!rightUnderMax) {
-            // m_rightRawEffort = 0;
-        // }
 
-        SmartDashboard.putBoolean("is left under max", leftUnderMax);
-        SmartDashboard.putBoolean("is right under max", rightUnderMax);
+        
+
+
+
+        // if (leftPow <= 0 || leftUnderMax /*&& !leftNearMax)*/) {
+        //     m_leftRawEffort = leftPow;
+        // }
+        // // } else if (leftNearMax) {
+        //     // m_rightRawEffort = rightPow * 0.25;
+        // // } else if (!leftUnderMax) {
+        //     // m_leftRawEffort = 0;
+        // // }
+
+        // boolean rightUnderMax = m_rightMotor.getSensorPosition() <= RIGHT_FREE_HOOK_TARGET;
+        // boolean rightNearMax = (RIGHT_MAX_EXTEND_POS - m_rightMotor.getSensorPosition()) >= 10;
+
+        // if (rightPow <= 0 || rightUnderMax /* && !rightNearMax)*/) {
+        //     m_rightRawEffort = rightPow;
+        // }
+        // // } else if (rightNearMax) {
+        //     // m_rightRawEffort = rightPow * 0.25;
+        // // } else if (!rightUnderMax) {
+        //     // m_rightRawEffort = 0;
+        // // }
+
+        SmartDashboard.putBoolean("is left at max", leftAtMax);
+        SmartDashboard.putBoolean("is right at max", rightAtMax);
         SmartDashboard.putBoolean("is left near max", leftNearMax);
         SmartDashboard.putBoolean("is right near max", rightNearMax);
 
