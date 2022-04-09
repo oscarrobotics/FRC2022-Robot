@@ -22,6 +22,7 @@ public class PositionClimbCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         boolean done = climb.atTarget();
+        System.out.println("POSCLIMB FINISHED");
         return done;
     }
 

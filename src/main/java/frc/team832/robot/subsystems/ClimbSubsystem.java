@@ -99,7 +99,7 @@ public class ClimbSubsystem extends SubsystemBase{
 
         dash_usePid = DashboardManager.addTabBooleanBox(this, "UsePID");
 
-        setDefaultCommand(new StartEndCommand(this::idle, () -> {}, this).withName("default idle cmd"));
+        // setDefaultCommand(new StartEndCommand(this::idle, () -> {}, this).withName("default idle cmd"));
     }
 
     @Override
@@ -153,6 +153,8 @@ public class ClimbSubsystem extends SubsystemBase{
 
         dash_leftHomingStalled.setBoolean(isLeftStalling());
         dash_rightHomingStalled.setBoolean(isRightStalling());
+
+        SmartDashboard.putBoolean("use pid", m_usePid);
     }
 
     /*  FFE = motor's velocity / 12 volts
