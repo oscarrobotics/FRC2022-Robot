@@ -78,7 +78,7 @@ public class RobotContainer {
           // -m_xboxCtrl.getLeftY(),
           driveLimiter.calculate(-m_xboxCtrl.getLeftY()),
           // m_xboxCtrl.getRightX(),
-          turnLimiter.calculate(m_xboxCtrl.getRightX()*.65),  
+          turnLimiter.calculate(m_xboxCtrl.getRightX()*.55),  
           2
         );
     }, drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
@@ -94,8 +94,8 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    configOperatorCommands();
-    // configTestingCommands();
+    // configOperatorCommands();
+    configTestingCommands();
   }
   
 

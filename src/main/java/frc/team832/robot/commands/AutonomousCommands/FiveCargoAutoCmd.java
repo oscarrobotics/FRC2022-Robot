@@ -40,7 +40,7 @@ public class FiveCargoAutoCmd extends SequentialCommandGroup {
 		ShooterSubsystem shooter
 	) {
 		initialPath = drivetrain.loadPath("5 Ball Auto 01", 2, 3.5, true);
-		secondPath = drivetrain.loadPath("5 Ball Auto 02", 2, 2.5, true);
+		secondPath = drivetrain.loadPath("5 Ball Auto 02", 3, 3.5, true);
 		thirdPath = drivetrain.loadPath("5 Ball Auto 03", 3, 6);
 
 		addRequirements(drivetrain, intake, conveyor, shooter);
