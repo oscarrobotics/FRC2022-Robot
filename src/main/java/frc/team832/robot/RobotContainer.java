@@ -65,23 +65,26 @@ public class RobotContainer {
     // var threeBallPath = PathPlanner.loadPath("3 Ball Auto", 2, 2);
     // var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
     // autoSelector.addAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
-    var twoBallAutoCmd = new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+    var twoBallAutoCmd = new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter);                           //two ball auto for shuffleboard
     autoSelector.addAutonomous("2 Cargo Auto", twoBallAutoCmd.initialPath, twoBallAutoCmd);
     // autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
     // autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
 
-    var fiveBallAutoCmd = new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+    var fiveBallAutoCmd = new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter);                        //five ball auto for shuffleboard (WIP)
     autoSelector.addDefaultAutonomous("5 Cargo Auto", fiveBallAutoCmd.initialPath, fiveBallAutoCmd);
    
+    /* Arcade drive Commands*/
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           // -m_xboxCtrl.getLeftY(),
-          driveLimiter.calculate(-m_xboxCtrl.getLeftY()),
+          driveLimiter.calculate(-m_xboxCtrl.getLeftY()*0.1), 
           // m_xboxCtrl.getRightX(),
-          turnLimiter.calculate(m_xboxCtrl.getRightX()*.55),  
+          turnLimiter.calculate(m_xboxCtrl.getRightX()*0.55),  //change back to .55 when not testing
           2
         );
     }, drivetrain::stop, drivetrain).withName("ArcadeDriveCommand");
+
+    /* Tank Drive */
 
     /** var tankDriveCommand = new RunEndCommand(() -> {
           drivetrain.teleopTankDrive(
@@ -94,28 +97,30 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(arcadeDriveCommand);
 
-    // configOperatorCommands();
-    configTestingCommands();
+    configOperatorCommands();
+    // configTestingCommands();
   }
   
-
+  /* Operator buttons assigned to commands */
   public void configOperatorCommands() {
     m_xboxCtrl.b().whileHeld(drivetrain.getTargetingCommand(() -> -m_xboxCtrl.getLeftY()));
     
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyor));
 
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, false));
-    stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, true));
+    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, false));
+    // stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, true));
 
-    stratComInterface.scSideBot().whenPressed(new ShootBallCmd(
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCmd(conveyor, shooter, 2000, 2000));
+
+    stratComInterface.scSideBot().whenPressed(new ShootBallCmd(     //Spins wheels for fender and tarmac buttons
       conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true));
     stratComInterface.scSideTop().whileHeld(new ShootBallCmd(
       conveyor, shooter, ShooterConstants.FRONT_RPM_HIGH_TARMAC, ShooterConstants.REAR_RPM_HIGH_TARMAC));
     stratComInterface.scSideMid().whileHeld(new ShootBallCmd(
       conveyor, shooter, ShooterConstants.FRONT_RPM_HIGH_FENDER, ShooterConstants.REAR_RPM_HIGH_FENDER));
 
-    stratComInterface.sc1().whileHeld(new RunEndCommand(
+    stratComInterface.sc1().whileHeld(new RunEndCommand(    //buttons for climb commands
       () -> climb.setPower(1, 1), 
       () -> climb.setPower(0, 0),
       climb
@@ -147,13 +152,15 @@ public class RobotContainer {
   }
 
   public void configTestingCommands() {
-    configClimbTestCmds();
+    // configClimbTestCmds();
     // configShootTestCmds();
+    configIntakeTestCmds();
   }
 
   public void configClimbTestCmds() {
-    // zero climb for testing
-    stratComInterface.arcadeBlackLeft().whenPressed(() -> climb.zeroClimb());
+    // // zero climb for testing
+    stratComInterface.arcadeBlackLeft().whenPressed(() -> climb.pivotClimb());
+    stratComInterface.arcadeWhiteLeft().whenPressed(() -> climb.straightenClimb());
 
     // // climb via power to soft limit
     // stratComInterface.sc3().whenPressed(
@@ -169,36 +176,46 @@ public class RobotContainer {
     //     climb.setTargetPosition(0, 0);
     //   }, climb);
 
-    // auto climb cmd
-    stratComInterface.arcadeBlackRight().whenPressed(new AutoMidToHigh(climb, drivetrain));
+    // // auto climb cmd
+    stratComInterface.arcadeBlackRight().whenPressed(new AutoClimbCmd(climb, drivetrain));
 
-    // home climb cmd
-    stratComInterface.arcadeWhiteLeft().whenPressed(new HomeClimbCmd(climb));
+    // // home climb cmd
+    stratComInterface.arcadeWhiteRight().whenPressed(new HomeClimbCmd(climb));
 
-    // climb via pid (EXTEND TARGET CMD) to next bar target
-    var extendCmd = new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd");
-    
-    stratComInterface.sc2().whenPressed(extendCmd);
-    // stratComInterface.arcadeWhiteLeft().whenPressed(nextBarCmd);
+    // // climb via pid (EXTEND TARGET CMD) to next bar wait point target
+    // stratComInterface.sc2().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET).withName("ExtendCmd"));
+    // stratComInterface.sc5().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd2"));
 
-    // climb via pid (EXTEND TARGET CMD) to free hook target
+
+    // // stratComInterface.arcadeWhiteLeft().whenPressed(nextBarCmd);
+
+    stratComInterface.sc4().whenPressed(new PositionClimbCommand(climb, ClimbConstants.MIN_EXTEND_POS, ClimbConstants.MIN_EXTEND_POS));
+
+    // // climb via pid (EXTEND TARGET CMD) to free hook target
     stratComInterface.sc3().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_FREE_HOOK_TARGET, ClimbConstants.RIGHT_FREE_HOOK_TARGET));
 
-    // climb via pid (EXTEND TARGET CMD) to min
-    stratComInterface.sc6().whenPressed(new PositionClimbCommand(climb, ClimbConstants.RETRACT_TARGET, ClimbConstants.RETRACT_TARGET));
+    // // climb via pid (EXTEND TARGET CMD) to min
+    // stratComInterface.sc6().whenPressed(new PositionClimbCommand(climb, ClimbConstants.RETRACT_TARGET, ClimbConstants.RETRACT_TARGET));
 
-    // climb up via power - will stop at limit
-    stratComInterface.sc1().whileHeld(new RunEndCommand(
-      () -> climb.setPower(.5, .5), 
-      climb::idle,
-      climb)
-    );
-    // climb down via power - no bottom soft limit
-    stratComInterface.sc4().whileHeld(new RunEndCommand(
-      () -> climb.setPower(-.5, -.5), 
-      climb::idle,
-      climb)
-    );
+
+
+
+    stratComInterface.sc1().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET).withName("ExtendCmd"));
+    stratComInterface.sc2().whenPressed(new PositionClimbCommand(climb, ClimbConstants.LEFT_TO_NEXT_BAR_TARGET, ClimbConstants.RIGHT_TO_NEXT_BAR_TARGET).withName("ExtendCmd"));
+
+
+    // // climb up via power - will stop at limit
+    // stratComInterface.sc1().whileHeld(new RunEndCommand(
+    //   () -> climb.setPower(.5, .5), 
+    //   climb::idle,
+    //   climb)
+    // );
+    // // climb down via power - no bottom soft limit
+    // stratComInterface.sc4().whileHeld(new RunEndCommand(
+    //   () -> climb.setPower(-.5, -.5), 
+    //   climb::idle,
+    //   climb)
+    // );
 
     // control climb up down via power - toggle up = climb up, slider pos = power
     stratComInterface.doubleToggleUp().whileHeld(new RunEndCommand(
@@ -284,6 +301,42 @@ public class RobotContainer {
         conveyor
       )
     );
+  }
+
+  public void configIntakeTestCmds() {
+    // hold intake out
+    stratComInterface.singleToggle().whileHeld(new RunEndCommand(
+      () -> intake.extendIntake(),
+      () -> intake.retractIntake(), 
+      intake));
+
+    // intake
+    stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor));//.whenReleased(new QueueBallCommand(conveyor, shooter));
+
+    // feed shooter (spin conveyor forward)
+    stratComInterface.arcadeWhiteRight().whileHeld(new RunEndCommand(
+      () -> {
+        conveyor.setPower(ConveyorConstants.FEEDING_POWER);
+      }, 
+      () -> {
+        conveyor.idle();
+      }, 
+      conveyor
+    ));
+
+    // intake from shooter - reverse conveyer and both flywheels
+    stratComInterface.arcadeWhiteLeft().whileHeld(new RunEndCommand(
+      () -> {
+        conveyor.setPower(-ConveyorConstants.FEEDING_POWER);
+        shooter.setRPM(-2000, -2000);
+      }, 
+      () -> {
+        // intake.idle();
+        conveyor.idle();
+        shooter.idle();
+      }, 
+      conveyor
+    ));
   }
 
   /**

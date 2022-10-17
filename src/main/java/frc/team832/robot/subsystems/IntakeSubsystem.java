@@ -37,6 +37,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.setInverted(true);
         intakeMotor.getBaseController().configOpenloopRamp(0.125);
 
+        /*Intake PID */
         dash_intakeTargetRPM = DashboardManager.addTabItem(this, "Intake Target RPM", 0.0);
         dash_intakeActualRPM = DashboardManager.addTabItem(this, "Intake Actual RPM", 0.0);
         dash_intakeMotorRPM = DashboardManager.addTabItem(this, "Intake Motor RPM", 0.0);
@@ -53,7 +54,7 @@ public class IntakeSubsystem extends SubsystemBase{
     public void updateControlLoops() {
         // runIntakePID();
     }
-
+    /** Intake PID + Feed Foward on dashboard **/
     private void updateDashboardData() {
         dash_intakeTargetRPM.setDouble(intakeTargetRPM);
         dash_intakeActualRPM.setDouble(intakeMotor.getSensorVelocity());
@@ -64,7 +65,8 @@ public class IntakeSubsystem extends SubsystemBase{
     }
     
     private void runIntakePID(){
-        //uses motor velocity to determine amnt of outpt needed to reach target
+       
+        //calculates motor velocity to send power needed for target
         intakeActualRPM = intakeMotor.getSensorVelocity();
         
         if (intakeTargetRPM != 0) {
@@ -86,6 +88,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.set(power);
     }
 
+    /** Extends / retracts piston **/
     public void extendIntake() {
         intakePistons.set(true);
     }

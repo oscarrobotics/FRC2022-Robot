@@ -28,8 +28,8 @@ public class ClimbSubsystem extends SubsystemBase{
     private final Solenoid climbPiston = new Solenoid(PneumaticsModuleType.REVPH, CLIMB_SOLENOID_ID);
 
     /*assigns PID constants + Feed Forward to the climb*/
-    private ProfiledPIDController m_leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, 250));
-    private ProfiledPIDController m_rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, 250));
+    private ProfiledPIDController m_leftPID = new ProfiledPIDController(LEFT_KP, 0, LEFT_KD, new TrapezoidProfile.Constraints(MAX_LEFT_ENCODER_VELOCITY, 315));
+    private ProfiledPIDController m_rightPID = new ProfiledPIDController(RIGHT_KP, 0, RIGHT_KD, new TrapezoidProfile.Constraints(MAX_RIGHT_ENCODER_VELOCITY, 315));
     private final ElevatorFeedforward leftFF = LEFT_FEEDFORWARD;
     private final ElevatorFeedforward rightFF = RIGHT_FEEDFORWARD;
     public double m_leftTargetPos, m_rightTargetPos, leftActualPos, rightActualPos, m_rightPIDEffort, m_rightFFEffort, m_leftPIDEffort, m_leftFFEffort;

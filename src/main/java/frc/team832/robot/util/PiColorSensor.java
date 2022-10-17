@@ -2,8 +2,7 @@ package frc.team832.robot.util;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PiColorSensor {
     private static PiColorSensor INSTANCE;
@@ -33,14 +32,11 @@ public class PiColorSensor {
     private NetworkTableEntry m_proximityEntry = m_ntInst.getEntry("proximity1");
     private NetworkTableEntry m_colorEntry = m_ntInst.getEntry("color1");
 
-    private long m_lastProxChange = 0;
+    // public double getProximity() {
+    //     return m_proximityEntry.getDouble(-1);
+    // }
 
-    public boolean dataFresh() {
-        boolean hasUpdated =  m_proximityEntry.getLastChange() != m_lastProxChange;
-        m_lastProxChange = m_proximityEntry.getLastChange();
-        return hasUpdated;
-    }
-
+    /** Says a ball exists, where it is, the color, and whether it matches our alliance color **/
     public double getProximity() {
         return m_proximityEntry.getDouble(-1);
     }
@@ -50,12 +46,14 @@ public class PiColorSensor {
         return new REVColor(colorArr);
     }
 
-    public boolean isBallPresent() {
-        return dataFresh() && getProximity() >= 750;
+    public boolean isBallPresent() {                     
+        boolean present = getProximity() != -1;
+        SmartDashboard.putBoolean("BallPresent", present);
+        return present;
     }
 
     public boolean isBallBlue() {
-        return dataFresh() && getColor().b >= 4000;
+        return getColor().b >= 4000;
     }
 
     public boolean isBallRed() {
@@ -65,7 +63,7 @@ public class PiColorSensor {
     public boolean isAllianceRed() {
         return false;
         // return DriverStation.getAlliance() == DriverStation.Alliance.Red;
-    }
+    } 
 
     public boolean isAllianceBlue() {
         return true;

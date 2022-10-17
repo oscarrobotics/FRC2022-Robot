@@ -26,6 +26,7 @@ import frc.team832.lib.driverstation.dashboard.DashboardManager;
 import frc.team832.lib.motorcontrol.NeutralMode;
 import frc.team832.lib.motorcontrol.vendor.CANTalonFX;
 import frc.team832.lib.util.OscarMath;
+import frc.team832.robot.Constants.ClimbConstants;
 import frc.team832.robot.Constants.DrivetrainConstants;
 import frc.team832.robot.Constants.VisionConstants;
 
@@ -53,6 +54,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public final CANTalonFX m_rightMasterMotor = new CANTalonFX(RIGHT_MASTER_TALON_ID);
   public final CANTalonFX m_rightSlaveMotor = new CANTalonFX(RIGHT_SLAVE_TALON_ID);
   private final WPI_Pigeon2 m_imu = new WPI_Pigeon2(PIGEON_ID);
+
+
+
+
+  private double imu_prevPitch;
+
+
+
+
   // private final Gyro m_imu;
 
   private final OscarDrivetrain m_drivetrain;
@@ -208,7 +218,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
       targetingPID.setD(m_aimKd);
     }
 
-    SmartDashboard.putNumber("gyro yaw", getPitch());
+
+    double pitch = getPitch();
+    double delta = pitch - imu_prevPitch;
+    if(delta < .075) delta = 0;
+    imu_prevPitch = pitch;
+
+    SmartDashboard.putNumber("gyro pitch", pitch);
+    SmartDashboard.putBoolean("safe to extend", pitch >= ClimbConstants.SAFE_TO_EXTEND);
+    SmartDashboard.putNumber("gyro pitch delta", delta);
+    SmartDashboard.putBoolean("is swing positive", delta > 0);
 
     updateVision();
   }
@@ -305,7 +324,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("vision pid effort", getTargetingRotationSpeed());
 		}
   }
-
+  //Be aware of yaw when fine-tuning the vision
+  
   public double getTargetingRotationSpeed() {
     // double targetYaw = target.getYaw() + 5;
     double errorSign = Math.signum(target.getYaw());
@@ -346,5 +366,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getPitch() {
     return m_imu.getPitch();
+  }
+
+  public double getSwingDirection() {
+    double delta = m_imu.getPitch() - imu_prevPitch;
+    imu_prevPitch = m_imu.getPitch();
+
+    if(Math.abs(delta) < .05) return 0;
+
+    return delta;
   }
 }

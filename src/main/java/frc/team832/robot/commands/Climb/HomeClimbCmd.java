@@ -8,6 +8,7 @@ public class HomeClimbCmd extends CommandBase {
 
     private boolean leftHomed, rightHomed;
     
+    /* */
     public HomeClimbCmd(ClimbSubsystem climb) {
         this.climb = climb;
         addRequirements(climb);

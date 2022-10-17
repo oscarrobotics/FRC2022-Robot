@@ -117,7 +117,7 @@ public final class Constants {
 		public static final double ANGULAR_KA = 1.0154;
 		public static final double ANGULAR_KP = 1.4084;
 
-		// TEST PATH FOLLOWING TRAJECTORY
+		// TEST PATH FOLLOWING TRAJECTORY IN PATHWEAVER
 		private static final Pose2d zero_zero_StartPose = new Pose2d();
 		private static final Pose2d halfMeterX_Pose = new Pose2d(3, 0, new Rotation2d());
 		public static final TrajectoryConfig CALM_TRAJCONFIG = new TrajectoryConfig(2, 3);
@@ -279,16 +279,16 @@ public final class Constants {
 		/** Mechanical Characteristics **/
 		public static final double LEFT_TO_NEXT_BAR_TARGET = 89.9;
 		public static final double RIGHT_TO_NEXT_BAR_TARGET = 94.5;
-		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 86.00 - 10;
-		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 92.36 - 10;
-		public static final double SAFE_TO_EXTEND = 30;
+		public static final double LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET = 51.6;
+		public static final double RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET = 57.6;
+		public static final double SAFE_TO_EXTEND = 5;
 		public static final double LEFT_FREE_HOOK_TARGET = 30;
 		public static final double RIGHT_FREE_HOOK_TARGET = 30;
 		public static final double RETRACT_TARGET = .75;
 		public static final double WAIT_POINT_TARGET = 22;
 		public static final double LEFT_MAX_EXTEND_POS = 89.9 - 2; // to mid bar
 		public static final double RIGHT_MAX_EXTEND_POS = 94.5 - 2; // to mid bar
-		public static final double MIN_EXTEND_POS = 0;
+		public static final double MIN_EXTEND_POS = 5;
 		public static final double GEARBOX_REDUCTION = 10.61;
 
 		/** System Control Values **/

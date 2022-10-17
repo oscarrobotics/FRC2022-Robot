@@ -2,6 +2,7 @@ package frc.team832.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team832.robot.Constants.ConveyorConstants;
@@ -19,6 +20,8 @@ public class AcceptBallCommand extends CommandBase{
 
     private PiColorSensor m_colorSensor = PiColorSensor.getInstance();
     private boolean isCorrectColor = false;
+    private boolean isPresent = false;
+    private double proximity = 0;
     private Timer rejectTimer = new Timer();
 
     public AcceptBallCommand(IntakeSubsystem intake, ShooterSubsystem shooter, ConveyorSubsystem conveyor) {
@@ -31,27 +34,32 @@ public class AcceptBallCommand extends CommandBase{
     @Override
     public void initialize() {
         intake.extendIntake();
-        intake.setPower(IntakeConstants.INTAKE_POWER);
+        intake.setPower(.4);
         shooter.setRPM(-1000, -1000);
 
         conveyor.setPower(ConveyorConstants.QUEUING_POWER);
     }
 
-    // @Override
-    // public void execute() {
-    //     isCorrectColor = m_colorSensor.isBallPresent() && m_colorSensor.isCargoCorrectColor();
+    @Override
+    public void execute() {
+        proximity =  m_colorSensor.getProximity();
+        isPresent = m_colorSensor.isBallPresent();
+        // SmartDashboard.putNumber("bottom proximity", proximity);
+        // SmartDashboard.putBoolean("BottomCargoSensor", isPresent);
 
-    //     if(!isCorrectColor) {
-    //         rejectTimer.start();
-    //         conveyor.setPower(-ConveyorConstants.QUEUING_POWER);
+        // isCorrectColor = isPresent && m_colorSensor.isCargoCorrectColor();
 
-    //         if (rejectTimer.hasElapsed(.5) && !m_colorSensor.isBallPresent()) {
-    //             conveyor.setPower(ConveyorConstants.QUEUING_POWER);
+        // if(!isCorrectColor) {
+        //     rejectTimer.start();
+        //     conveyor.setPower(-ConveyorConstants.QUEUING_POWER);
+
+        //     if (rejectTimer.hasElapsed(.5) && !m_colorSensor.isBallPresent()) {
+        //         conveyor.setPower(ConveyorConstants.QUEUING_POWER);
                 
-    //             rejectTimer.reset();
-    //         }
-    //     }
-    // }
+        //         rejectTimer.reset();
+        //     }
+        // }
+    }
 
     // @Override
     // public boolean isFinished() {

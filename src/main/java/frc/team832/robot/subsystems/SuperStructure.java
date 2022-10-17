@@ -5,6 +5,7 @@ public class SuperStructure {
     private final ConveyorSubsystem conveyor;
     private final ShooterSubsystem shooter;
 
+    /** Inherits all features of subsystems into one class**/
     public SuperStructure(IntakeSubsystem intake, ConveyorSubsystem conveyor, ShooterSubsystem shooter) {
         this.intake = intake;
         this.conveyor = conveyor;

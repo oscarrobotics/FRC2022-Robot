@@ -45,7 +45,7 @@ public class ShooterSubsystem extends SubsystemBase{
     private double distanceToTargetMeters;
     
     /** Creates a new ShooterSubsystem **/
-    public ShooterSubsystem(PhotonCamera gloworm) {
+    public ShooterSubsystem(PhotonCamera gloworm) {     //motor power limits; Open Loop (no need for feedback)
         DashboardManager.addTab(this);
         
         m_frontMotor.wipeSettings();
@@ -61,7 +61,8 @@ public class ShooterSubsystem extends SubsystemBase{
         m_rearFlywheel.setClosedLoop(false);
 
         // m_frontStallDetector.setStallCurrent(7);
-
+        
+        /** Network tables for shooter **/
         dash_frontFlywheelTargetRPM = DashboardManager.addTabItem(this, "Front Flywheel Target RPM", 0.0);
         dash_frontFlywheelActualRPM = DashboardManager.addTabItem(this, "Front Flywheel Actual RPM", 0.0);
         dash_rearFlywheelTargetRPM = DashboardManager.addTabItem(this, "Rear Flywheel Target RPM", 0.0);
@@ -82,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase{
         updateVisionDistance();
         updateDashboardData();
     }
-
+    /** Updates info about actual and target RPM on dashboard **/
     public void updateDashboardData() {
         dash_frontFlywheelTargetRPM.setDouble(m_frontFlywheelTargetRPM);
         dash_frontFlywheelActualRPM.setDouble(m_frontMotor.getSensorVelocity());
@@ -93,7 +94,7 @@ public class ShooterSubsystem extends SubsystemBase{
         dash_rearAtTarget.setBoolean(rearAtTarget(50));
 
     }
-
+    /** Changes RPM to target **/
     public void setRPM(double frontTarget, double rearTarget) {
         m_frontFlywheelTargetRPM = frontTarget;
         m_rearFlywheelTargetRPM = rearTarget;
@@ -105,6 +106,7 @@ public class ShooterSubsystem extends SubsystemBase{
         setRPM(0, 0);
     }
 
+    /** Checks if all wheels are at the target **/
     public boolean frontAtTarget(double tolerance) {
         return m_frontFlywheel.atTarget(tolerance);
     }
@@ -125,6 +127,7 @@ public class ShooterSubsystem extends SubsystemBase{
         return m_frontStallDetector.getStallStatus().isStalled;
     }
 
+    /** Checks vision to calculate the dist. to target **/
     public void updateVisionDistance() {
         PhotonPipelineResult latestResult = gloworm.getLatestResult();
     
@@ -142,6 +145,7 @@ public class ShooterSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("distance to target", distanceToTargetMeters);
     }
 
+    /** Checks whether to set the RPM to low/high goal **/
     public void setVisionRpms(boolean isLow) {
         double frontRpm, rearRpm;
 
@@ -164,6 +168,7 @@ public class ShooterSubsystem extends SubsystemBase{
         setRPM(frontRpm, rearRpm);
     }
 
+    /** Gets target RPM based on vision distance to target **/
     public double getFrontVisionRPM() {
         var frontRpm = FRONT_SHOOTER_RPM_HIGH_MAP.get(distanceToTargetMeters);
         return frontRpm;
@@ -173,10 +178,12 @@ public class ShooterSubsystem extends SubsystemBase{
         return rearRpm;
     }
 
+    /** sets hood based on low or high **/
     public void setHood(boolean high) {
         m_hoodSolenoid.set(high);
     }
 
+    /** Checks the odometry of sensor on motor to surface **/
     public double getRearSurfaceSpeed() {
         return m_rearMotor.getSensorVelocity() * 2.5 * 3.14;
     }

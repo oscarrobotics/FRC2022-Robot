@@ -42,10 +42,10 @@ public class AutoMidToHigh extends SequentialCommandGroup{
             new PositionClimbCommand(m_climb, LEFT_FREE_HOOK_TARGET, RIGHT_FREE_HOOK_TARGET), 
             // new WaitCommand(0),
             // pivot arms
-            new PivotClimbCommand(m_climb)
+            new PivotClimbCommand(m_climb),
             // new WaitCommand(0),
             // to next bar
-            // new PositionClimbCommand(m_climb, LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET, RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET)
+            new PositionClimbCommand(m_climb, LEFT_TO_NEXT_BAR_WAIT_POINT_TARGET, RIGHT_TO_NEXT_BAR_WAIT_POINT_TARGET)
         );
     }
 

@@ -1,6 +1,7 @@
 package frc.team832.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -16,6 +17,7 @@ import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
+import frc.team832.robot.util.PiColorSensor;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -70,6 +72,10 @@ public class Robot extends TimedRobot {
     intake.periodic();
     conveyor.periodic();
     shooter.periodic();
+
+    // PiColorSensor.getInstance().isBallPresent();
+    double prox = NetworkTableInstance.getDefault().getEntry("proximity1").getDouble(-1);
+    System.out.printf("Proximity: %.2f\n", prox);
 
     if (m_robotContainer.userButton.get()) {
       m_robotContainer.setAutoPose();
