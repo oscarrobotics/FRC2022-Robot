@@ -60,6 +60,6 @@ public class AutoClimbCmd extends SequentialCommandGroup{
         if(interrupted) {
             m_climb.idle(true);
         }
-        else {m_climb.idle(false)}
+        else {m_climb.idle(false);}
     }
 }

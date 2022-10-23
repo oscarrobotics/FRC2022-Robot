@@ -66,18 +66,19 @@ public class RobotContainer {
     // var threeBallTestCmd = drivetrain.getTrajectoryCommand(threeBallPath);
     // autoSelector.addAutonomous("3 Ball Auto PathTest", threeBallPath, threeBallTestCmd);
     var twoBallAutoCmd = new TwoCargoAutoCmd(drivetrain, intake, conveyor, shooter);                           //two ball auto for shuffleboard
-    autoSelector.addAutonomous("2 Cargo Auto", twoBallAutoCmd.initialPath, twoBallAutoCmd);
+    autoSelector.addDefaultAutonomous("2 Cargo Auto", twoBallAutoCmd.initialPath, twoBallAutoCmd);
     // autoSelector.addAutonomous("3 Cargo Auto", new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter));
+    var threeBallAutoCmd = new ThreeCargoAutoCmd(drivetrain, intake, conveyor, shooter);
+    autoSelector.addAutonomous("3 Cargo Auto", threeBallAutoCmd.initialPath, threeBallAutoCmd);
     // autoSelector.addAutonomous("4 Cargo Auto", new FourCargoAutoCmd(drivetrain, intake, conveyor, shooter));
-
     var fiveBallAutoCmd = new FiveCargoAutoCmd(drivetrain, intake, conveyor, shooter);                        //five ball auto for shuffleboard (WIP)
-    autoSelector.addDefaultAutonomous("5 Cargo Auto", fiveBallAutoCmd.initialPath, fiveBallAutoCmd);
+    autoSelector.addAutonomous("5 Cargo Auto", fiveBallAutoCmd.initialPath, fiveBallAutoCmd);
    
     /* Arcade drive Commands*/
     var arcadeDriveCommand = new RunEndCommand(() -> {
         drivetrain.teleopArcadeDrive(
           // -m_xboxCtrl.getLeftY(),
-          driveLimiter.calculate(-m_xboxCtrl.getLeftY()*0.1), 
+          driveLimiter.calculate(-m_xboxCtrl.getLeftY()*0.55), 
           // m_xboxCtrl.getRightX(),
           turnLimiter.calculate(m_xboxCtrl.getRightX()*0.55),  //change back to .55 when not testing
           2
@@ -108,13 +109,13 @@ public class RobotContainer {
     stratComInterface.arcadeBlackRight().whileHeld(new AcceptBallCommand(intake, shooter, conveyor)).whenReleased(new QueueBallCommand(conveyor, shooter));
     stratComInterface.arcadeWhiteRight().whileHeld(new RejectBallCommand(intake, conveyor));
 
-    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, false));
+    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, false));
     // stratComInterface.arcadeWhiteLeft().whileHeld(new ShootBallVisionCmd(conveyor, shooter, true));
 
-    stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCmd(conveyor, shooter, 2000, 2000));
+    // stratComInterface.arcadeBlackLeft().whileHeld(new ShootBallCmd(conveyor, shooter, 2000, 2000));
 
-    stratComInterface.scSideBot().whenPressed(new ShootBallCmd(     //Spins wheels for fender and tarmac buttons
-      conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true));
+    // stratComInterface.scSideBot().whenPressed(new ShootBallCmd(     //Spins wheels for fender and tarmac buttons
+    //   conveyor, shooter, ShooterConstants.FRONT_RPM_LOW_FENDER, ShooterConstants.REAR_RPM_LOW_FENDER, true));
     stratComInterface.scSideTop().whileHeld(new ShootBallCmd(
       conveyor, shooter, ShooterConstants.FRONT_RPM_HIGH_TARMAC, ShooterConstants.REAR_RPM_HIGH_TARMAC));
     stratComInterface.scSideMid().whileHeld(new ShootBallCmd(

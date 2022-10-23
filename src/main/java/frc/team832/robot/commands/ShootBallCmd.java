@@ -33,7 +33,7 @@ public class ShootBallCmd extends SequentialCommandGroup {
         if (isLow) {
             waitTime = 0;
         } else {
-            waitTime = 0.5;
+            waitTime = 0.25;
         }
 
         addCommands(
