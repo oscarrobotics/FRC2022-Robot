@@ -1,13 +1,18 @@
 package frc.team832.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team832.lib.CANDevice;
+import frc.team832.lib.motorcontrol.NeutralMode;
+import frc.team832.robot.commands.Climb.HomeClimbCmd;
 import frc.team832.robot.subsystems.ClimbSubsystem;
-import frc.team832.robot.subsystems.ConveyerSubsystem;
+import frc.team832.robot.subsystems.ConveyorSubsystem;
 import frc.team832.robot.subsystems.DrivetrainSubsystem;
 import frc.team832.robot.subsystems.IntakeSubsystem;
 import frc.team832.robot.subsystems.ShooterSubsystem;
@@ -23,19 +28,28 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
-  // private final Compressor compressor = m_robotContainer.compressor;
-  // private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrainSubsystem;
-  // private final IntakeSubsystem intake = m_robotContainer.intake;
-  // private final ConveyerSubsystem conveyer = m_robotContainer.conveyer;
+  private final Compressor compressor = m_robotContainer.compressor;
+  private final DrivetrainSubsystem drivetrain = m_robotContainer.drivetrain;
+  private final IntakeSubsystem intake = m_robotContainer.intake;
+  private final ConveyorSubsystem conveyor = m_robotContainer.conveyor;
   private final ShooterSubsystem shooter = m_robotContainer.shooter;
-  // private final ClimbSubsystem climber = m_robotContainer.climber;
+  private final ClimbSubsystem climb = m_robotContainer.climb;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
-  public void robotInit() {    
+  public void robotInit() {
+    if (RobotBase.isSimulation()) {
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
+
+    CameraServer.startAutomaticCapture();
+
+    climb.reset();
+
+    CANDevice.printMissingDevices();
   }
 
   /**
@@ -52,13 +66,24 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    intake.periodic();
+    conveyor.periodic();
     shooter.periodic();
+
+    if (m_robotContainer.userButton.get()) {
+      m_robotContainer.setAutoPose();
+    }
+
+    SmartDashboard.putNumber("Storage PSI", compressor.getPressure());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
     // drivetrain.stop();
+    CommandScheduler.getInstance().cancelAll();
+    drivetrain.setNeutralMode(NeutralMode.kCoast);
   }
 
   @Override
@@ -68,6 +93,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    CommandScheduler.getInstance().cancelAll();
+
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
+    m_robotContainer.setAutoPose();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -85,9 +114,15 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    CommandScheduler.getInstance().cancelAll();
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    drivetrain.setNeutralMode(NeutralMode.kBrake);
+    
+    CommandScheduler.getInstance().schedule(false, new HomeClimbCmd(climb));
   }
 
   /** This function is called periodically during operator control. */
@@ -99,11 +134,12 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
 
+    drivetrain.setNeutralMode(NeutralMode.kCoast);
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_robotContainer.configTestingCommands();
+    drivetrain.teleopArcadeDrive(0.7, 0, 1);
   }
 }

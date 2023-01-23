@@ -11,6 +11,7 @@ public class StraightenClimbCommand extends CommandBase{
         addRequirements(climb);
     }
    
+    //climb system straightens the robot to not tilt *too* much when reaching the next bar
     @Override
     public void initialize() {
         climb.straightenClimb();
